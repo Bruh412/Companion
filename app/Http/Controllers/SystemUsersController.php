@@ -42,6 +42,7 @@ class SystemUsersController extends Controller
                 'last_name' => $request['lname'],
                 'email' => $request['email'],
                 'birthday' => $request['birthday'],
+                'address' => $request['address'],
                 'gender' => $gender,
                 // 'gender' => $request['gender'],
                 'username' => $request['username'],

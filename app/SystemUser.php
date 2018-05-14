@@ -17,7 +17,7 @@ class SystemUser extends Eloquent implements Authenticatable
     public $incrementing = false;
     
     protected $fillable = [
-        'first_name', 'last_name', 'username', 'email', 'birthday', 'gender', 'password','userType'
+        'first_name', 'last_name', 'username', 'email', 'birthday', 'address','gender', 'password','userType'
     ];
     protected $hidden = [
         'password', 'remember_token',
