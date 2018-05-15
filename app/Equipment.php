@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Keywords extends Model
+class Equipment extends Model
 {
-    public $table = 'keywords';
-    protected $primaryKey = 'keywordID';
+    public $table = 'equipments';
+    protected $primaryKey = 'equipmentID';
     public $incrementing = false;
     public $timestamps = false;
 }

@@ -14,4 +14,8 @@ class PostStatus extends Model
     public function usersPostFeeling(){
         return $this->hasOne('App\UsersPostFeeling','post_id','post_id');
     }
+
+    public function user(){
+        return $this->hasOne('App\SystemUser','post_user_id','user_id');
+    }
 }

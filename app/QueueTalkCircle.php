@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Keywords extends Model
+class QueueTalkCircle extends Model
 {
-    public $table = 'keywords';
-    protected $primaryKey = 'keywordID';
+    public $table = 'queueTalkCircle';
+    protected $primaryKey = 'queueID';
     public $incrementing = false;
     public $timestamps = false;
 }

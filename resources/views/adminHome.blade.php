@@ -79,16 +79,14 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Companion
+                    Admin Home
                 </div>
 
                 <div class="links">
-                <h4>Admin login page</h4>
-                    <!-- <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a> -->
+                    <a href="/activities">Activities</a>
+                    <a href="/categories">Categories</a>
+                    <a href="/interests">Interests</a>
+                    <a href="/quotes">Quotes</a>
                 </div>
             </div>
         </div>

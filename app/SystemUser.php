@@ -22,4 +22,8 @@ class SystemUser extends Eloquent implements Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function postStatus(){
+        return $this->hasMany('App\PostStatus','post_user_id','user_id');
+    }
 }
