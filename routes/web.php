@@ -12,16 +12,18 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('specs');
 });
-Route::get('/register','SystemUsersController@registerPage');
 
-// Route::get('/userType/{userType}','SystemUsersController@chooseUser')->name('userType');
+// Route::get('/register','SystemUsersController@registerPage');
 Route::post('/register','SystemUsersController@register')->name('register');
-// Route::post('/registerseeker','SystemUsersController@registerSeeker')->name('seeker');
-// Route::post('/registerfacilitator','SystemUsersController@registerFacilitator')->name('facilitator');
+
 
 Route::get('/interests/get','InterestController@getInterests');
+Route::get('/specialization/get','SystemUsersController@getSpecsFromDB');
+// Route::get('/specialization/get','SystemUsersController@try');
+
+
 Route::view('/login', 'login')->name('login');
 Route::post('/login','SystemUsersController@userAuthentication')->name('login');
 Route::get('/logout','SystemUsersController@logout')->name('logout');
@@ -31,21 +33,18 @@ Route::get('/logout','SystemUsersController@logout')->name('logout');
 Route::middleware(['auth'])->group(function(){
     Route::get('/home','AdminController@adminHome');
 
-
     Route::get('/posts/display','PostStatusController@displayPosts');
-    // Route::get('/post/{postid}/display','PostStatusController@displayPost');
+    Route::get('/post/{postid}/display','PostStatusController@displayPost');
     Route::get('/posts/create','PostStatusController@addPost');
     Route::post('/posts/save','PostStatusController@savePost');
-    
-    // Route::get('/post/{postid}/edit','PostStatusController@update');
+    Route::get('/post/{postid}/edit','PostStatusController@update');
     Route::post('/posts/update','PostStatusController@saveupdate');
-
     Route::get('/post/{postid}/delete','PostStatusController@deletePost');
-
 
     Route::get('/quotes/save','QuotesController@saveQuote');
     Route::get('/categorize','QuotesController@categorizeQuotes');
     Route::get('/displayPost','QuotesController@displayQuotes');
+
 
      // ---------------------------- ACTIVITIES
     Route::get('/activities', 'ActivityController@dashboard');

@@ -10,6 +10,4 @@ class Interest extends Model
     protected $primaryKey = 'interestID';
     public $timestamps = false;
     public $incrementing = false;
-
-    
 }
