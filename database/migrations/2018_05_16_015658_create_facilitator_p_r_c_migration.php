@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFacilitatorDetailsTable extends Migration
+class CreateFacilitatorPRCMigration extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateFacilitatorDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('FacilitatorDetails', function (Blueprint $table) {
-            // $table->increments('id');
-            // $table->timestamps();
+        Schema::create('facilitatorPRC', function (Blueprint $table) {
             $table->uuid('user_id');
-             $table->foreign('user_id')->references('user_id')->on('systemusers')->onDelete('cascade');
+            $table->foreign('user_id')->references('user_id')->on('systemusers')->onDelete('cascade');
+            $table->string('prc_id');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateFacilitatorDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('FacilitatorDetails');
+        Schema::dropIfExists('facilitatorPRC');
     }
 }

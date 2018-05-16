@@ -10,6 +10,10 @@ use App\Token;
 use App\EmptyMuch;
 use App\Interest;
 use App\UsersInterests;
+use App\Specialization;
+use App\FacilitatorSpec;
+use App\FacilitatorPRC;
+use App\PrcRaw;
 use DB;
 
 class SystemUsersController extends Controller
@@ -29,10 +33,9 @@ class SystemUsersController extends Controller
         return view('login');
     }
 
-    // public function chooseUSer($userType){
-    //     return response()->json([
-    //         'userType' => $userType,
-    //     ]);
+    // public function try(){
+    //     $db_specs = Specialization::get();
+    //     return $db_specs;
     // }
 
     public function register(Request $request){
@@ -74,18 +77,18 @@ class SystemUsersController extends Controller
                 //comparing interests to db_interests
                 // $db_usersInterests = [];
                 // $usersInterests = $request->interests;
-                // $interests = Interests::get();
+                // $interests = Interest::get();
                 // foreach($interests as $interest){
                 //     for ($i = 0; $i < count($usersInterests); $i++){
                 //         if ($interest['interestName'] == $usersInterests[$i]){
-                //             array_push($db_usersInterests,$interest['interestName']);
+                //             array_push($db_usersInterests,$interest['interestID']);
                 //         }
                 //     }
                 // }
                 // //store interests to usersinterests
                 // foreach($db_usersInterests as $user_interest){
                 //     UsersInterests::create([
-                //         'user_ID' => $userID,
+                //         'user_id' => $userID,
                 //         'interestID' => $user_interest,
                 //     ]);
                 // }
@@ -104,8 +107,9 @@ class SystemUsersController extends Controller
                     // 'gender' => $request['gender'],
                     'username' => $request['username'],
                     'password' => bcrypt($request['password']),
-                    'userType' => 'seeker',
+                    'userType' => 'facilitator',
                 ]);
+
                 //generating TOKEN_ID and store userID to token table
                 $userID = SystemUser::where("username", $request['username'])->value('user_id');
                 $token = new Token();
@@ -121,144 +125,64 @@ class SystemUsersController extends Controller
                 }
                 $token->token_user_id = $userID;
                 $token->save();
+
+                //check and store PRC
+                $prc_raw = PrcRaw::get();
+                $prc_input = $request->prc;
+                $count = 0;
+                foreach($prc_raw as $prc){
+                    if ($prc['prc_id'] === $prc_input){
+                        $count++;
+                    }
+                }
+                // return $count;
+                if ($count != 0){
+                    FacilitatorPRC::create([
+                        'user_id' => $userID,
+                        'prc_id' => $prc_input,
+                    ]);
+                }
+
+                //comparing specs to db_specs
+                $db_specs = Specialization::get();
+                $usersSpecs = $request['specs'];
+                $specs = [];
+                foreach($db_specs as $spec){
+                    for ($i = 0; $i < count($usersSpecs); $i++){
+                        if ($spec['spec_name'] == $usersSpecs[$i]){
+                            array_push($specs,$spec['spec_id']);
+                        }
+                    }
+                }
+                foreach($specs as $spec){
+                    FacilitatorSpec::create([
+                        'user_id' => $userID,
+                        'spec_id' => $spec,
+                    ]);
+                }
+
                 //comparing interests to db_interests
-                // $db_usersInterests = [];
-                // $usersInterests = $request->interests;
-                // $interests = Interests::get();
-                // foreach($interests as $interest){
-                //     for ($i = 0; $i < count($usersInterests); $i++){
-                //         if ($interest['interestName'] == $usersInterests[$i]){
-                //             array_push($db_usersInterests,$interest['interestName']);
-                //         }
-                //     }
-                // }
-                // //store interests to usersinterests
-                // foreach($db_usersInterests as $user_interest){
-                //     UsersInterests::create([
-                //         'user_ID' => $userID,
-                //         'interestID' => $user_interest,
-                //     ]);
-                // }
+                $db_usersInterests = [];
+                $usersInterests = $request->interests;
+                $interests = Interest::get();
+                foreach($interests as $interest){
+                    for ($i = 0; $i < count($usersInterests); $i++){
+                        if ($interest['interestName'] == $usersInterests[$i]){
+                            array_push($db_usersInterests,$interest['interestID']);
+                        }
+                    }
+                }
+                //store interests to usersinterests
+                foreach($db_usersInterests as $user_interest){
+                    UsersInterests::create([
+                        'user_id' => $userID,
+                        'interestID' => $user_interest,
+                    ]);
+                }
                 return response(200);
             }
+        }
     }
-
-    // public function registerSeeker(Request $request){
-    //     if ($request['female']){
-    //         $gender = $request['female'];
-    //     } else {
-    //         $gender = $request['male'];
-    //     }
-
-    //     if ($request['confirm'] == $request['password']){
-    //         return SystemUser::create([
-    //             'first_name' => $request['fname'],
-    //             'last_name' => $request['lname'],
-    //             'email' => $request['email'],
-    //             'birthday' => $request['birthday'],
-    //             'address' => $request['address'],
-    //             'gender' => $gender,
-    //             // 'gender' => $request['gender'],
-    //             'username' => $request['username'],
-    //             'password' => bcrypt($request['password']),
-    //             'userType' => 'seeker',
-    //         ]);
-    //         //generating TOKEN_ID and store userID to token table
-    //         $userID = SystemUser::where("username", $request['username'])->value('user_id');
-    //         $token = new Token();
-    //         if (Token::get() == EmptyMuch::get()){
-    //             $token->token_id = "T00000000001";
-    //         }
-    //         else {
-    //             $row = Token::orderby('token_id','desc')->first();
-    //             $temp = substr($row["token_id"],1);
-    //             $temp = (int)$temp + 1;
-    //             $newTokenID = "T".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
-    //             $token->token_id = $newTokenID;
-    //         }
-    //         $token->token_user_id = $userID;
-    //         $token->save();
-    //         //comparing interests to db_interests
-    //         // $db_usersInterests = [];
-    //         // $usersInterests = $request->interests;
-    //         // $interests = Interests::get();
-    //         // foreach($interests as $interest){
-    //         //     for ($i = 0; $i < count($usersInterests); $i++){
-    //         //         if ($interest['interestName'] == $usersInterests[$i]){
-    //         //             array_push($db_usersInterests,$interest['interestName']);
-    //         //         }
-    //         //     }
-    //         // }
-    //         // //store interests to usersinterests
-    //         // foreach($db_usersInterests as $user_interest){
-    //         //     UsersInterests::create([
-    //         //         'user_ID' => $userID,
-    //         //         'interestID' => $user_interest,
-    //         //     ]);
-    //         // }
-    //         // return response(200);
-
-    //     }
-    // }
-
-    // public function registerFacilitator(Request $request){
-    //     if ($request['female']){
-    //         $gender = $request['female'];
-    //     } else {
-    //         $gender = $request['male'];
-    //     }
-
-    //     if ($request['confirm'] == $request['password']){
-    //         SystemUser::create([
-    //             'first_name' => $request['fname'],
-    //             'last_name' => $request['lname'],
-    //             'email' => $request['email'],
-    //             'birthday' => $request['birthday'],
-    //             'address' => $request['address'],
-    //             'gender' => $gender,
-    //             // 'gender' => $request['gender'],
-    //             'username' => $request['username'],
-    //             'password' => bcrypt($request['password']),
-    //             'userType' => 'facilitator',
-    //         ]);
-
-    //         $userID = SystemUser::where("username", $request['username'])->value('user_id');
-    //         $token = new Token();
-    //         if (Token::get() == EmptyMuch::get()){
-    //             $token->token_id = "T00000000001";
-    //         }
-    //         else {
-    //             $row = Token::orderby('token_id','desc')->first();
-    //             $temp = substr($row["token_id"],1);
-    //             $temp = (int)$temp + 1;
-    //             $newTokenID = "T".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
-    //             $token->token_id = $newTokenID;
-    //         }
-    //         $token->token_user_id = $userID;
-    //         $token->save();
-
-
-    //         //comparing interests to db_interests
-    //         // $db_usersInterests = [];
-    //         // $usersInterests = $request->interests;
-    //         // $interests = Interests::get();
-    //         // foreach($interests as $interest){
-    //         //     for ($i = 0; $i < count($usersInterests); $i++){
-    //         //         if ($interest['interestName'] == $usersInterests[$i]){
-    //         //             array_push($db_usersInterests,$interest['interestName']);
-    //         //         }
-    //         //     }
-    //         // }
-    //         // //store interests to usersinterests
-    //         // foreach($db_usersInterests as $user_interest){
-    //         //     UsersInterests::create([
-    //         //         'user_ID' => $userID,
-    //         //         'interestID' => $user_interest,
-    //         //     ]);
-    //         // }
-    //         return response(200);
-    //     }
-    // }
 
     public function userAuthentication(Request $request){
         $result = Auth::attempt(['username' => $request['username'], 'password' => $request['password']]);

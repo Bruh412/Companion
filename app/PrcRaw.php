@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Interest extends Model
+class PrcRaw extends Model
 {
-    public $table = 'interests';
-    protected $primaryKey = 'interestID';
+    public $table = 'prcraw';
     public $timestamps = false;
     public $incrementing = false;
 }
