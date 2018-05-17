@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PostFeeling extends Model
 {
-    protected $table = 'postfeelings';
+    public $table = 'postfeelings';
     protected $primaryKey = 'post_feeling_id';
     public $incrementing = false;
     public $timestamps = false;

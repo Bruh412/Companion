@@ -12,5 +12,8 @@
         <input type="password" name="password" placeholder="Password"><br>
         <button type="submit" name="submit">Submit</button>
     </form>
+
+    <a href="/groupUser/S0001/Sad">Queue</a><br>
+    <a href="/checkQueue/S0003">check</a>
 </body>
  </html>

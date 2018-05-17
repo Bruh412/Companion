@@ -45,8 +45,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/categorize','QuotesController@categorizeQuotes');
     Route::get('/displayPost','QuotesController@displayQuotes');
 
-
-     // ---------------------------- ACTIVITIES
+     // ---------------------------- ACTIVITIES -X
     Route::get('/activities', 'ActivityController@dashboard');
     Route::get('/addAct', 'ActivityController@addAct');
     Route::post('/saveAct', 'ActivityController@saveAct');
@@ -55,32 +54,39 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/deleteAct/{id}', 'ActivityController@deleteAct');
     Route::get('/viewAct/{id}', 'ActivityController@viewAct');
 
-    // --- INTERESTS
+    // --- INTERESTS -X
     Route::get('/interests', 'InterestController@dashboard');
     Route::get('/addInt', 'InterestController@addInt');
     Route::post('/addInt', 'InterestController@saveInt');
     Route::get('/deleteInt/{id}', 'InterestController@deleteInt');
 
-    // --- CATEGORIES
+    // --- CATEGORIES -X
     Route::get('/categories', 'CategoryController@dashboard');
     Route::get('/addCat', 'CategoryController@addCat');
     Route::post('/addCat', 'CategoryController@saveCat');
     Route::get('/deleteCat/{id}', 'CategoryController@deleteCat');
     Route::get('/viewCat/{id}', 'CategoryController@viewCat');
-            // --- KEYWORDS
+            // --- KEYWORDS -X
     Route::get('/deleteKeyword/{catID}/{id}', 'KeywordController@deleteKeyword');
     Route::get('/addKeyword/{catID}', 'KeywordController@addKeyword');
     Route::post('/addKeyword/{catID}', 'KeywordController@saveKeyword');
 
-    // --- QUOTES
+    // --- QUOTES -X
     Route::get('/quotes', 'QuotesController@dashboard');
     Route::get('/addQuote', 'QuotesController@addQuote');
     Route::post('/addQuote', 'QuotesController@saveQuote');
+
+    // --- FEELINGS -X
+    Route::get('/feelings', 'FeelingsController@dashboard');
+    Route::get('/addFeeling', 'FeelingsController@addFeeling');
+    Route::post('/addFeeling', 'FeelingsController@saveFeeling');
+    Route::get('/deleteFeeling/{id}', 'FeelingsController@deleteFeeling');
 });
 
 // --- GROUPING
 
 // - Add to queue
-Route::get('/groupUser/{id}', 'SystemController@addUserToTalkCircleQueue');
+// temp feeling
+Route::get('/groupUser/{id}/{feeling}', 'SystemController@addUserToTalkCircleQueue');
 // - Check queue
-Route::get('/checkQueue', 'SystemController@checkQueue');
+Route::get('/checkQueue/{id}', 'SystemController@checkQueue1');

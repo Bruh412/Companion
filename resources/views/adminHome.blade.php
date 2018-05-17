@@ -69,7 +69,17 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <!-- <a class="dropdown-item" href="/logout"
+                            onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a> -->
+                        <a href="/logout">Logout</a>
+
+                                    <!-- <form id="logout-form" action="/logout" method="POST" style="display: none;">
+                                        @csrf
+                                </form> -->
+                        <!-- <a href="{{ url('/home') }}">Home</a> -->
                     @else
                         <a href="{{ route('login') }}">Login</a>
                         <a href="{{ route('register') }}">Register</a>
@@ -84,9 +94,11 @@
 
                 <div class="links">
                     <a href="/activities">Activities</a>
-                    <a href="/categories">Categories</a>
                     <a href="/interests">Interests</a>
+                    <a href="/feelings">Feelings</a>
+                    <a href="/categories">Categories</a>
                     <a href="/quotes">Quotes</a>
+                    
                 </div>
             </div>
         </div>

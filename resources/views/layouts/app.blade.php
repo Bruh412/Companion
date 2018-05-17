@@ -52,11 +52,12 @@
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/logout"
+                                    <!-- <a class="dropdown-item" href="/logout"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
-                                    </a>
+                                    </a> -->
+                                    <a href="/logout" class="dropdown-item">Logout</a>
 
                                     <form id="logout-form" action="/logout" method="POST" style="display: none;">
                                         @csrf
