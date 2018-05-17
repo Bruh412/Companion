@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\PostStatus;
 use App\EmptyMuch;
-use App\PostFeeling;
+use App\Problem;
 use App\UsersPostFeeling;
 use App\Quote;
 use Auth;
@@ -101,20 +101,10 @@ class PostStatusController extends Controller
     }
 
 
-    // public function displayPostFeelings(){
-        
-    // }
-
-
-
-
-
-
-
-
-
-
-
+    public function getFeelings(){
+        $feelings = PostFeeling::get();
+        return response($feelings,200);
+    }
 
     public function displayQuotes(){
         // $collection = []; $j = 0; $count = 0; $check = true;
