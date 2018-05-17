@@ -45,7 +45,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/categorize','QuotesController@categorizeQuotes');
     Route::get('/displayPost','QuotesController@displayQuotes');
 
-     // ---------------------------- ACTIVITIES -X
+    //---------------------------------------------------------------
+    Route::get('/problems/get','ProblemController@getProblems');
+    Route::get('/feelings/get','PostStatusController@getFeelings');
+     // ---------------------------- ACTIVITIES
     Route::get('/activities', 'ActivityController@dashboard');
     Route::get('/addAct', 'ActivityController@addAct');
     Route::post('/saveAct', 'ActivityController@saveAct');
