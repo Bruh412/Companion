@@ -18,7 +18,7 @@ class ActivityController extends Controller
 {
     private $messages = [
         'title.required'=>'Please enter a title for the activity.',
-        'title.unique'=>' This title has already been taken! Please try a different title.',
+        'title.unique'=>'This title has already been taken! Please try a different title.',
         'details.required'=>'Please enter a few details for the activity.',
         'tags.required'=>'Please choose a few tags that relate to the activity.',
         'equipment.required'=>'Please enter the needed equipment for the activity.',

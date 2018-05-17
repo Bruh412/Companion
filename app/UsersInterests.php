@@ -13,4 +13,12 @@ class UsersInterests extends Model
     protected $fillable = [
         'user_id', 'interestID',
     ];
+    
+    public function user(){
+        return $this->hasOne('App\SystemUser','user_id','user_id');
+    }
+
+    public function interest(){
+        return $this->hasOne('App\Interest', 'interestID', 'interestID');
+    }
 }

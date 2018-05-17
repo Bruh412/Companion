@@ -47,6 +47,7 @@ class CategoryController extends Controller
                 
                 $category->categoryID = $newCategoryID;
             }
+            $tempid =  $category->categoryID;
             $category->categoryName = $req->category;
             $category->save();
 
@@ -67,7 +68,7 @@ class CategoryController extends Controller
             //     $keyword->keywordName = $key;
             //     $keyword->save();
             // }
-            return redirect(url('/categories'));
+            return redirect(url('/addKeyword'.'/'.$tempid));
         }
         else{
             return redirect()->back()->withInput()->withErrors($validation);

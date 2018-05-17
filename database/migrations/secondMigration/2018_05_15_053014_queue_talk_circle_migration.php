@@ -17,6 +17,7 @@ class QueueTalkCircleMigration extends Migration
             // $table->increments('id');
             // $table->timestamps();
             $table->string('queueID')->primary();
+            $table->string('feeling');
             $table->string('user_id');
 
             $table->foreign('user_id')->references('user_id')->on('systemusers')->onDelete('cascade');

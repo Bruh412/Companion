@@ -183,6 +183,7 @@ class SystemUsersController extends Controller
             }
         }
     }
+}
 
     public function userAuthentication(Request $request){
         $result = Auth::attempt(['username' => $request['username'], 'password' => $request['password']]);

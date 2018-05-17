@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use App\Traits\UuidPrimary;
+use App\UsersInterests;
 
 class SystemUser extends Eloquent implements Authenticatable
 {
@@ -25,5 +26,9 @@ class SystemUser extends Eloquent implements Authenticatable
 
     public function postStatus(){
         return $this->hasMany('App\PostStatus','post_user_id','user_id');
+    }
+
+    public function interests(){
+        return $this->hasMany('App\UsersInterests','user_id','user_id');
     }
 }

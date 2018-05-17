@@ -6,13 +6,16 @@ use Illuminate\Http\Request;
 use App\SystemUser;
 use App\QueueTalkCircle;
 use App\EmptyMuch;
+use App\customClasses\QueueScore;
+use App\customClasses\QueueScoreContainer;
 
 
 class SystemController extends Controller
 {
-    public function addUserToTalkCircleQueue($userID){
+    public function addUserToTalkCircleQueue($userID, $feeling){
+        
         // groups are based on 3 things: CATEGORIES/INTERESTS, PROBLEMS, AND LOCATION
-        // 
+        //                                          3             1             2      
         // dd($user);
 
         $user = SystemUser::findOrFail($userID);
@@ -32,20 +35,78 @@ class SystemController extends Controller
                 $queue->queueID = $id;
             }
             $queue->user_id = $user->user_id;
+            $queue->feeling = $feeling;
             $queue->save();
+            
             
             return response("Added to Queue!", 200);
         }
         else{
             //IN THE QUEUE
             // dd("Hi");
-            $queue = QueueTalkCircle::where("user_id",$userID)->get();
-            $queue->delete();
+            $queue = QueueTalkCircle::where("user_id",$userID)->delete();
+            // $queue->delete();
             return response("Removed from Queue!", 200);
         }
     }
 
-    public function checkQueue(){
+    public function checkQueue($id){
+        $queue = QueueTalkCircle::where("user_id", $id)->get();
+        $list = QueueTalkCircle::where([["feeling", $queue[0]->feeling]])->orderBy('feeling', 'asc')->orderBy('queueID', 'asc')->get();
+        //  dd($list);
+        if(count($list) >= 4){
+            for ($i=0; $i < 3; $i++) { 
+                // $list[$i]->delete();
+                print_r($list[$i]->user_id);
+            }
+            return response("Group found!", 200);
+        }
+        else{
+            return response("Group not yet found", 200);
+        }
+    }
+
+    public function checkQueue1($id){
+        $scoreslist = new QueueScoreContainer;
+        // dd(SystemUser::findOrFail($id)->interests);
+        $userinQueue = QueueTalkCircle::where("user_id", $id)->get();
+        $mainUser = SystemUser::findOrFail($id);
+        $list = QueueTalkCircle::get();
         
+        foreach ($list as $row) {
+            // dd($userinQueue[0]->queueID);
+            if($row->queueID != $userinQueue[0]->queueID){
+                
+                $score = new QueueScore();
+                $score->setUserID($row->queueID);
+                $points = 0;
+
+                if($row->feeling == $userinQueue[0]->feeling)
+                    $points++;
+                $otherUser = SystemUser::findOrFail($row->user_id);
+                foreach ($otherUser->interests as $key) {
+                    // if($key->interestName == $mainUser->interest->interestName){
+                    //     dd("Hello");
+                    //     $points++;
+                    // }
+                    foreach ($mainUser->interests as $key_1) {
+                        if($key['interestID'] == $key_1['interestID']){
+                                $points++;
+                            }
+                    }
+                }
+                
+                $score->setScore($points);
+                $scoreslist->addToContainer($score);
+            }
+        }
+        // dd($scoreslist);
+        // ---- SORTING
+        $sortedArr = array();
+
+        foreach ($scoreslist->getContainer() as $score) {
+            echo($score->getUserID()." --- ".$score->getScore()."<br>");
+            
+        }
     }
 }
