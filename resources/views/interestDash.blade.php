@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
      <h1>List of Interests</h1>
 
     <table class="table table-striped">
@@ -29,7 +30,8 @@
     </div>
     @endif
     <form action="/addInt" method="get">
-        <button class="btn btn-primary" style="font-size: 22px;">Add Interest</button>
+        <button class="btn btn-primary">Add Interest</button>
     </form>
     <br>
+</div>
 @endsection

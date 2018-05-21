@@ -12,10 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('specs');
+    return view('welcome');
 });
 
-// Route::get('/register','SystemUsersController@registerPage');
+Route::get('/register','SystemUsersController@registerPage');
 Route::post('/register','SystemUsersController@register')->name('register');
 
 
@@ -28,6 +28,7 @@ Route::view('/login', 'login')->name('login');
 Route::post('/login','SystemUsersController@userAuthentication')->name('login');
 Route::get('/logout','SystemUsersController@logout')->name('logout');
 // Route::get('/logout','AdminController@logout')->name('logout');
+Route::get('/quotes/save','QuotesController@saveQuote');
 
 
 Route::middleware(['auth'])->group(function(){
@@ -41,14 +42,14 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/posts/update','PostStatusController@saveupdate');
     Route::get('/post/{postid}/delete','PostStatusController@deletePost');
 
-    Route::get('/quotes/save','QuotesController@saveQuote');
+    // Route::get('/quotes/save','QuotesController@saveQuote');
     Route::get('/categorize','QuotesController@categorizeQuotes');
     Route::get('/displayPost','QuotesController@displayQuotes');
 
     //---------------------------------------------------------------
     Route::get('/problems/get','ProblemController@getProblems');
     Route::get('/feelings/get','PostStatusController@getFeelings');
-     // ---------------------------- ACTIVITIES
+    // ---------------------------- ACTIVITIES----------------------
     Route::get('/activities', 'ActivityController@dashboard');
     Route::get('/addAct', 'ActivityController@addAct');
     Route::post('/saveAct', 'ActivityController@saveAct');
@@ -78,6 +79,9 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/quotes', 'QuotesController@dashboard');
     Route::get('/addQuote', 'QuotesController@addQuote');
     Route::post('/addQuote', 'QuotesController@saveQuote');
+    Route::get('/quote/{quoteID}/edit', 'QuotesController@editQuote');
+    Route::post('/quote/edit', 'QuotesController@saveUpdate');
+    Route::get('/quote/{quoteID}/delete', 'QuotesController@delete');
 
     // --- FEELINGS -X
     Route::get('/feelings', 'FeelingsController@dashboard');

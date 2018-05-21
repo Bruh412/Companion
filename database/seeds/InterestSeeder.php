@@ -12,17 +12,17 @@ class InterestSeeder extends Seeder
     public function run()
     {
         $interest = [   
-                ['interestID'=>'I001','interestName'=>'Arts/Crafts'],
-                ['interestID'=>'I002','interestName'=>'Music'],
-                ['interestID'=>'I003','interestName'=>'Writing'],
-                ['interestID'=>'I004','interestName'=>'Games'],
-                ['interestID'=>'I005','interestName'=>'Puzzles'],
-                ['interestID'=>'I006','interestName'=>'Sports'],
-                ['interestID'=>'I007','interestName'=>'Funny'],
-                ['interestID'=>'I008','interestName'=>'Exercises'],
-                ['interestID'=>'I009','interestName'=>'Social'],
-                ['interestID'=>'I010','interestName'=>'Self-Care'],
-                ['interestID'=>'I011','interestName'=>'Experiental'],
+                ['interestID'=>'I001','interestName'=>'Arts/Drawing'],
+                ['interestID'=>'I002','interestName'=>'Crafts'],
+                ['interestID'=>'I003','interestName'=>'Literature'],
+                ['interestID'=>'I004','interestName'=>'Music'],
+                ['interestID'=>'I005','interestName'=>'E-Gaming'],
+                ['interestID'=>'I006','interestName'=>'Mvoies/Tv'],
+                ['interestID'=>'I007','interestName'=>'Puzzles'],
+                ['interestID'=>'I008','interestName'=>'Sports'],
+                ['interestID'=>'I009','interestName'=>'Adventures'],
+                ['interestID'=>'I010','interestName'=>'Self-Get-togethers'],
+                // ['interestID'=>'I011','interestName'=>'Meditation'],
        ];
 
        DB::table('interests')->insert($interest);

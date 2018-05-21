@@ -13,10 +13,13 @@ class CategorySeeder extends Seeder
     {
         $data = [   
             ['categoryID'=>'C0001','categoryName'=>'Family'],
-            ['categoryID'=>'C0002','categoryName'=>'Sadness'],
-            ['categoryID'=>'C0003','categoryName'=>'Inspirational'],
-            ['categoryID'=>'C0004','categoryName'=>'Happiness'],
-            ['categoryID'=>'C0005','categoryName'=>'Success'],
+            ['categoryID'=>'C0002','categoryName'=>'Friends'],
+            ['categoryID'=>'C0003','categoryName'=>'Relationship'],
+            ['categoryID'=>'C0004','categoryName'=>'Health'],
+            ['categoryID'=>'C0005','categoryName'=>'Academic'],
+            ['categoryID'=>'C0006','categoryName'=>'Work'],
+            ['categoryID'=>'C0007','categoryName'=>'Financial'],
+            ['categoryID'=>'C0008','categoryName'=>'Personal'],
         ];
 
         DB::table('categories')->insert($data);

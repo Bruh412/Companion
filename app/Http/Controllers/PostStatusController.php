@@ -7,6 +7,7 @@ use App\PostStatus;
 use App\EmptyMuch;
 use App\Problem;
 use App\UsersPostFeeling;
+use App\PostFeeling;
 use App\Quote;
 use Auth;
 use GuzzleHttp;

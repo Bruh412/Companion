@@ -12,6 +12,10 @@ class Category extends Model
     public $timestamps = false;
 
     public function keywords(){
-        return $this->hasMany("companion\Keyword", "categoryID", "categoryID");
+        return $this->hasMany("App\Keyword", "categoryID", "categoryID");
+    }
+
+    public function matchQuote(){
+        return $this->hasMany("App\MatchQuote", "categoryID", "categoryID");
     }
 }

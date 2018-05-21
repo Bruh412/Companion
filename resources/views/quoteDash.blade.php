@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
      <h1>List of Quotes</h1>
 
     <table class="table table-striped">
@@ -12,13 +13,29 @@
         <tr>
             <th>Quote</th>
             <th>Author</th>
+            <th>Category</th>
+            <th></th>
+            <th></th>
         </tr>
         @foreach($list as $row)
             <tr>
                 <td>{{ $row['quoteText'] }}</td>
                 <td>{{ $row['quoteAuthor'] }}</td>
-                <!-- <td><a href="#" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">Edit</a></td> -->
-                <!-- <td><a href="/deleteInt/{{ $row['interestID'] }}" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">Delete</a></td> -->
+                <td>
+                    <ul>
+                @foreach($row->quoteCategory as $category)
+                    <li>{{ $category->categories->categoryName }}</li>
+                @endforeach
+                    </ul>
+                </td>
+                <td>
+                    <a href="{{ url('/quote/'.$row['quoteID']. '/edit') }}" class="btn btn-info">Edit</a>
+                </td>
+                <td>
+                    <form>
+                    <a href="{{ url('/quote/'.$row['quoteID']. '/delete') }}" class="btn btn-danger">Delete</a>
+                    <form>
+                </td>
             </tr>
         @endforeach
     @endif
@@ -28,8 +45,11 @@
         {{ $list->links() }}
     </div>
     @endif
-    <form action="/addQuote" method="get">
-        <button class="btn btn-primary" style="font-size: 22px;">Add Quote</button>
-    </form>
+    <!-- <form action="/addQuote" method="get"> -->
+        <!-- <button class="btn btn-primary" style="font-size: 22px;">Add Quote</button> -->
+        <a href="{{ url('/addQuote') }}" class="btn btn-primary">Add Quote</a>
+    <!-- </form> -->
     <br>
+
+</div>
 @endsection
