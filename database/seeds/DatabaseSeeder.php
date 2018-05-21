@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SpecializationSeeder::class);
         $this->call(PrcIDSeeder::class);
         $this->call(ProblemSeeder::class);
+        $this->call(UserInterestSeeder::class);
     }
 
 }

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\SystemUser;
 use App\QueueTalkCircle;
 use App\EmptyMuch;
+use App\UsersInterests;
+
 use App\customClasses\QueueScore;
 use App\customClasses\QueueScoreContainer;
 
@@ -109,4 +111,72 @@ class SystemController extends Controller
             
         }
     }
+
+    ///////////////////////////////////////////////////////
+
+        private function validateDuplicates($valueToBeChecked, $array){
+            foreach ($array as $key) {
+                if($key == $valueToBeChecked)
+                    return true;
+            }
+            return false;
+        }
+
+        private function checkClusterChange($oldClusters, $newClusters){
+            foreach ($oldClusters as $row) {
+                foreach ($newClusters as $newRow) {
+                    if($row != $newRow)
+                        return true;
+                }
+            }
+
+            return false;
+        }   
+
+        public function checkQueue2($id){
+            $userQueue = QueueTalkCircle::where("user_id", $id)->get()[0];
+            $sameProblemUsers = QueueTalkCircle::where("problem", $userQueue->problem)->get();
+            
+            // ----- K-Means Section
+            $clusterContainer = array();
+            $centroidCount = count($sameProblemUsers)/4;
+                // assigning centroids
+                for ($i=0; $i < $centroidCount; $i++) {
+                    $random = rand(0,$centroidCount);
+                    if(!$this->validateDuplicates($sameProblemUsers[$random], $clusterContainer)){
+                        $clusterContainer[$i] = array();                        
+                        $clusterContainer[$i][0] = $sameProblemUsers[$random];
+                    }
+                }
+
+                // cluster iterations
+            // $oldContainer = array();
+            // $newContainer = array();
+
+            // for ($i=0; $oldContainer == $newContainer ; $i++) { 
+            //     $oldContainer = $clusterContainer;
+                foreach ($clusterContainer as $cluster) {
+                    for ($j=0; $j < count($sameProblemUsers); $j++) { 
+                       $eucLat = pow($cluster[0]->latitude - $sameProblemUsers[$j]->latitude, 2);
+                       $eucLong = pow($cluster[0]->longitude - $sameProblemUsers[$j]->longitude, 2);
+                       var_dump($eucLat + $eucLong);
+                       echo "<br><br><br>";
+
+                       $clusterInterests = UsersInterests::where("user_id",$cluster[0]->user_id)->get();
+                       $sameProblemUsersInterests = UsersInterests::where("user_id",$sameProblemUsers[$j]->user_id)->get();
+
+                       dd($clusterInterests);
+
+                    //    foreach ($ as $key => $value) {
+                    //        # code...
+                    //    }
+                    }
+                }
+            // }
+            // var_dump('yeet');
+            // ----- end of section
+
+            // dd($clusterContainer);
+        }
 }
+
