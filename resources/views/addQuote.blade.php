@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
 <a href="/quotes" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
     <br>
     <br>
@@ -32,4 +33,5 @@
         <button class="btn btn-primary" style="font-size: 22px;">Save Quote</button>
     </form>
     <br>
+    </div>
 @endsection

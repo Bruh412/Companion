@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
      <h1>List of Categories</h1>
 
     <table class="table table-striped">
@@ -29,7 +30,8 @@
     </div>
     @endif
     <form action="/addCat" method="get">
-        <button class="btn btn-primary" style="font-size: 22px;">Add Category</button>
+        <button class="btn btn-primary">Add Category</button>
     </form>
     <br>
+</div>
 @endsection

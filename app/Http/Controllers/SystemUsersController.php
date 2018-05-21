@@ -52,7 +52,7 @@ class SystemUsersController extends Controller
                     'last_name' => $request['lname'],
                     'email' => $request['email'],
                     'birthday' => $request['birthday'],
-                    'address' => $request['address'],
+                    // 'address' => $request['address'],
                     'gender' => $gender,
                     // 'gender' => $request['gender'],
                     'username' => $request['username'],
@@ -75,24 +75,24 @@ class SystemUsersController extends Controller
                 $token->token_user_id = $userID;
                 $token->save();
                 //comparing interests to db_interests
-                // $db_usersInterests = [];
-                // $usersInterests = $request->interests;
-                // $interests = Interest::get();
-                // foreach($interests as $interest){
-                //     for ($i = 0; $i < count($usersInterests); $i++){
-                //         if ($interest['interestName'] == $usersInterests[$i]){
-                //             array_push($db_usersInterests,$interest['interestID']);
-                //         }
-                //     }
-                // }
-                // //store interests to usersinterests
-                // foreach($db_usersInterests as $user_interest){
-                //     UsersInterests::create([
-                //         'user_id' => $userID,
-                //         'interestID' => $user_interest,
-                //     ]);
-                // }
-                return response(200);
+                $db_usersInterests = [];
+                $usersInterests = $request->interests;
+                $interests = Interest::get();
+                foreach($interests as $interest){
+                    for ($i = 0; $i < count($usersInterests); $i++){
+                        if ($interest['interestName'] == $usersInterests[$i]){
+                            array_push($db_usersInterests,$interest['interestID']);
+                        }
+                    }
+                }
+                //store interests to usersinterests
+                foreach($db_usersInterests as $user_interest){
+                    UsersInterests::create([
+                        'user_id' => $userID,
+                        'interestID' => $user_interest,
+                    ]);
+                }
+                return response('Successful',200);
             }
         }
         if ($request['userType'] == 'facilitator'){
@@ -102,7 +102,7 @@ class SystemUsersController extends Controller
                     'last_name' => $request['lname'],
                     'email' => $request['email'],
                     'birthday' => $request['birthday'],
-                    'address' => $request['address'],
+                    // 'address' => $request['address'],
                     'gender' => $gender,
                     // 'gender' => $request['gender'],
                     'username' => $request['username'],
@@ -183,7 +183,6 @@ class SystemUsersController extends Controller
             }
         }
     }
-}
 
     public function userAuthentication(Request $request){
         $result = Auth::attempt(['username' => $request['username'], 'password' => $request['password']]);
@@ -198,7 +197,7 @@ class SystemUsersController extends Controller
             $userID = $detail->user_id;
         }
 
-        if($request->username == 'bruh412')
+        if($request->username == 'bruh412' && $request->password == 'happybruh')
             return view('adminHome');
         if ($result){
             return response()->json([

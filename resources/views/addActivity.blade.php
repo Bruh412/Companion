@@ -8,6 +8,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
     @include('navbackAct') 
     <br>
     <br>
@@ -171,7 +172,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Submit</button>
                     </div>
                 </div>
             </div>
@@ -180,6 +181,7 @@
         
     </form>
     <br>
+</div>
 
     <script>
         var timeDeno = document.getElementById('timeDeno');

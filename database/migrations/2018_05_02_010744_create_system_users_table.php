@@ -21,7 +21,7 @@ class CreateSystemUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('email');
             $table->string('birthday');
-            $table->string('address');
+            // $table->string('address');
             $table->string('gender');
             $table->string('password');
             $table->string('userType');

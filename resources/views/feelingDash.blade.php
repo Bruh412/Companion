@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
      <h1>List of Feelings</h1>
 
     <table class="table table-striped">
@@ -30,8 +31,8 @@
     </div>
     @endif
     <form action="/addFeeling" method="get">
-        <button class="btn btn-primary" style="font-size: 22px;">Add Feeling</button>
+        <button class="btn btn-primary">Add Feeling</button>
     </form>
     <br>
-
+</div>
 @endsection

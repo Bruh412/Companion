@@ -14,4 +14,8 @@ class Quote extends Model
     protected $fillable = [
         'quoteID','quoteText','quoteAuthor',
     ];
+
+    public function quoteCategory(){
+        return $this->hasMany("App\MatchQuote", "quoteID", "quoteID");
+    }
 }

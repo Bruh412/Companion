@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-@include('navbackCat')
+<div class="container">
+
+    @include('navbackCat')
      <h1>{{ $category['categoryName'] }} Keywords</h1>
 
     <table class="table table-striped">
@@ -29,7 +31,8 @@
     </div>
     @endif
     <form action="/addKeyword/{{ $category['categoryID'] }}" method="get">
-        <button class="btn btn-primary" style="font-size: 22px;">Add Keyword</button>
+        <button class="btn btn-primary">Add Keyword</button>
     </form>
     <br>
+</div>
 @endsection
