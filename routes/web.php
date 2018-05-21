@@ -96,4 +96,4 @@ Route::middleware(['auth'])->group(function(){
 // temp feeling
 Route::get('/groupUser/{id}/{feeling}', 'SystemController@addUserToTalkCircleQueue');
 // - Check queue
-Route::get('/checkQueue/{id}', 'SystemController@checkQueue1');
+Route::get('/checkQueue/{id}', 'SystemController@checkQueue2');
