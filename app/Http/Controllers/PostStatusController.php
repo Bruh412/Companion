@@ -11,15 +11,17 @@ use App\PostFeeling;
 use App\Quote;
 use Auth;
 use GuzzleHttp;
+use Validator;
 
 class PostStatusController extends Controller
 {
+    
     public function displayPosts(){
         $id = Auth::id();
         $posts = PostStatus::where('post_user_id',$id)->get();
         // return $posts;
         // return response($posts,200);
-        return view('display',compact('posts'));
+        // return view('display',compact('posts'));
     }
 
     public function displayPost($postid){
@@ -36,6 +38,8 @@ class PostStatusController extends Controller
         $feelingID = ' ';
         $id = Auth::id();
         $post = new PostStatus();
+        $authorizationHeader = $request->header('Authorization');
+
         if (PostStatus::get() == EmptyMuch::get()){
             $post->post_id = "P00000000001";
         }
@@ -49,22 +53,30 @@ class PostStatusController extends Controller
         $pID = $post->post_id;
         $post->post_content = $request->post;
         $insertedID = $post->post_id;
-        $post->post_user_id = $id;
+        $post->post_user_id = $authorizationHeader;
         $post->save();
 
         $db_feeling = PostFeeling::get();
-        foreach($db_feeling as $feel){
-            if ($feel["post_feeling_name"] == $request->feeling){
-                $feelingID = $feel["post_feeling_id"];
+        if (!empty($request->feeling)){
+            foreach($db_feeling as $feel){
+                if ($feel["post_feeling_name"] == $request->feeling){
+                    $feelingID = $feel["post_feeling_id"];
+                }
             }
+            UsersPostFeeling::create([
+                'post_id' => $pID,
+                'post_feeling_id' => $feelingID,
+            ]);
+        } else {
+            UsersPostFeeling::create([
+                'post_id' => $pID,
+                'post_feeling_id' => null,
+            ]);
         }
-        
-        UsersPostFeeling::create([
-            'post_id' => $pID,
-            'post_feeling_id' => $feelingID,
+
+        return response()->json([
+            'message' => 'Posted!',
         ]);
-        // return redirect(url('/posts/'.$insertedID.'/display'));
-        return response("Posted!",200);
     }   
 
     public function update($postid){
@@ -76,23 +88,28 @@ class PostStatusController extends Controller
     }
 
     public function saveupdate(Request $request){
-        // $validation = Validator::make($request->all(),$this->rules,$this->messages);
-        // if($validation->passes()){
         $feelingID = ' ';
-        $record = PostStatus::where("post_id",$request->postid)->get();
-        $record->post_content = $request->content;
-        $post->save();
+        $record = PostStatus::where("post_id",$request->postid)->first();
+        $record->post_content = $request->post;
+        $record->save();
+        $id = $request->postid;
         $db_feeling = PostFeeling::get();
-        foreach($db_feeling as $feel){
-            if ($feel["post_feeling_name"] == $request->feeling){
-                $feelingID = $feel["post_feeling_id"];
+        $feeling = UsersPostFeeling::where("post_id",$id)->first();
+        if (!empty($request->feeling)){
+            foreach($db_feeling as $feel){
+                if ($feel["post_feeling_name"] == $request->feeling){
+                    $feelingID = $feel["post_feeling_id"];
+                }
             }
+            $feeling->post_feeling_id = $feelingID;
+        } else {
+            $feeling->post_feeling_id = null;
         }
-        $feeling = UsersPostFeeling::where("post_id",$request->postid)->get();
-        $feeling->post_feeling_id = $feelingID;
-        // $insertedID = $post->post_id;
-        // $post->post_user_id = $id;
-        return response("Post updated!",200);
+        $feeling->save();
+
+        return response()->json([
+            'message' => 'Updated!',
+        ]);
     }
 
     public function deletePost($postid){

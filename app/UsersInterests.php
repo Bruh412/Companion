@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class UsersInterests extends Model
 {
     public $table = "usersinterests";
+    protected $primaryKey = 'id';
     public $timestamps = false;
-    public $incrementing = false;
+    // public $incrementing = false;
 
     protected $fillable = [
         'user_id', 'interestID',

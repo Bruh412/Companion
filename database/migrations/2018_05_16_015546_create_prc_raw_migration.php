@@ -14,6 +14,7 @@ class CreatePrcRawMigration extends Migration
     public function up()
     {
         Schema::create('prcraw', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('prc_id');
         });
     }

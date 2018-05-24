@@ -22,16 +22,16 @@ Route::post('/register','SystemUsersController@register')->name('register');
 Route::get('/interests/get','InterestController@getInterests');
 Route::get('/specialization/get','SystemUsersController@getSpecsFromDB');
 // Route::get('/specialization/get','SystemUsersController@try');
-
+// Route::post('/posts/char','PostStatusController@char')->name('huhu');
 
 Route::view('/login', 'login')->name('login');
 Route::post('/login','SystemUsersController@userAuthentication')->name('login');
 Route::get('/logout','SystemUsersController@logout')->name('logout');
 // Route::get('/logout','AdminController@logout')->name('logout');
 Route::get('/quotes/save','QuotesController@saveQuote');
+Route::get('/quotes/save','QuotesController@saveQuote');
 
-
-Route::middleware(['auth'])->group(function(){
+// Route::middleware(['auth'])->group(function(){
     Route::get('/home','AdminController@adminHome');
 
     Route::get('/posts/display','PostStatusController@displayPosts');
@@ -88,7 +88,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/addFeeling', 'FeelingsController@addFeeling');
     Route::post('/addFeeling', 'FeelingsController@saveFeeling');
     Route::get('/deleteFeeling/{id}', 'FeelingsController@deleteFeeling');
-});
+// });
 
 // --- GROUPING
 

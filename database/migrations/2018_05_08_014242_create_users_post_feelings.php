@@ -14,10 +14,10 @@ class CreateUsersPostFeelings extends Migration
     public function up()
     {
         Schema::create('UsersPostFeelings', function (Blueprint $table) {
-            // $table->increments('id');
+            $table->increments('id');
             $table->string('post_id');
             $table->foreign('post_id')->references('post_id')->on('poststatus')->onDelete('cascade');
-            $table->string('post_feeling_id');
+            $table->string('post_feeling_id')->nullable();
             $table->foreign('post_feeling_id')->references('post_feeling_id')->on('postfeelings')->onDelete('cascade');
             // $table->timestamps();
         });
