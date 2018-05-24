@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class UsersPostFeeling extends Model
 {
     public $table = "userspostfeelings";
+    protected $primaryKey = 'id';
+    // public $primarykey = null;
     public $timestamps = false;
-    public $incrementing = false;
+    // public $incrementing = false;
 
     protected $fillable = [
         'post_id', 'post_feeling_id',

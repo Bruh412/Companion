@@ -11,7 +11,7 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        $data = [   
+        $data = [
             ['categoryID'=>'C0001','categoryName'=>'Family'],
             ['categoryID'=>'C0002','categoryName'=>'Friends'],
             ['categoryID'=>'C0003','categoryName'=>'Relationship'],

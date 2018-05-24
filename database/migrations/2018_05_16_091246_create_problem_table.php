@@ -16,7 +16,7 @@ class CreateProblemTable extends Migration
         Schema::create('problem', function (Blueprint $table) {
             // $table->increments('id');
             // $table->timestamps();
-            $table->string('problem_id');
+            $table->string('problem_id')->primary();
             $table->string('problem_name');
         });
     }

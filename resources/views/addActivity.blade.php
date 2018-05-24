@@ -141,6 +141,12 @@
                 @endforeach
                 </td>         
             </tr>
+            <tr>
+                <td colspan="2">Problem: </td>
+                <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter1">
+                    Add Problem
+                </button></td>
+            </tr>
            
             
         </table>
@@ -178,7 +184,33 @@
             </div>
         </div>
         <!-- END OF POPUP AREA        -->
-        
+        <!-- POPUP AREA -->
+        <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Interests</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover">
+                            @foreach($problems as $row)
+                                <tr>
+                                    <td><input type="checkbox" name="problems[]" value="{{ $row['problem_name'] }}"></td>
+                                    <td>{{ $row['problem_name'] }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END OF POPUP AREA        -->
     </form>
     <br>
 </div>

@@ -12,6 +12,7 @@ use App\Files;
 use App\ActivityTag;
 use App\Step;
 use App\Equipment;
+use App\Problem;
 use Validator;
 
 class ActivityController extends Controller
@@ -41,7 +42,8 @@ class ActivityController extends Controller
     public function addAct(){
         $mode = 'add';
         $tags = Interest::get();
-        return view('addActivity')->with(["mode"=>$mode, "tags"=>$tags]);
+        $problems  = Problem::get();
+        return view('addActivity')->with(["mode"=>$mode, "tags"=>$tags, "problems"=>$problems]);
     }
 
     public function saveAct(Request $req){
@@ -160,6 +162,14 @@ class ActivityController extends Controller
                 $activityTag->tagID = $tag[0]->interestID;
                 $activityTag->actID = $activityTemp;
                 $activityTag->save();
+            }
+        //-----------------------------PROBLEMS
+            foreach ($req->problems as $index) {
+                $problemID = Interest::where("problem_name", $index)->value('problem_id');
+                $activityProblem = new ActivityProblem;
+                $activityProblem->problem_id = $problemID;
+                $activityProblem->actID = $activityTemp;
+                $activityProblem->save();
             }
 
             return redirect(url('/home'));

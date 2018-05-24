@@ -21,8 +21,8 @@ class ProblemSeeder extends Seeder
             ['problem_id'=>'PB0007','problem_name'=>'Personal Issues'],
             ['problem_id'=>'PB0008','problem_name'=>'Financial Problem'],
             ['problem_id'=>'PB0009','problem_name'=>'Violence'],
-            ['problem_id'=>'PB0009','problem_name'=>'Gender Problem'],
-            ['problem_id'=>'PB0010','problem_name'=>'Family Problem'],
+            ['problem_id'=>'PB0010','problem_name'=>'Gender Problem'],
+            ['problem_id'=>'PB0011','problem_name'=>'Family Problem'],
         ];
         DB::table('problem')->insert($data);
     }

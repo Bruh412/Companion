@@ -193,64 +193,97 @@ class QuotesController extends Controller
         // foreach($db_category as $category){
         //     array_push($categoryIDS,$category['categoryID']);
         // }
-        $family = 0;
-        $friends = 0;
-        $relationship = 0;
-        $health = 0; 
-        $academic = 0;
-        $work = 0;
-        $financial = 0;
-        $personal = 0;
+        // $family = 0;
+        // $friends = 0;
+        // $relationship = 0;
+        // $health = 0; 
+        // $academic = 0;
+        // $work = 0;
+        // $financial = 0;
+        // $personal = 0;
+
+        $categoriesCount = [];
+
+        foreach($db_category as $row){
+            $categoriesCount[$row['categoryName']] = 0;
+        }   
+
+        // foreach($categoriesCount as $index => $value){
+        //     $hi = $value+2;
+        //     echo $hi.'<br>';
+        // }
+
+        // return $categoriesCount['Family'];
+
+        // dd($categoriesCount);
+        // $row['']
         //checking sa keywords then compare sa words sa post
-        foreach($db_words as $row){
-            for( $i = 0 ; $i < count($words) ; $i++ ){
-                if (strcasecmp($row['keywordName'],$words[$i]) == 0){
-                    $id = $row['categoryID'];
-                    switch($id){
-                        case "C0001": $family++;
-                        break;
-                        case "C0002": $friends++;
-                        break;
-                        case "C0003": $relationship++;
-                        break;
-                        case "C0004": $health++;
-                        break;
-                        case "C0005": $academic++;
-                        break;
-                        case "C0006": $work++;
-                        break;
-                        case "C0007": $financial++;
-                        break;
-                        case "C0008": $personal++;
-                        break;
+        // foreach($db_words as $row){
+        //     for( $i = 0 ; $i < count($words) ; $i++ ){
+                // if (strcasecmp($row['keywordName'],$words[$i]) == 0){
+                //     $id = $row['categoryID'];
+                //     switch($id){
+                //         case "C0001": $family++;
+                //         break;
+                //         case "C0002": $friends++;
+                //         break;
+                //         case "C0003": $relationship++;
+                //         break;
+                //         case "C0004": $health++;
+                //         break;
+                //         case "C0005": $academic++;
+                //         break;
+                //         case "C0006": $work++;
+                //         break;
+                //         case "C0007": $financial++;
+                //         break;
+                //         case "C0008": $personal++;
+                //         break;
+                //     }
+                // }
+        //     }
+        // }
+
+        foreach($db_category as $category){
+            foreach($db_words as $word){
+                for( $i = 0 ; $i < count($words) ; $i++ ){
+                    if ($word['categoryID'] == $category['categoryID']){
+                        if (strcasecmp($word['keywordName'],$words[$i]) == 0){
+                            foreach($categoriesCount as $index => $value){
+                                if ($category['categoryName'] == $index){
+                                    $value = $value + 1;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-        $result = array(
-            "Family" => $family,
-            "Friends" => $friends,
-            "Relationship" => $relationship,
-            "Health" => $health,
-            "Academic" => $academic,
-            "Work" => $work,
-            "Financial" => $financial,
-            "Personal" => $personal,
-        );
-        arsort($result);
-        $firstThreeElements = array_slice($result, 0, 3,true);
 
-        $quotes = [];
-        foreach($firstThreeElements as $index => $value){
-            $quotes = DB::table('categories')
-            ->join('matchquote','categories.categoryID','=','matchquote.categoryID')
-            ->join('quotes','matchquote.quoteID','=','quotes.quoteID')
-            ->select('quotes.*')
-            ->where('categoryName',$index)
-            ->get();
-        }
+        // $result = array(
+        //     "Family" => $family,
+        //     "Friends" => $friends,
+        //     "Relationship" => $relationship,
+        //     "Health" => $health,
+        //     "Academic" => $academic,
+        //     "Work" => $work,
+        //     "Financial" => $financial,
+        //     "Personal" => $personal,
+        // );
+        // arsort($result);
+        // $firstThreeElements = array_slice($result, 0, 3,true);
 
-        return rand(json_encode($quotes));
+        // $quotes = [];
+        // foreach($firstThreeElements as $index => $value){
+        //     $quotes = DB::table('categories')
+        //     ->join('matchquote','categories.categoryID','=','matchquote.categoryID')
+        //     ->join('quotes','matchquote.quoteID','=','quotes.quoteID')
+        //     ->select('quotes.*')
+        //     ->where('categoryName',$index)
+        //     ->get();
+        // }
+
+        // return rand(json_encode($quotes));
 
         // if (strcasecmp($word['keywordName'],$words[$i]) == 0){
         //     if (!in_array($word['categoryID'],$quoteCategories)){

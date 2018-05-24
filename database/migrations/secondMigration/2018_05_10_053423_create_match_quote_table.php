@@ -14,7 +14,7 @@ class CreateMatchQuoteTable extends Migration
     public function up()
     {
         Schema::create('MatchQuote', function (Blueprint $table) {
-            // $table->increments('id');
+            $table->increments('id');
             $table->string('categoryID');
             $table->foreign('categoryID')->references('categoryID')->on('categories')->onDelete('cascade');
             $table->string('quoteID');

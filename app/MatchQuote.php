@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class MatchQuote extends Model
 {
     public $table = 'matchquote';
+    protected $primaryKey = 'id';
     public $timestamps = false;
-    public $incrementing = false;
+    // public $incrementing = false;
 
     protected $fillable = [
         'categoryID', 'quoteID', 

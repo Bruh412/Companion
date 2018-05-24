@@ -14,7 +14,7 @@ class CreateUsersInterestsTable extends Migration
     public function up()
     {
         Schema::create('UsersInterests', function (Blueprint $table) {
-            // $table->increments('id');
+            $table->increments('id');
             $table->uuid('user_id');
             $table->foreign('user_id')->references('user_id')->on('systemusers')->onDelete('cascade');
             $table->string('interestID');
