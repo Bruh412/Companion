@@ -9,6 +9,8 @@ class SpecializationController extends Controller
 {
     public function getSpecsFromDB(){
         $specs = Specialization::get();
-        return response($specs,200);
+        return response()->json([
+            'specs' => $specs,
+        ]);
     }
 }

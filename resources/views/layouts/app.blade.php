@@ -20,8 +20,50 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        html, body {
+            background-color: #fff;
+            color: #636b6f;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 100;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to left, #FDC830, #F37335);
+        }
+
+        .full-height {
+            height: 100vh;
+        }
+
+        .flex-center {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .position-ref {
+            position: relative;
+        }
+
+        .top-right {
+            position: absolute;
+            right: 10px;
+            top: 18px;
+        }
+
+        .content {
+            text-align: center;
+        }
+
+        .title {
+            font-size: 84px;
+        }
+        .container {
+            color: white;
+        }
+    </style>
 </head>
-<body>
+<body height="500px">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
@@ -70,7 +112,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="main py-4">
             @yield('content')
         </main>
     </div>

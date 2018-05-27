@@ -9,6 +9,8 @@ class ProblemController extends Controller
 {
     public function getProblems(){
         $problems = Problem::Get();
-        return response($problems,200);
+        return response()->json([
+            'problems' => $problems,
+        ]);
     }
 }

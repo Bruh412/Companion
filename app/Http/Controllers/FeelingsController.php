@@ -30,6 +30,7 @@ class FeelingsController extends Controller
         return view("feelingDash");
     }
 
+
     public function saveFeeling(Request $req){
         $feels = new PostFeeling;
 

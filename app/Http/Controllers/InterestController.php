@@ -63,6 +63,8 @@ class InterestController extends Controller
     
     public function getInterests(){
         $interests = Interest::get();
-        return response($interests,200);
+        return response()->json([
+            'interests' => $interests,
+        ]);
     }
 }
