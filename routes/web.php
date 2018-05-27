@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
 });
 
 Route::get('/register','SystemUsersController@registerPage');
@@ -20,7 +20,7 @@ Route::post('/register','SystemUsersController@register')->name('register');
 
 
 Route::get('/interests/get','InterestController@getInterests');
-Route::get('/specialization/get','SystemUsersController@getSpecsFromDB');
+Route::get('/specialization/get','SpecializationController@getSpecsFromDB');
 // Route::get('/specialization/get','SystemUsersController@try');
 // Route::post('/posts/char','PostStatusController@char')->name('huhu');
 
@@ -45,6 +45,7 @@ Route::get('/quotes/save','QuotesController@saveQuote');
     // Route::get('/quotes/save','QuotesController@saveQuote');
     Route::get('/categorize','QuotesController@categorizeQuotes');
     Route::get('/displayPost','QuotesController@displayQuotes');
+    Route::get('/display','QuotesController@display');
 
     //---------------------------------------------------------------
     Route::get('/problems/get','ProblemController@getProblems');

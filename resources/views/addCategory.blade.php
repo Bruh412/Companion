@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container">
     @include('navbackCat') 
     <br>
     <br>
@@ -8,41 +9,12 @@
     <br>
     <form action="/addCat" method="post" enctype="multipart/form-data">
         @csrf
-        <table>
-            <tr>
-                <td colspan="2"><span>Category Name: </span></td>
-                <td><input type="text" name="category"  class="form-control{{ $errors->has('category') ? ' is-invalid' : '' }}" value="{{ old('category') }}"></td>
-                <td>
-                @foreach($errors->get('category') as $errorMsg)
-                    {{ $errorMsg }}
-                @endforeach
-                </td>
-            </tr>
-
-            <!-- <tr>    
-                <td colspan="4"><span>Add at least three keywords: </span></td>
-            </tr>
-
-            <tr>
-                <td colspan="2">Keyword 1:</td>
-                <td><input type="text" name="keywordIni[]"  class="form-control{{ $errors->has('keywordIni[]') ? ' is-invalid' : '' }}" value="{{ old('keywordIni[]') }}"></td>
-                <td>
-                @foreach($errors->get('keywordIni[]') as $errorMsg)
-                    {{ $errorMsg }}
-                @endforeach
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">Keyword 2:</td>
-                <td><input type="text" name="keywordIni[]"  class="form-control{{ $errors->has('keywordIni[]') ? ' is-invalid' : '' }}" value="{{ old('keywordIni[]') }}"></td>
-            </tr>
-            <tr>
-                <td colspan="2">Keyword 3:</td>
-                <td><input type="text" name="keywordIni[]"  class="form-control{{ $errors->has('keywordIni[]') ? ' is-invalid' : '' }}" value="{{ old('keywordIni[]') }}"></td>
-            </tr> -->
-        </table>
-        <br>
-        <button class="btn btn-primary" style="font-size: 22px;">Save Category</button>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Add Category</label>
+            <input type="text" class="form-control" id="exampleInputPassword1" name="category">
+        </div>
+        <button class="btn btn-primary">Save Category</button>
     </form>
     <br>
+</div>
 @endsection

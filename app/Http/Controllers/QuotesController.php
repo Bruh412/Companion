@@ -176,19 +176,96 @@ class QuotesController extends Controller
     //     return $quote;
     // }
 
-    public function displayQuotes(){
+    public function display(Request $request){
         $id = Auth::id();
         $post = DB::table('systemusers')
             ->join('poststatus','systemusers.user_id','=','poststatus.post_user_id')
             ->select('poststatus.post_content','poststatus.post_id')
             ->orderBy('post_id','desc')
-            ->where('user_id',$id)
+            ->where('user_id',$request->header('Authorization'))
             ->first();
-        // $post = PostStatus::where('user_id',$id)->get();
-        $words = explode(' ',$post->post_content);   
-        $db_words = Keywords::get();
-        $db_category = Category::get();
-        $quoteCategories = [];
+        $words = explode(' ',$post->post_content);
+        $similar = [];
+        for( $i = 0 ; $i < count($words) ; $i++ ){
+            $ss = DB::table('keywords')
+                    ->select('categoryID',DB::raw('COUNT(keywordName) as cnt_keyword'))
+                    ->where('keywordName',$words[$i])
+                    ->groupBy('categoryID')
+                    ->get();
+            if (!empty($ss)){
+                $temp = json_decode($ss);
+                array_push($similar,$temp);
+            }
+        }
+        $temp = [];
+        $total = [];
+        $final = [];
+        $temp2 = [];
+        $quotes = [];
+        $s = [];
+        $count = 0;
+        foreach($similar as $row){
+            foreach($row as $details => $value){
+                $false = 0;
+                if (empty($total)){
+                    $temp = [
+                                'category' => $value->categoryID,
+                                'counter' => $value->cnt_keyword,
+                            ];
+                    array_push($total,$temp);
+                } 
+                else {
+                    foreach($total as $index => $value1){
+                        if ($value1['category'] == $value->categoryID){
+                            $value1['counter'] = $value1['counter'] + $value->cnt_keyword;
+                            $temp2 = $value1;
+                            $false++;
+                        }
+                    }
+                    if ($false == 0){
+                        $temp = [
+                                    'category' => $value->categoryID,
+                                    'counter' => $value->cnt_keyword,
+                                ];
+                        array_push($total,$temp);
+                    }
+                    for($i  = 0 ; $i < count($total); $i++){
+                        if ($total[$i]['category'] == $temp2['category']){
+                            $total[$i]['counter'] = $temp2['counter'];
+                        }
+                    }
+                }
+            }
+        }
+
+        usort($total, function($a, $b){
+            return strcmp($b['counter'], $a['counter']);
+        });
+        foreach(array_splice($total,0,3) as $value){
+            $quotes = DB::table('matchquote')
+                    ->join('quotes','matchquote.quoteID','=','quotes.quoteID')
+                    ->select('quotes.*')
+                    ->where('matchquote.categoryID',$value['category'])
+                    ->get();
+        }
+        return response()->json([
+            'quotes' => $quotes
+        ]);
+    }
+
+    // public function displayQuotes(){
+    //     $id = Auth::id();
+    //     $post = DB::table('systemusers')
+    //         ->join('poststatus','systemusers.user_id','=','poststatus.post_user_id')
+    //         ->select('poststatus.post_content','poststatus.post_id')
+    //         ->orderBy('post_id','desc')
+    //         ->where('user_id',$id)
+    //         ->first();
+    //     // $post = PostStatus::where('user_id',$id)->get();
+    //     $words = explode(' ',$post->post_content);   
+    //     $db_words = Keywords::get();
+    //     $db_category = Category::get();
+    //     $quoteCategories = [];
         // $categoryIDS = [];
         // foreach($db_category as $category){
         //     array_push($categoryIDS,$category['categoryID']);
@@ -202,11 +279,11 @@ class QuotesController extends Controller
         // $financial = 0;
         // $personal = 0;
 
-        $categoriesCount = [];
+        // $categoriesCount = [];
 
-        foreach($db_category as $row){
-            $categoriesCount[$row['categoryName']] = 0;
-        }   
+        // foreach($db_category as $row){
+        //     $categoriesCount[$row['categoryName']] = 0;
+        // }   
 
         // foreach($categoriesCount as $index => $value){
         //     $hi = $value+2;
@@ -244,91 +321,21 @@ class QuotesController extends Controller
         //     }
         // }
 
-        foreach($db_category as $category){
-            foreach($db_words as $word){
-                for( $i = 0 ; $i < count($words) ; $i++ ){
-                    if ($word['categoryID'] == $category['categoryID']){
-                        if (strcasecmp($word['keywordName'],$words[$i]) == 0){
-                            foreach($categoriesCount as $index => $value){
-                                if ($category['categoryName'] == $index){
-                                    $value = $value + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // $result = array(
-        //     "Family" => $family,
-        //     "Friends" => $friends,
-        //     "Relationship" => $relationship,
-        //     "Health" => $health,
-        //     "Academic" => $academic,
-        //     "Work" => $work,
-        //     "Financial" => $financial,
-        //     "Personal" => $personal,
-        // );
-        // arsort($result);
-        // $firstThreeElements = array_slice($result, 0, 3,true);
-
-        // $quotes = [];
-        // foreach($firstThreeElements as $index => $value){
-        //     $quotes = DB::table('categories')
-        //     ->join('matchquote','categories.categoryID','=','matchquote.categoryID')
-        //     ->join('quotes','matchquote.quoteID','=','quotes.quoteID')
-        //     ->select('quotes.*')
-        //     ->where('categoryName',$index)
-        //     ->get();
-        // }
-
-        // return rand(json_encode($quotes));
-
-        // if (strcasecmp($word['keywordName'],$words[$i]) == 0){
-        //     if (!in_array($word['categoryID'],$quoteCategories)){
-        //         array_push($quoteCategories,$word['categoryID']);
-        //     } else 
-        //         continue;
-        // }
-
-        //getting the quote's id by category id
-        // $quoteIDS = [];
-        // foreach($quoteCategories as $category){
-        //     $quoteIDS = MatchQuote::where('categoryID',$category)->value('quoteID');
-        // }
-        // //getting quotes by quoteID
-        // $quotes = [];
-        // foreach($quotes as $quote){
-        //     $quotes = Quote::where('quoteID',$quote)->get(['quoteText','quoteAuthor']);
-        // }
-
-        // return $quoteCategories;
-
-    }
-
-    // public function categorizeQuotes(){
-    //     $quotes = Quote::get();
-    //     // $keywords = Keywords::get();
-    //     foreach($quotes as $quote){
-    //         echo $quote['id'];
-    //         $words = explode(' ', $quotes[0]['quoteText']);
-    //         var_dump($words);
-    //         foreach($keywords as $key){
-    //             // var_dump($key['keyword_name']);
-    //             for($i = 0 ; $i < count($words); $i++){
-                
+    //     foreach($db_category as $category){
+    //         foreach($db_words as $word){
+    //             for( $i = 0 ; $i < count($words) ; $i++ ){
+    //                 if ($word['categoryID'] == $category['categoryID']){
+    //                     if (strcasecmp($word['keywordName'],$words[$i]) == 0){
+    //                         foreach($categoriesCount as $index => $value){
+    //                             if ($category['categoryName'] == $index){
+    //                                 $value = $value + 1;
+    //                             }
+    //                         }
+    //                     }
+    //                 }
     //             }
     //         }
-    //         for($i = 0 ; $i < count($words); $i++){
-                
-    //         }
     //     }
-        // $post = DB::table('systemusers')
-        //     ->join('poststatus','systemusers.user_id','=','poststatus.post_user_id')
-        //     ->select('poststatus.post_content','poststatus.post_id')
-        //     ->orderBy('post_id','desc')
-        //     ->first();
-        // $post_words = explode(' ', $post->post_content);
+
     // }
 }

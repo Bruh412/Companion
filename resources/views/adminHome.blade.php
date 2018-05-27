@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
+        
         <!-- Styles -->
         <style>
             html, body {
@@ -62,6 +62,19 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            .flex-center{
+                color: white;
+                background: -webkit-linear-gradient(right, #FDC830, #F37335);
+                background: -moz-linear-gradient(right, #FDC830, #F37335);
+                background: -o-linear-gradient(right, #FDC830, #F37335);
+                background: linear-gradient(to left, #FDC830, #F37335);
+            }
+
+            .links a {
+                color: white;
+            }
+
         </style>
     </head>
     <body>

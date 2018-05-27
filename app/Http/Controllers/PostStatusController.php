@@ -121,7 +121,9 @@ class PostStatusController extends Controller
 
     public function getFeelings(){
         $feelings = PostFeeling::get();
-        return response($feelings,200);
+        return response()->json([
+            'feelings' => $feelings,
+        ]);
     }
 
     public function displayQuotes(){

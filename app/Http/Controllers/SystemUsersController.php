@@ -203,6 +203,10 @@ class SystemUsersController extends Controller
                     
         if($request->username == 'bruh412' && $request->password == 'happybruh')
             return view('adminHome');
+        else {
+            return view('login');
+        }
+
         if ($result){
             return response()->json([
                 'message' => 'Successful!',

@@ -152,9 +152,9 @@
         </table>
         <br>
         @if($mode == 'edit')
-            <button class="btn btn-primary" style="font-size: 22px;">Save Changes</button> 
+            <button class="btn btn-primary">Save Changes</button> 
         @else
-            <button class="btn btn-primary" style="font-size: 22px;">Save Activity</button>
+            <button class="btn btn-primary">Save Activity</button>
         @endif
 
         <!-- POPUP AREA -->
