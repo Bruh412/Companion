@@ -17,15 +17,14 @@ class CategoryController extends Controller
 
     public function dashboard(){
         $list = Category::paginate(5);
-        return view("categoryDash")->with(["list"=>$list]);
+        return view("admin.categoryDash")->with(["list"=>$list]);
     }
 
     public function addCat(){
-        return view("addCategory");
+        return view("admin.addCategory");
     }
 
     public function saveCat(Request $req){
-        // dd($req);
         $category = new Category;
         
         $rules = [
@@ -84,6 +83,6 @@ class CategoryController extends Controller
     public function viewCat($id){
         $category = Category::findOrFail($id);
         $keywords = Keywords::where("categoryID", $id)->paginate(5);
-        return view("viewCategory")->with(["category"=>$category, "list"=>$keywords]);
+        return view("admin.viewCategory")->with(["category"=>$category, "list"=>$keywords]);
     }   
 }

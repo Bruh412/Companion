@@ -18,4 +18,8 @@ class Category extends Model
     public function matchQuote(){
         return $this->hasMany("App\MatchQuote", "categoryID", "categoryID");
     }
+
+    public function matchVideo(){
+        return $this->hasMany("App\MatchVideo", "categoryID", "categoryID");
+    }
 }

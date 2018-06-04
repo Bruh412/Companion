@@ -25,13 +25,13 @@ class QuotesController extends Controller
 
     public function dashboard(){
         $list = Quote::paginate(7);
-        return view("quoteDash")->with(["list"=>$list]);
+        return view("admin.quoteDash")->with(["list"=>$list]);
     }
 
     public function addQuote(){
         $mode = 'add';
         $categories = Category::get();
-        return view("editQuote",compact('mode','categories'));
+        return view("admin.editQuote",compact('mode','categories'));
     }
 
     public function saveQuote(Request $req){
@@ -96,7 +96,7 @@ class QuotesController extends Controller
         // if($result){
         //     return view('editQuote',compact("quote","categories","result"));
         // } else{
-            return view('editQuote',compact("quote","categories","mode"));
+            return view('admin.editQuote',compact("quote","categories","mode"));
         // }
     }
 
@@ -176,15 +176,59 @@ class QuotesController extends Controller
     //     return $quote;
     // }
 
-    public function display(Request $request){
-        $id = Auth::id();
+    // public function saveQuote(){
+    //     $client = new GuzzleHttp\Client();
+    //     $res = $client->request('GET', 'https://api.forismatic.com/api/1.0/?method=getQuote&key=happy&format=json&lang=en');
+    //     $data = $res->getBody()->getContents();
+    //     $newData = json_decode($data, true);
+    //     $quote = new Quote();
+    //     if (Quote::get() == EmptyMuch::get()){
+    //         $quote->quoteID = "Q00001";
+    //         $quote->quoteText = $newData['quoteText'];
+    //         $quote->quoteAuthor = $newData['quoteAuthor'];
+    //         $quote->save();
+    //         return $quote;
+    //     }
+    //     else {
+    //         $counter = 0;
+    //         $quotes = Quote::get();
+    //         foreach($quotes as $quote){
+    //             if (strcmp($quote['quoteText'],$newData['quoteText']) == 0){
+    //                 $counter++;
+    //             }
+    //         }
+    //         if ($counter == 0){
+    //             $row = Quote::orderby('quoteID','desc')->first();
+    //             $temp = substr($row["quoteID"],1);
+    //             $temp = (int)$temp + 1;
+    //             $newQuoteID = "Q".(string)str_pad($temp,5,"0",STR_PAD_LEFT);
+    //             return Quote::create([
+    //                 'quoteID' => $newQuoteID,
+    //                 'quoteText' => $newData['quoteText'],
+    //                 'quoteAuthor' => $newData['quoteAuthor'],
+    //             ]);
+    //         }
+    //     }
+    //     return $quote;
+    // }
+
+    public function display(){
+        $userid = Auth::id();
+        // $post = DB::table('systemusers')
+        //     ->join('poststatus','systemusers.user_id','=','poststatus.post_user_id')
+        //     ->select('poststatus.post_content','poststatus.post_id')
+        //     ->orderBy('post_id','desc')
+        //     ->where('user_id',$request->header('Authorization'))
+        //     ->first();
         $post = DB::table('systemusers')
             ->join('poststatus','systemusers.user_id','=','poststatus.post_user_id')
             ->select('poststatus.post_content','poststatus.post_id')
             ->orderBy('post_id','desc')
-            ->where('user_id',$request->header('Authorization'))
+            ->where('user_id',$userid)
             ->first();
+            //naa ni sa savePOST
         $words = explode(' ',$post->post_content);
+        
         $similar = [];
         for( $i = 0 ; $i < count($words) ; $i++ ){
             $ss = DB::table('keywords')
@@ -192,6 +236,7 @@ class QuotesController extends Controller
                     ->where('keywordName',$words[$i])
                     ->groupBy('categoryID')
                     ->get();
+                    //keywordID and postID
             if (!empty($ss)){
                 $temp = json_decode($ss);
                 array_push($similar,$temp);
@@ -241,6 +286,7 @@ class QuotesController extends Controller
         usort($total, function($a, $b){
             return strcmp($b['counter'], $a['counter']);
         });
+        return $total;
         foreach(array_splice($total,0,3) as $value){
             $quotes = DB::table('matchquote')
                     ->join('quotes','matchquote.quoteID','=','quotes.quoteID')
@@ -248,9 +294,14 @@ class QuotesController extends Controller
                     ->where('matchquote.categoryID',$value['category'])
                     ->get();
         }
-        return response()->json([
-            'quotes' => $quotes
-        ]);
+
+        //stores quoteID and postID in table
+
+
+        // return response()->json([
+        //     'quotes' => $quotes
+        // ]);
+        return view('mediaWall',compact('quotes'));
     }
 
     // public function displayQuotes(){

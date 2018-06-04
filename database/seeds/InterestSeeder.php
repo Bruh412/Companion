@@ -17,7 +17,7 @@ class InterestSeeder extends Seeder
                 ['interestID'=>'I003','interestName'=>'Literature'],
                 ['interestID'=>'I004','interestName'=>'Music'],
                 ['interestID'=>'I005','interestName'=>'E-Gaming'],
-                ['interestID'=>'I006','interestName'=>'Mvoies/Tv'],
+                ['interestID'=>'I006','interestName'=>'Movies/Tv'],
                 ['interestID'=>'I007','interestName'=>'Puzzles'],
                 ['interestID'=>'I008','interestName'=>'Sports'],
                 ['interestID'=>'I009','interestName'=>'Adventures'],

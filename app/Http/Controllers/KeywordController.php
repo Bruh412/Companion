@@ -17,7 +17,7 @@ class KeywordController extends Controller
 
     public function addKeyword($id){
         $category = Category::findOrFail($id);
-        return view("addKeyword")->with(["category"=>$category]);
+        return view("admin.addKeyword")->with(["category"=>$category]);
     }
 
     public function saveKeyword($id, Request $req){

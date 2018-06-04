@@ -12,15 +12,18 @@
        <meta charset="UTF-8">
 	   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="{{ asset('/css/util.css') }}" rel="stylesheet" type="text/css">
-	<link href="{{ asset('/css/main.css') }}" rel="stylesheet" type="text/css">
-		<style>
+	   <link href="{{ asset('/css/util.css') }}" rel="stylesheet" type="text/css">
+	   <link href="{{ asset('/css/main.css') }}" rel="stylesheet" type="text/css">
+	   
+	   <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css">
+	   <style>
 			#bckgrnd {
 				background: linear-gradient(to right, #F2994A , #F2C94C);
 			}
 			.login-container{
-				background: none !important;
-				padding-top: 140px;
+				padding-top: 140px;    
+				padding-left: 3rem;
+    			padding-right: 3rem;
 			}
 			.login-btn{
 				background-color: #fc4a1a;
@@ -30,8 +33,8 @@
 			}
 			.img-icon {
 				position: absolute;
-				width: 200px;
-				height: 200px;
+				width: 175px;
+				height: 175px;
 				border-radius: 100px;
 				-webkit-border-radius: 100px;
 				-moz-border-radius: 100px;
@@ -40,21 +43,38 @@
 				right: 0;
 				margin:0 auto;
 				top:0%;
+				margin-top: 1rem;
 			  }
 			  .input-text {
 				background: none !important;
 			  }
+			  .wrap-login100{
+				  width: 455px;
+			  }
+			  .img-text{
+				  position: relative; 
+				  top: 50px; 
+				  left: 8.5rem;
+				  font-family: "Sans Serif";
+			  }
+			  .register{
+				  font-family: "Sans Serif";
+				  left: 0;
+				  right: 0;
+				  margin:0 auto;
+			  }
 		</style>
     </head>
     <body>
-        <div class="limiter">
+
+    <div class="limiter">
 		<div class="container-login100" id="bckgrnd">
 			<div class="login-container wrap-login100 p-t-50 p-b-90">
 				<form class="login100-form validate-form flex-sb flex-w"  method="post" action="<?php echo url('/login') ?>">
 				{{ csrf_field() }}
 					<div>
 						<img src="{{ asset('/image/logo.png') }}" class="img-icon">
-						<!-- <span class=">Companion</span> -->
+						<!-- <span class="img-text">Companion<span> -->
 					</div>
 					<span class="login100-form-title p-b-51" style="color : white">
 						Login
@@ -84,11 +104,14 @@
 						<button class="login-btn login100-form-btn" type="submit" name="submit">
 							Login
 						</button>
+						<span class="register">
+							Not registered? <a href="{{ url('/userType') }}">Create an account</a>
+						<span>
 					</div>
-
 				</form>
 			</div>
 		</div>
 	</div>
+	
     </body>
 </html>

@@ -16,6 +16,18 @@ class PostStatus extends Model
     }
 
     public function user(){
-        return $this->hasOne('App\SystemUser','post_user_id','user_id');
+        return $this->hasOne('App\SystemUser','user_id','post_user_id');
+    }
+
+    public function comments(){
+        return $this->hasMany('App\CommentPost','post_id','post_id');
+    }
+
+    public function quotes(){
+        return $this->hasMany('App\MatchQuote','post_id','post_id');
+    }
+
+    public function postQuote(){
+        return $this->hasMany('App\MatchPostQuote','post_id','post_id');
     }
 }

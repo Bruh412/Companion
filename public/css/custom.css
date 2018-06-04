@@ -1,0 +1,63 @@
+a{
+	color: black;
+}
+.container.home-body {
+	padding-top: 70px;
+}
+
+.cover-pic{
+	background:linear-gradient(to top, rgba(0,0,0,0) 20%, rgba(0,0,0,1)), url('your_url');
+}
+
+.prof-pic{
+	position: absolute;
+	top: 120px;
+	right: 600px;
+	width: 13%;
+	height: 23%;
+	padding-bottom: 5px;
+}
+
+.name-bar{
+	background-color: #FFCE4B;
+	height: 3rem;
+}
+
+.card-body {
+	padding: 0px;
+}
+
+.word-name-bar{
+	 margin: 0;
+	 font-size: 20px;
+	 font-family: sans-serif; 
+}
+
+.list-group-item{
+	padding: 5px;
+	list-style: dashed;
+	border-top: none;
+}
+
+.card-text {
+	padding: 8px;
+}
+
+.card-title{
+	padding-top: 1rem;
+}
+
+/*[ Responsive ]*/
+@media (max-width: 768px) {
+  .home-body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+@media (max-width: 576px) {
+  .home-body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+}

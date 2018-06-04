@@ -18,4 +18,8 @@ class Quote extends Model
     public function quoteCategory(){
         return $this->hasMany("App\MatchQuote", "quoteID", "quoteID");
     }
+
+    public function postQuote(){
+        return $this->hasMany('App\MatchPostQuote','quoteID','quoteID');
+    }
 }

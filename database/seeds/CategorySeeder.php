@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
             ['categoryID'=>'C0003','categoryName'=>'Relationship'],
             ['categoryID'=>'C0004','categoryName'=>'Health'],
             ['categoryID'=>'C0005','categoryName'=>'Academic'],
-            ['categoryID'=>'C0006','categoryName'=>'Work'],
+            ['categoryID'=>'C0006','categoryName'=>'Job/Career'],
             ['categoryID'=>'C0007','categoryName'=>'Financial'],
             ['categoryID'=>'C0008','categoryName'=>'Personal'],
         ];

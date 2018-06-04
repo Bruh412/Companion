@@ -17,17 +17,17 @@ class FeelingsController extends Controller
 
     public function dashboard(){
         $list = PostFeeling::paginate(5);
-        return view("feelingDash")->with(['list'=>$list]);
+        return view("admin.feelingDash")->with(['list'=>$list]);
     }
 
     public function addFeeling(){
-        return view("addFeeling");
+        return view("admin.addFeeling");
     }
 
     public function deleteFeeling($id){
         $feeling = PostFeeling::findOrFail($id);
         $feeling->delete();
-        return view("feelingDash");
+        return view("admin.feelingDash");
     }
 
 
