@@ -12,6 +12,6 @@ class Files extends Model
     public $incrementing = false;
 
     public function activity(){
-        return $this->belongsTo("companion\Activity", "actID", "actID");
+        return $this->belongsTo("App\Activity", "actID", "actID");
     }
 }

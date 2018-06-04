@@ -12,10 +12,10 @@ class ActivityTag extends Model
     public $incrementing = false;
 
     public function activity(){
-        return $this->hasOne("companion\Activity", "actID", "actID");
+        return $this->hasOne("App\Activity", "actID", "actID");
     }
 
     public function interest(){
-        return $this->hasOne("companion\Interest", "interestID", "tagID");
+        return $this->hasOne("App\Interest", "interestID", "tagID");
     }
 }

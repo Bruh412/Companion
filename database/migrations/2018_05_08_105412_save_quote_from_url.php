@@ -16,7 +16,7 @@ class SaveQuoteFromUrl extends Migration
         Schema::create('Quotes', function (Blueprint $table) {
             // $table->increments('id');
             $table->string('quoteID')->primary();
-            $table->string('quoteText');
+            $table->text('quoteText');
             $table->string('quoteAuthor');
             // $table->timestamps();
         });

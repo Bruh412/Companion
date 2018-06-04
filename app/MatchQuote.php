@@ -22,4 +22,8 @@ class MatchQuote extends Model
     public function categories(){
         return $this->hasOne('App\Category','categoryID','categoryID');
     }
+
+    public function post(){
+        return $this->hasOne('App\PostStatus','post_id','post_id');
+    }
 }

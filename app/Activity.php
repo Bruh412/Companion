@@ -12,18 +12,18 @@ class Activity extends Model
     public $incrementing = false;
 
     public function activityTags(){
-        return $this->hasMany("companion\ActivityTag", "actID", "actID");
+        return $this->hasMany("App\ActivityTag", "actID", "actID");
     }
 
     public function media(){
-        return $this->hasMany("companion\Files", "actID", "actID");
+        return $this->hasMany("App\Files", "actID", "actID");
     }
 
     public function steps(){
-        return $this->hasMany("companion\Step", "actID", "actID");
+        return $this->hasMany("App\Step", "actID", "actID");
     }
 
     public function equipments(){
-        return $this->hasMany("companion\Equipment", "actID", "actID");
+        return $this->hasMany("App\Equipment", "actID", "actID");
     }
 }

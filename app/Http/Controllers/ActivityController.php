@@ -13,6 +13,7 @@ use App\ActivityTag;
 use App\Step;
 use App\Equipment;
 use App\Problem;
+use App\ActivityProblem;
 use Validator;
 
 class ActivityController extends Controller
@@ -36,14 +37,14 @@ class ActivityController extends Controller
 //--------------------------------------
     public function dashboard(){
         $list = Activity::paginate(3);
-        return view('dashboard')->with(["list"=>$list]);
+        return view('admin.dashboard')->with(["list"=>$list]);
     }
 
     public function addAct(){
         $mode = 'add';
         $tags = Interest::get();
         $problems  = Problem::get();
-        return view('addActivity')->with(["mode"=>$mode, "tags"=>$tags, "problems"=>$problems]);
+        return view('admin.addActivity')->with(["mode"=>$mode, "tags"=>$tags, "problems"=>$problems]);
     }
 
     public function saveAct(Request $req){
@@ -164,15 +165,16 @@ class ActivityController extends Controller
                 $activityTag->save();
             }
         //-----------------------------PROBLEMS
+            // return $req->problems;
             foreach ($req->problems as $index) {
-                $problemID = Interest::where("problem_name", $index)->value('problem_id');
+                $problemID = Problem::where("problem_name", $index)->value('problem_id');
                 $activityProblem = new ActivityProblem;
                 $activityProblem->problem_id = $problemID;
                 $activityProblem->actID = $activityTemp;
                 $activityProblem->save();
             }
 
-            return redirect(url('/home'));
+            return redirect(url('/activities'));
         }
         else{
             return redirect()->back()->withInput()->withErrors($validation);
@@ -183,7 +185,8 @@ class ActivityController extends Controller
         $mode = 'edit';
         $act = Activity::findOrFail($id);
         $tags = Interest::get();
-        return view('addActivity')->with(["mode"=>$mode, "act"=>$act, "tags"=>$tags]);
+        $problems = Problem::get();
+        return view('admin.addActivity')->with(["mode"=>$mode, "act"=>$act, "tags"=>$tags,"problems"=>$problems]);
     }
 
     public function saveActEdit(Request $req){
@@ -227,7 +230,6 @@ class ActivityController extends Controller
                     }
                 }
             }
-
 
             $origEquip = Equipment::where("actID", $act->actID)->get();
             foreach ($origEquip as $row) {
@@ -297,14 +299,26 @@ class ActivityController extends Controller
             }
         }
 
-            if($req->time == "none")
-                $act->time = "None";
-            else
-                $act->time = (string)$req->time.(string)$req->timeDeno;
-            $act->gender = $req->gender;
-            $act->save();
+        if($req->time == "none")
+            $act->time = "None";
+        else
+            $act->time = (string)$req->time.(string)$req->timeDeno;
+        $act->gender = $req->gender;
+        $act->save();
 
-            return redirect(url('/home'));
+        $origprobs = ActivityProblem::where("actID", $act->actID)->get();
+        foreach ($origprobs as $row) {
+            $row->delete();
+        }
+        foreach ($req->problems as $index) {
+            $problem = Problem::where("problem_name", $index)->get();
+            $activityProblem = new ActivityProblem;
+            $activityProblem->problem_id = $problem[0]->problem_id;
+            $activityProblem->actID = $act->actID;
+            $activityProblem->save();
+        }
+
+        return redirect(url('/activities'));
         }
         else
             return back()->withInput($req->all())->withErrors($validation);
@@ -318,6 +332,6 @@ class ActivityController extends Controller
 
     public function viewAct($id){
         $act = Activity::findOrFail($id);
-        return view('viewSingleActivity')->with(["act"=>$act]);
+        return view('admin.viewSingleActivity')->with(["act"=>$act]);
     }
 }

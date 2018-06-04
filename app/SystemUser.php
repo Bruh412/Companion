@@ -31,4 +31,8 @@ class SystemUser extends Eloquent implements Authenticatable
     public function interests(){
         return $this->hasMany('App\UsersInterests','user_id','user_id');
     }
+
+    public function comments(){
+        return $this->hasMany('App\CommentPost','user_id','user_id');
+    }
 }

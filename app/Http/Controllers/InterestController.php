@@ -17,11 +17,11 @@ class InterestController extends Controller
 
     public function dashboard(){
         $list = Interest::paginate(5);
-        return view("interestDash")->with(["list"=>$list]);
+        return view("admin.interestDash")->with(["list"=>$list]);
     }
 
     public function addInt(){
-        return view("addInterest");
+        return view("admin.addInterest");
     }
 
     public function saveInt(Request $req){

@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +11,7 @@
 */
 
 Route::get('/', function () {
-    return view('login');
+    return view('homepage');
 });
 
 Route::get('/register','SystemUsersController@registerPage');
@@ -30,8 +29,25 @@ Route::get('/logout','SystemUsersController@logout')->name('logout');
 // Route::get('/logout','AdminController@logout')->name('logout');
 Route::get('/quotes/save','QuotesController@saveQuote');
 Route::get('/quotes/save','QuotesController@saveQuote');
+//----------------------------------------------------------
+Route::view('/loginService','loginService');
+Route::view('/userType','userType');
+Route::view('/register/seeker','registerSeeker');
+Route::view('/register/facilitator','registerFacilitator');
+Route::post('/userType','SystemUsersController@userType');
+Route::post('/register/seeker','SystemUsersController@registerSeeker');
+Route::post('/register/facilitator','SystemUsersController@registerFacilitator');
+Route::get('/wall','SystemUsersController@wall');
+Route::post('/mediawall','QuotesController@display');
 
-// Route::middleware(['auth'])->group(function(){
+Route::get('/comment/{postid}/add','PostStatusController@addComment');
+Route::post('/comment/save','PostStatusController@saveComment');
+Route::get('/video','VideoController@video');
+Route::get('/video/get','VideoController@getVideo');
+Route::get('/post/{postid}/view','PostStatusController@displayPost');
+//----------------------------------------------------------
+
+Route::middleware(['auth'])->group(function(){
     Route::get('/home','AdminController@adminHome');
 
     Route::get('/posts/display','PostStatusController@displayPosts');
@@ -45,7 +61,7 @@ Route::get('/quotes/save','QuotesController@saveQuote');
     // Route::get('/quotes/save','QuotesController@saveQuote');
     Route::get('/categorize','QuotesController@categorizeQuotes');
     Route::get('/displayPost','QuotesController@displayQuotes');
-    Route::get('/display','QuotesController@display');
+    // Route::get('/display','QuotesController@display');
 
     //---------------------------------------------------------------
     Route::get('/problems/get','ProblemController@getProblems');
@@ -89,7 +105,7 @@ Route::get('/quotes/save','QuotesController@saveQuote');
     Route::get('/addFeeling', 'FeelingsController@addFeeling');
     Route::post('/addFeeling', 'FeelingsController@saveFeeling');
     Route::get('/deleteFeeling/{id}', 'FeelingsController@deleteFeeling');
-// });
+});
 
 // --- GROUPING
 

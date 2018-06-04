@@ -28,7 +28,7 @@
             font-weight: 100;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(to left, #FDC830, #F37335);
+            background: linear-gradient(to right, #FFB75E, #FFC837);
         }
 
         .full-height {
@@ -58,9 +58,9 @@
         .title {
             font-size: 84px;
         }
-        .container {
-            color: white;
-        }
+         .container {
+            color: black;
+        } 
     </style>
 </head>
 <body height="500px">
@@ -69,7 +69,7 @@
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/home') }}">
                     <!-- {{ config('app.name', 'Laravel') }} -->
-                    {{'Companion - Admin'}}
+                    {{'Companion'}}
                 </a>
                 <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

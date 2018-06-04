@@ -134,6 +134,7 @@ class KeywordSeeder extends Seeder
             ['keywordID'=>'K0111','categoryID'=>'C0004','keywordName'=>'symptoms'],
 
             //acads
+            //school,grade
             ['keywordID'=>'K0112','categoryID'=>'C0005','keywordName'=>'scholarly'],
             ['keywordID'=>'K0113','categoryID'=>'C0005','keywordName'=>'scholastic'],
             ['keywordID'=>'K0114','categoryID'=>'C0005','keywordName'=>'lessons'],

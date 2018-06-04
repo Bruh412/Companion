@@ -10,7 +10,6 @@ class UsersPostFeeling extends Model
     protected $primaryKey = 'id';
     // public $primarykey = null;
     public $timestamps = false;
-    // public $incrementing = false;
 
     protected $fillable = [
         'post_id', 'post_feeling_id',
