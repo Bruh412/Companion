@@ -22,4 +22,8 @@ class Category extends Model
     public function matchVideo(){
         return $this->hasMany("App\MatchVideo", "categoryID", "categoryID");
     }
+
+    public function images(){
+        return $this->hasMany('App\CategoryImage','categoryID','categoryID');
+    }
 }

@@ -14,4 +14,8 @@ class FacilitatorSpec extends Model
     protected $fillable = [
         'user_id', 'spec_id', 
     ];
+
+    public function spec(){
+        return $this->hasOne('App\Specialization', 'spec_id', 'spec_id');
+    }
 }

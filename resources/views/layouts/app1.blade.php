@@ -78,7 +78,62 @@
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Profile</a>
+            <a class="nav-link" href="#"  onClick="getLocation()">Profile</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</a>
+        <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</button> -->
+        <!-- <button type="submit">Join TalkCircle</button> -->
+        <form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
+            {{ csrf_field() }}
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Just a question before joining...</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" class="btn btn-danger">&times;</span>
+                                    </button>
+                                </div>
+                                        
+                                        <div class="modal-body">
+                                            <h4>Join TalkCircle today!</h4>
+                                            <p>Help people by being there for them when they need a listening ear.</p>
+                                            <input type="hidden" name="long" id="long">
+                                            <input type="hidden" name="lat" id="lat">
+                                        
+                                        </div>
+                                        <script>
+                                            var long = document.getElementById("long");
+                                            var lat = document.getElementById("lat");
+
+                                            function getLocation() {
+                                                console.log(navigator.geolocation);
+                                                if (navigator.geolocation) {
+                                                    navigator.geolocation.getCurrentPosition(showPosition);
+                                                } else { 
+                                                    // long.value = "null";
+                                                    // lat.value = "null";
+                                                    long.value = position.coords.longitude;
+                                                    lat.value = position.coords.latitude;
+                                                }
+                                            }
+
+                                            function showPosition(position) {
+                                                long.value = position.coords.longitude;
+                                                lat.value = position.coords.latitude;
+                                            }
+
+                                        </script>
+                                        <div class="modal-footer">
+                                                <button type="submit" class="btn btn-info" id="imagesButton">Join Queue</button>
+                                                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                </div>
+            </form>
         </li>
         </ul>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">

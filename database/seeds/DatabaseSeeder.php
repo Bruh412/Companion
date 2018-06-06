@@ -19,7 +19,12 @@ class DatabaseSeeder extends Seeder
         $this->call(SpecializationSeeder::class);
         $this->call(PrcIDSeeder::class);
         $this->call(ProblemSeeder::class);
-        // $this->call(UserInterestSeeder::class);
+        $this->call(SystemConfigSeeder::class);
+
+        $this->call(QueueSeeder::class);
+        $this->call(SystemConfigSeeder::class);
+        $this->call(UserInterestSeeder::class);
+        $this->call(SpecMatchProbSeeder::class);
     }
 
 }

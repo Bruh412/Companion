@@ -134,6 +134,7 @@ class ActivityController extends Controller
         if(!is_null($req->media[0])){
             foreach ($req->media as $file) {
                 $fileName = $req->title."/uploads"."/".$file->getClientOriginalName();
+                $fileName = str_replace(' ', '', $fileName);
                 $fileType = $file->getClientOriginalExtension();
                 Storage::disk('public')->put($fileName, File::get($file));
                 $url = Storage::url($fileName);

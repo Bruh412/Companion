@@ -17,7 +17,7 @@ class QueueTalkCircleMigration extends Migration
             // $table->increments('id');
             // $table->timestamps();
             $table->string('queueID')->primary();
-            $table->string('problem');
+            // $table->string('problem');
             $table->string('longitude');
             $table->string('latitude');
             $table->string('user_id');

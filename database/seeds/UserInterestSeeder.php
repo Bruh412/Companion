@@ -24,21 +24,21 @@ class UserInterestSeeder extends Seeder
             ['user_id'=>'S0002','interestID'=>'I003'],
             ['user_id'=>'S0002','interestID'=>'I006'],
             ['user_id'=>'S0002','interestID'=>'I009'],
-            ['user_id'=>'S0002','interestID'=>'I011'],
+            // ['user_id'=>'S0002','interestID'=>'I011'],
 
             ['user_id'=>'S0003','interestID'=>'I001'],
             ['user_id'=>'S0003','interestID'=>'I002'],
             ['user_id'=>'S0003','interestID'=>'I007'],
             ['user_id'=>'S0003','interestID'=>'I009'],
             ['user_id'=>'S0003','interestID'=>'I010'],
-            ['user_id'=>'S0003','interestID'=>'I011'],
+            // ['user_id'=>'S0003','interestID'=>'I011'],
 
             ['user_id'=>'S0004','interestID'=>'I002'],
             ['user_id'=>'S0004','interestID'=>'I005'],
             ['user_id'=>'S0004','interestID'=>'I006'],
             ['user_id'=>'S0004','interestID'=>'I007'],
             ['user_id'=>'S0004','interestID'=>'I009'],
-            ['user_id'=>'S0004','interestID'=>'I011'],
+            // ['user_id'=>'S0004','interestID'=>'I011'],
 
             ['user_id'=>'S0005','interestID'=>'I001'],
             ['user_id'=>'S0005','interestID'=>'I002'],
@@ -52,7 +52,7 @@ class UserInterestSeeder extends Seeder
             ['user_id'=>'S0006','interestID'=>'I005'],
             ['user_id'=>'S0006','interestID'=>'I006'],
             ['user_id'=>'S0006','interestID'=>'I007'],
-            ['user_id'=>'S0006','interestID'=>'I011'],
+            // ['user_id'=>'S0006','interestID'=>'I011'],
 
             ['user_id'=>'S0007','interestID'=>'I001'],
             ['user_id'=>'S0007','interestID'=>'I002'],
