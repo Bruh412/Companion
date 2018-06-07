@@ -87,6 +87,9 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/addCat', 'CategoryController@saveCat');
     Route::get('/deleteCat/{id}', 'CategoryController@deleteCat');
     Route::get('/viewCat/{id}', 'CategoryController@viewCat');
+    Route::post('/addImage/{id}', 'CategoryController@addImageCategory');
+    Route::get('/viewCategoryImages/{id}', 'CategoryController@viewCategoryImages');
+    Route::get('/deleteImg/{id}', 'CategoryController@deleteImg');
             // --- KEYWORDS -X
     Route::get('/deleteKeyword/{catID}/{id}', 'KeywordController@deleteKeyword');
     Route::get('/addKeyword/{catID}', 'KeywordController@addKeyword');
@@ -105,12 +108,23 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/addFeeling', 'FeelingsController@addFeeling');
     Route::post('/addFeeling', 'FeelingsController@saveFeeling');
     Route::get('/deleteFeeling/{id}', 'FeelingsController@deleteFeeling');
+
+    // --- CONFIGURATION -X
+    Route::get('/systemConfig', 'SystemController@viewConfig');
+    Route::get('/editConfig/{field}', 'SystemController@editConfig');
+    Route::post('/editConfig/{field}', 'SystemController@saveEditConfig');
+
+    // --- GROUPING
+
+    // - Add to queue
+    // temp feeling
+    Route::post('/groupUser/{id}', 'SystemController@addUserToTalkCircleQueue');
+    // - Check queue
+    Route::get('/checkQueue/{id}', 'SystemController@checkQueue3');
+
+    Route::post('/groupFaci/{id}', 'SystemController@addFaciToTalkCircleQueue');
+    Route::get('/checkQueue/{id}', 'SystemController@checkQueue3');
 });
+// });
 
-// --- GROUPING
 
-// - Add to queue
-// temp feeling
-Route::get('/groupUser/{id}/{feeling}', 'SystemController@addUserToTalkCircleQueue');
-// - Check queue
-Route::get('/checkQueue/{id}', 'SystemController@checkQueue2');

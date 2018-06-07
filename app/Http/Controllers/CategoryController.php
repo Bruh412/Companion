@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use App\Category;
+use App\CategoryImage;
 use App\EmptyMuch;
 use App\Keywords;
 use Validator;
@@ -50,6 +53,7 @@ class CategoryController extends Controller
             $category->categoryName = $req->category;
             $category->save();
 
+
             // foreach ($req->keywordIni as $key) {
             //     $keyword = new Keywords;
             //     if(Keywords::get() == EmptyMuch::get()){
@@ -85,4 +89,44 @@ class CategoryController extends Controller
         $keywords = Keywords::where("categoryID", $id)->paginate(5);
         return view("admin.viewCategory")->with(["category"=>$category, "list"=>$keywords]);
     }   
+
+    public function addImageCategory($catid, Request $req){
+        if(!is_null($req->media[0])){
+            $category = Category::findOrFail($catid);
+            foreach ($req->media as $file) {
+                $fileName = $category->categoryName."/categoryUploads"."/".$file->getClientOriginalName();
+                $fileName = str_replace(' ', '', $fileName);
+                // dd($fileName);
+                Storage::disk('public')->put($fileName, File::get($file));
+                $url = Storage::url($fileName);
+
+                $newFile = new CategoryImage;
+                if(CategoryImage::get() == EmptyMuch::get()){
+                    $newFile->catImageID = "F00001";
+                }
+                else{
+                    $row = CategoryImage::orderby('catImageID', 'desc')->first();
+                    $temp = substr($row['catImageID'], 1);
+                    $temp =(int)$temp + 1;
+                    $id = "F".(string)str_pad($temp, 5, "0", STR_PAD_LEFT);
+                    $newFile->catImageID = $id;
+                }
+                $newFile->imageContent = $url;
+                $newFile->categoryID = $catid;
+                $newFile->save();
+            }
+        }
+        return redirect(url('/viewCat'.'/'.$catid));
+    }
+
+    public function viewCategoryImages($id){
+        $category = Category::findOrFail($id);
+        return view("viewCatImages")->with(["category"=>$category]);
+    }
+
+    public function deleteImg($id){
+        $img = CategoryImage::findOrFail($id);
+        $img->delete();
+        return redirect()->back();
+    }
 }

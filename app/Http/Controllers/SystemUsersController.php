@@ -22,6 +22,7 @@ use App\CertificateFile;
 use App\MatchPostQuote;
 use App\TopCategoriesForPost;
 use App\MatchVideo;
+use App\Problem;
 use DB;
 
 class SystemUsersController extends Controller
@@ -245,6 +246,8 @@ class SystemUsersController extends Controller
                 // $id = SystemUser::where('username',$request->username)->value('user_id');
                 // $usersPost = PostStatus::where('post_user_id',$id)->orderBy('post_id','desc')->get();
                 $id = 'JRMOMjCoR58';
+                // $problems = Problem::get();
+                // dd($problems);
                 return redirect(url('/wall'));
                 // return view('user.home',compact('feelings','usersPost','id'));
             }
@@ -275,6 +278,7 @@ class SystemUsersController extends Controller
 
     public function wall(){
         $id = Auth::id();
+        $problems = Problem::get();
         $feelings = PostFeeling::get();
         $usersPost = PostStatus::where('post_user_id',$id)->orderBy('post_id','desc')->get();
         $catPost = TopCategoriesForPost::get();
@@ -303,7 +307,7 @@ class SystemUsersController extends Controller
             }
             array_push($videos,$temp);
         }
-        return view('user.home',compact('feelings','usersPost','quotes','videos','comp'));
+        return view('user.home',compact('feelings','usersPost','quotes','videos','comp','problems'));
     }
 
     public function registerSeeker(){

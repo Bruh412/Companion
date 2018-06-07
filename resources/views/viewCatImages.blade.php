@@ -4,7 +4,7 @@
 
 <div class="container">
 
-    @include('navbackCat')
+<a href="/viewCat/{{ $category['categoryID'] }}" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
     <h1>{{ $category['categoryName'] }} Related Images</h1>
 
     @if($category->images != [])

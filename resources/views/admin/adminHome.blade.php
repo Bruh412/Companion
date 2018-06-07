@@ -106,11 +106,13 @@
                 </div>
 
                 <div class="links">
+                    <!-- <a href="/checkQueue/S0003">TestGroup</a> -->
                     <a href="/activities">Activities</a>
                     <a href="/interests">Interests</a>
                     <a href="/feelings">Feelings</a>
                     <a href="/categories">Categories</a>
                     <a href="/quotes">Quotes</a>
+                    <a href="/systemConfig">Configuration</a>
                     
                 </div>
             </div>
