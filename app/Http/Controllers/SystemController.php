@@ -567,7 +567,7 @@ class SystemController extends Controller
 
             foreach ($group as $member) {
                 if($member['userType'] == 'facilitator')
-                    echo "<b>".$member['first_name']." ".$member['last_name']."</b><br>";
+                    echo "<b>Host: ".$member['first_name']." ".$member['last_name']."</b><br>";
                 else
                     echo $member['first_name']." ".$member['last_name']."<br>";
             }
