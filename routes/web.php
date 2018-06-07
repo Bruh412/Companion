@@ -23,7 +23,7 @@ Route::get('/specialization/get','SpecializationController@getSpecsFromDB');
 // Route::get('/specialization/get','SystemUsersController@try');
 // Route::post('/posts/char','PostStatusController@char')->name('huhu');
 
-Route::view('/login', 'login')->name('login');
+Route::get('/login', 'SystemUsersController@loginPage');
 Route::post('/login','SystemUsersController@userAuthentication')->name('login');
 Route::get('/logout','SystemUsersController@logout')->name('logout');
 // Route::get('/logout','AdminController@logout')->name('logout');
@@ -37,17 +37,24 @@ Route::view('/register/facilitator','registerFacilitator');
 Route::post('/userType','SystemUsersController@userType');
 Route::post('/register/seeker','SystemUsersController@registerSeeker');
 Route::post('/register/facilitator','SystemUsersController@registerFacilitator');
-Route::get('/wall','SystemUsersController@wall');
-Route::post('/mediawall','QuotesController@display');
-
-Route::get('/comment/{postid}/add','PostStatusController@addComment');
-Route::post('/comment/save','PostStatusController@saveComment');
-Route::get('/video','VideoController@video');
-Route::get('/video/get','VideoController@getVideo');
-Route::get('/post/{postid}/view','PostStatusController@displayPost');
+    Route::get('/video','VideoController@video');
 //----------------------------------------------------------
 
 Route::middleware(['auth'])->group(function(){
+    Route::get('/wall','SystemUsersController@wall');
+    Route::get('/facilitator/home','SystemUsersController@facHome');
+    Route::post('/mediawall','QuotesController@display');
+
+    Route::get('/comment/{postid}/add','PostStatusController@addComment');
+    Route::post('/comment/save','PostStatusController@saveComment');
+    Route::get('/video/get','VideoController@getVideo');
+    Route::get('/post/{postid}/view','PostStatusController@displayPost');
+
+
+
+
+
+
     Route::get('/home','AdminController@adminHome');
 
     Route::get('/posts/display','PostStatusController@displayPosts');

@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Companion</title>
 
@@ -14,7 +15,8 @@
 
 	   <link href="{{ asset('/css/util.css') }}" rel="stylesheet" type="text/css">
 	   <link href="{{ asset('/css/main.css') }}" rel="stylesheet" type="text/css">
-	   
+	   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	   <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css">
 	   <style>
 			#bckgrnd {
@@ -72,6 +74,7 @@
 			<div class="login-container wrap-login100 p-t-50 p-b-90">
 				<form class="login100-form validate-form flex-sb flex-w"  method="post" action="<?php echo url('/login') ?>">
 				{{ csrf_field() }}
+				<input type="hidden" value="{{ csrf_token() }}" id="token">
 					<div>
 						<img src="{{ asset('/image/logo.png') }}" class="img-icon">
 						<!-- <span class="img-text">Companion<span> -->
@@ -80,15 +83,15 @@
 						Login
 					</span>
 
-					
+					<span id="error" style="color: red">&nbsp;{{ $error }}</span>
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Username is required">
-						<input class="input-text input100" type="text" name="username" placeholder="Username">
+						<input class="input-text input100" type="text" name="username" id="username" placeholder="Username">
 						<span class="focus-input100"></span>
 					</div>
 					
 					
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Password is required">
-						<input class="input-text input100" type="password" name="password" placeholder="Password">
+						<input class="input-text input100" type="password" name="password" id="<password></password>" placeholder="Password">
 						<span class="focus-input100"></span>
 					</div>
 					
@@ -101,7 +104,7 @@
 					</div> -->
 
 					<div class="container-login100-form-btn m-t-17">
-						<button class="login-btn login100-form-btn" type="submit" name="submit">
+						<button class="login-btn login100-form-btn" type="submit" name="submit" id="loginBtn">
 							Login
 						</button>
 						<span class="register">
@@ -112,6 +115,5 @@
 			</div>
 		</div>
 	</div>
-	
     </body>
 </html>

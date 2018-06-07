@@ -14,6 +14,7 @@ use App\MatchPostQuote;
 use App\MatchQuote;
 use App\MatchVideo;
 use App\TopCategoriesForPost;
+use App\YoutubeAPIKey;
 use Auth;
 use GuzzleHttp;
 use Validator;
@@ -45,7 +46,7 @@ class PostStatusController extends Controller
         $feelingID = ' ';
         $id = Auth::id();
         // $authorizationHeader = $request->header('Authorization');
-
+        $post = new PostStatus();
         if (PostStatus::get() == EmptyMuch::get()){
             $post->post_id = "P00000000001";
         }
@@ -60,7 +61,6 @@ class PostStatusController extends Controller
         $post->post_content = $request->post;
         $insertedID = $post->post_id;
         $post->post_user_id = $id;
-        // $post->post_user_id = $authorizationHeader;
         $post->save();
 
         $db_feeling = PostFeeling::get();
@@ -76,15 +76,9 @@ class PostStatusController extends Controller
             ]);
         }
         $feelings = PostFeeling::get();
-
-        // $post = DB::table('systemusers')
-        //     ->join('poststatus','systemusers.user_id','=','poststatus.post_user_id')
-        //     ->select('poststatus.post_content','poststatus.post_id')
-        //     ->orderBy('post_id','desc')
-        //     ->where('user_id',$id)
-        //     ->first();
         $words = explode(' ',$request->post);
         $similar = [];
+        // // compare words sa db keywords
         for( $i = 0 ; $i < count($words) ; $i++ ){
             $ss = DB::table('keywords')
                     ->select('categoryID',DB::raw('COUNT(keywordName) as cnt_keyword'))
@@ -103,7 +97,14 @@ class PostStatusController extends Controller
         $quotes = [];
         $s = [];
         $count = 0;
-        // return $similar;
+        $arr = (array)$similar;
+        $countSimilar = 0;
+        foreach($arr as $row){
+            if (!empty($row)){
+                $countSimilar++;
+            }
+        }
+        //group by categoryID and add each counter
         foreach($similar as $row){
             foreach($row as $details => $value){
                 $false = 0;
@@ -140,12 +141,12 @@ class PostStatusController extends Controller
                 }
             }
         }
+        //sort by highest counter
         usort($total, function($a, $b){
             return strcmp($b['counter'], $a['counter']);
         });
-        // return $total;
         $newTotal = $total;
-        // return array_splice($total,0,3);
+        // return top 3
         foreach(array_splice($total,0,3) as $value){
             $quotes = DB::table('matchquote')
                     ->join('quotes','matchquote.quoteID','=','quotes.quoteID')
@@ -153,6 +154,7 @@ class PostStatusController extends Controller
                     ->where('matchquote.categoryID',$value['category'])
                     ->get();
         }
+        //store quotes that matches post
         foreach($quotes as $quote){
             $match = new MatchPostQuote();
             if (MatchPostQuote::get() == EmptyMuch::get()){
@@ -169,7 +171,27 @@ class PostStatusController extends Controller
             $match->quoteID = $quote->quoteID;
             $match->save();
         }
-        // return array_splice($newTotal,0,3);
+        //if way match kwords sa db, random quotes and store
+        if($countSimilar == 0 ){
+            $temp1 = Quote::orderByRaw("RAND()")->take(30)->get();
+            foreach($temp1 as $row1){
+                $match = new MatchPostQuote();
+                if (MatchPostQuote::get() == EmptyMuch::get()){
+                    $match->matchID = "M00000000001";
+                }
+                else {
+                    $row = MatchPostQuote::orderby('matchID','desc')->first();
+                    $temp = substr($row["matchID"],1);
+                    $temp = (int)$temp + 1;
+                    $newPostID = "M".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
+                    $match->matchID = $newPostID;
+                }
+                $match->post_id = $pID;
+                $match->quoteID = $row1->quoteID;
+                $match->save();
+            }
+        }
+        // store top 3 categories sa user's post
         foreach(array_splice($newTotal,0,3) as $row1){
             $top = new TopCategoriesForPost();
             if (TopCategoriesForPost::get() == EmptyMuch::get()){
@@ -190,36 +212,36 @@ class PostStatusController extends Controller
                 $top->save();
             }
         }
-        // return 'yhey';
         $quotes = [];
+        $n_quotes = [];
         $videos = [];
         $result = [];
         $comp = [];
+        $n_comp = [];
         $usersPost = PostStatus::where('post_user_id',$id)->orderBy('post_id','desc')->get();
         $catPost = TopCategoriesForPost::get();
-        foreach($usersPost as $post){
+
+        foreach($usersPost as $post){ //selects quotes for posts
             $temp = MatchPostQuote::where('post_id', $post['post_id'])->orderByRaw("RAND()")->take(3)->get();
             array_push($quotes,$temp);
-            // return $catPost;
-            foreach($catPost as $row){
+            foreach($catPost as $row){ // gets Top 3 Categories based on PostID which will be used in slecting video
                 if ($post->post_id == $row->post_id){
                     array_push($result,$row);
                 }
             }
         }
-        foreach($result as $row){
+
+        foreach($result as $row){ //selecting videos based on categoryID
             $temp = MatchVideo::where('categoryID', $row['categoryID'])->orderByRaw("RAND()")->take(2)->get();
-            foreach($temp as $row1){
+            foreach($temp as $row1){ // storing postID and videoID for comparing sa view
                 $tem = [
                     'post_id' => $row['post_id'],
                     'videoID' => $row1->videoID,
                 ];
                 array_push($comp,$tem);
-                // return $comp;
             }
             array_push($videos,$temp);
         }
-        // return $videos;
         return view("user.postList",compact('usersPost','quotes','videos','comp'));
     }   
 
@@ -264,12 +286,6 @@ class PostStatusController extends Controller
         else {
             $feeling->delete();
         }
-        // $post = DB::table('systemusers')
-        //     ->join('poststatus','systemusers.user_id','=','poststatus.post_user_id')
-        //     ->select('poststatus.post_content','poststatus.post_id')
-        //     ->orderBy('post_id','desc')
-        //     ->where('user_id',$userid)
-        //     ->first();
         $words = explode(' ',$request->post);
         $similar = [];
         for( $i = 0 ; $i < count($words) ; $i++ ){

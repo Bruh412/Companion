@@ -57,35 +57,35 @@
             <hr>
           </div>
           <div class="col-lg-8 mx-auto">
-            <p class="text-faded mb-5">Connect with your friends - and explore, socialize with other fascinating people. Join on events that interests you and have fun. Seek, View and Tag Along.</p>
-            <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
+            <p class="text-faded mb-5">Feel free to post what you feel and facilators will help you. Join on events that interests you and have fun doing activitites with other fascinating people. </p>
+            <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find out more</a>
           </div>
         </div>
       </div>
     </header>
 
-    <section class="bg-primary" id="about">
+     <section class="bg-primary" id="about">
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto text-center">
-            <h2 class="section-heading text-white">We've got what you need!</h2>
+            <h2 class="section-heading text-white">FEEL WELCOMED AND BELONGED!</h2>
             <hr class="light my-4">
-            <p class="text-faded mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! All of the templates and themes on Start Bootstrap are open source, free to download, and easy to use. No strings attached!</p>
-            <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
+            <p class="text-faded mb-4"></p>
+            <a class="btn btn-light btn-xl js-scroll-trigger" href="{{ url ('/login')}}">Get Started!</a>
           </div>
         </div>
       </div>
-    </section>
+    </section> 
 
-    <section id="contact">
+    <section id="contact" style="padding: 1rem 0;">
       <div class="container">
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-lg-8 mx-auto text-center">
             <h2 class="section-heading">Let's Get In Touch!</h2>
             <hr class="my-4">
             <p class="mb-5">Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
           </div>
-        </div>
+        </div> -->
         <div class="row">
           <div class="col-lg-4 ml-auto text-center">
             <i class="fa fa-phone fa-3x mb-3 sr-contact"></i>
@@ -95,7 +95,7 @@
             <i class="fa fa-envelope-o fa-3x mb-3 sr-contact"></i>
             <p>
               <a href="mailto:your-email@your-domain.com">feedback@startbootstrap.com</a>
-            </p>
+            </p>  
           </div>
         </div>
       </div>

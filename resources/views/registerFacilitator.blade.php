@@ -126,27 +126,31 @@
                 <div class="form-group">
                     <input type="password" class="form-control" id="exampleInputPassword1" name="confirm" placeholder="Confirm Password">
                 </div>
-                @foreach($interests as $interest)
+                <label for="exampleFormControlInput1">Interests</label>
                 <div class="form-check" style="background-color: white;">
+                    @foreach($interests as $interest)
                     <input class="form-check-input" type="checkbox" value="{{ $interest->interestName }}" id="defaultCheck1" name="interests[]">
                     <label class="form-check-label" for="defaultCheck1">
                         {{ $interest->interestName }}
                     </label>
+                    <br>
+                    @endforeach
                 </div>
-                @endforeach
                 <br>
                 <div class="form-group">
-                    <span><span>
+                    <span>Please upload a picture of your Certificate of Registration<span>
                     <input type="file" name="file" class="form-control"> 
                 </div>
-                @foreach($specs as $spec)
+                <label for="exampleFormControlInput1">Specializations</label>
                 <div class="form-check" style="background-color: white;">
+                    @foreach($specs as $spec)
                     <input class="form-check-input" type="checkbox" value="{{ $spec->spec_name }}" id="defaultCheck1" name="specs[]">
                     <label class="form-check-label" for="defaultCheck1">
                         {{ $spec->spec_name }}
                     </label>
+                    <br>
+                    @endforeach
                 </div>
-                @endforeach
                 <br>
                 <input type="hidden" name="userType" value="facilitator">
                 <button class="btn btn-info" name="register">Register</button>
