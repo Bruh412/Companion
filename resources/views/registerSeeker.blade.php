@@ -126,14 +126,16 @@
                 <div class="form-group">
                     <input type="password" class="form-control" id="exampleInputPassword1" name="confirm" placeholder="Confirm Password">
                 </div>
-                @foreach($interests as $interest)
+                <label for="exampleFormControlInput1">Interests</label>
                 <div class="form-check" style="background-color: white;">
+                    @foreach($interests as $interest)
                     <input class="form-check-input" type="checkbox" value="{{ $interest->interestName }}" id="defaultCheck1" name="interests[]">
                     <label class="form-check-label" for="defaultCheck1">
                         {{ $interest->interestName }}
                     </label>
+                    <br>
+                    @endforeach
                 </div>
-                @endforeach
                 <br>
                 <input type="hidden" name="userType" value="seeker">
                 <button class="btn btn-info" name="register">Register</button>

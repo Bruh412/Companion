@@ -23,7 +23,9 @@ use App\MatchPostQuote;
 use App\TopCategoriesForPost;
 use App\MatchVideo;
 use App\Problem;
+use App\Quote;
 use DB;
+use Mail;
 
 class SystemUsersController extends Controller
 {
@@ -39,10 +41,24 @@ class SystemUsersController extends Controller
     }
 
     public function loginPage(){
-        return view('login');
+        $error = "";
+        return view('login',compact('error'));
     }
 
     public function register(Request $request){
+        $rules = [
+            'fname'=>'required|max:255',
+            'lname'=>'required|max:255',
+            'email'=>'required',
+            'username'=>'required|max:255|unique',
+            'password'=>'required',
+            'confirm'=>'required',
+            'interests'=>'required',
+            'month'=>'required',
+            'day'=>'required',
+            'year'=>'required',
+        ];
+
         $birthday = $request->month.'/'.$request->day.'/'.$request->year;
         $checkUsername = SystemUser::where('username',$request['username'])->value('username');
         if(is_null($checkUsername)){
@@ -76,6 +92,7 @@ class SystemUsersController extends Controller
                     }
                     $token->token_user_id = $userID;
                     $token->save();
+
                     //comparing interests to db_interests
                     $db_usersInterests = [];
                     $usersInterests = $request->interests;
@@ -98,7 +115,10 @@ class SystemUsersController extends Controller
                     // return response()->json([
                     //     "token" => $token_key,
                     // ]);
-                    return view('login');
+                    
+                    // Mail::send('mail.confirmation',$newTokenID, function($message) use())
+
+                    return redirect(url('/login'));
                 }
             }
             if ($request['userType'] == 'facilitator'){
@@ -133,23 +153,6 @@ class SystemUsersController extends Controller
                     $token->token_user_id = $userID;
                     $token->save();
 
-                    //check and store PRC
-                    // $prc_raw = PrcRaw::get();
-                    // $prc_input = $request->prc;
-                    // $count = 0;
-                    // foreach($prc_raw as $prc){
-                    //     if ($prc['prc_id'] === $prc_input){
-                    //         $count++;
-                    //     }
-                    // }
-
-                    // if ($count != 0){
-                    //     FacilitatorPRC::create([
-                    //         'user_id' => $userID,
-                    //         'prc_id' => $prc_input,
-                    //     ]);
-                    // }
-
                     //comparing interests to db_interests
                     $db_usersInterests = [];
                     $usersInterests = $request->interests;
@@ -170,27 +173,25 @@ class SystemUsersController extends Controller
                     }
 
                     // //certificate upload
-                    // $fileName = $request->file."/certificate"."/".$request->file->getClientOriginalName();
-                    // $fileType = $request->file->getClientOriginalExtension();
-                    // Storage::disk('public')->put($fileName, File::get($request->file));
-                    // // return "hi";
-                    // $url = Storage::url($fileName);
-                    // // dd($url);
-                    // $newFile = new CertificateFile;
-                    // if(CertificateFile::get() == EmptyMuch::get()){
-                    //     $newFile->fileID = "F00001";
-                    // }
-                    // else{
-                    //     $row = CertificateFile::orderby('fileID', 'desc')->first();
-                    //     $temp = substr($row['fileID'], 1);
-                    //     $temp =(int)$temp + 1;
-                    //     $id = "F".(string)str_pad($temp, 5, "0", STR_PAD_LEFT);
-                    //     $newFile->fileID = $id;
-                    // }
-                    // $newFile->fileContent = $url;
-                    // $newFile->fileExt = $fileType;
-                    // $newFile->user_id = $userID;
-                    // $newFile->save();
+                    $fileName = $request->username."/certificate"."/".$request->file->getClientOriginalName();
+                    $fileType = $request->file->getClientOriginalExtension();
+                    Storage::disk('public')->put($fileName, File::get($request->file));
+                    $url = Storage::url($fileName);
+                    $newFile = new CertificateFile;
+                    if(CertificateFile::get() == EmptyMuch::get()){
+                        $newFile->fileID = "F00001";
+                    }
+                    else{
+                        $row = CertificateFile::orderby('fileID', 'desc')->first();
+                        $temp = substr($row['fileID'], 1);
+                        $temp =(int)$temp + 1;
+                        $id = "F".(string)str_pad($temp, 5, "0", STR_PAD_LEFT);
+                        $newFile->fileID = $id;
+                    }
+                    $newFile->fileContent = $url;
+                    $newFile->fileExt = $fileType;
+                    $newFile->user_id = $userID;
+                    $newFile->save();
                     // return $newFile;
 
                     //comparing specs to db_specs
@@ -214,7 +215,7 @@ class SystemUsersController extends Controller
                     // return response()->json([
                     //     'token' => $token_key,
                     // ]);
-                    return view('login');
+                    return redirect(url('/login'));
                 }
             }
         } else {
@@ -252,14 +253,14 @@ class SystemUsersController extends Controller
                 // return view('user.home',compact('feelings','usersPost','id'));
             }
             else {
-                $seekersPost = PostStatus::orderBy('post_id','desc')->get();
-                return view('user.facilitatorHome',compact('seekersPost'));
+                return redirect(url('/facilitator/home'));  
             }
             // return response()->json([
             //     'message' => 'Successful!',
             // ]);
         }else {
-            return "incorrect pass";
+            $error = 'Invalid credentials!';
+            return view('login',compact('error'));
             // return response()->json([
             //     'message' => 'Not Successful!',
             // ]);
@@ -276,6 +277,11 @@ class SystemUsersController extends Controller
         return view('userType');
     }
 
+    public function facHome(){
+        $seekersPost = PostStatus::orderBy('post_id','desc')->get();
+        return view('user.facilitatorHome',compact('seekersPost'));
+    }
+
     public function wall(){
         $id = Auth::id();
         $problems = Problem::get();
@@ -286,16 +292,38 @@ class SystemUsersController extends Controller
         $videos = [];
         $result = [];
         $comp = [];
-        foreach($usersPost as $post){
+        $comp1 = [];
+        $n_quotes = [];
+        foreach($usersPost as $post){//mao ni kato gkuha niya post sa user og kato match quotes sa db
             $temp = MatchPostQuote::where('post_id', $post['post_id'])->orderByRaw("RAND()")->take(3)->get();
+            // if ($temp->isEmpty()){
+            //     $temp1 = Quote::orderByRaw("RAND()")->take(3)->get();
+            //         foreach($temp1 as $row1){
+            //             $tem = [
+            //                 'post_id' => $post['post_id'],
+            //                 'quoteID' => $row1->quoteID,
+            //             ];
+            //             array_push($comp1,$tem);
+            //         }
+            //     array_push($n_quotes,$temp1);
+            // }
             array_push($quotes,$temp);
-            //kuha topCatPost from the logged in user
-            foreach($catPost as $row){
+            foreach($catPost as $row){ //kuha topCatPost from the logged in user
                 if ($post->post_id == $row->post_id){
                     array_push($result,$row);
                 }
             }
         }
+        // return $quotes;
+        // $cou = 0;
+        // $chu =[];
+        // $quotes = (array)$arr;
+        // foreach($quotes as $row){
+        //     if(!empty($row)){
+        //         $cou++;
+        //     }
+        // }
+        // return $cou;
         foreach($result as $row){
             $temp = MatchVideo::where('categoryID', $row['categoryID'])->orderByRaw("RAND()")->take(2)->get();
             foreach($temp as $row1){
@@ -307,7 +335,8 @@ class SystemUsersController extends Controller
             }
             array_push($videos,$temp);
         }
-        return view('user.home',compact('feelings','usersPost','quotes','videos','comp','problems'));
+        // return view('user.home',compact('feelings','usersPost','quotes','videos','comp','problems'));
+        return view('user.home',compact('feelings','usersPost','quotes','videos','comp','n_quotes','comp1','problems'));
     }
 
     public function registerSeeker(){

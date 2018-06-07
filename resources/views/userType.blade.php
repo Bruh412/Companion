@@ -20,7 +20,7 @@
             font-weight: 100;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(to right, #ffe259, #ffa751); 
+            background-color: #fffaf4;
         }
 
         .full-height {
@@ -54,13 +54,14 @@
             color: black;
 		}
 		.btn {
-			margin-top: 5rem;
-			padding: 3rem 10rem;
+			margin-top: 0rem;
+			padding: 3rem 7rem;
 			font-size: 22px;
 			line-height: normal;
+            background-color: #FFB75E;
 			-webkit-border-radius: 8px;
 			-moz-border-radius: 8px;
-            border-radius: 8px;
+            border: none;
 		}
 		.ds{
 			background-color: transparent;
@@ -70,13 +71,13 @@
 <body>
     <div class="container" style="padding-top: 2rem;">
 		<div class="jumbotron ds" style="text-align: center;">
-			<h1 class="display-4">Register As</h1>
+			<h1 class="display-4" style="color: #FFB75E">Register As</h1>
 		</div>
 
 		<div class="container">
 			<div class="row" style="text-align:center">
 				<div class="col-md-6">
-					<form method="post" action="{{ url('/register/facilitator') }}">
+					<form method="post" action="{{ url('/register/seeker') }}">
 						{{ csrf_field() }}
 						<button class="btn btn-info" name="type" value="Seeker">Seeker</button>
 					</form>
