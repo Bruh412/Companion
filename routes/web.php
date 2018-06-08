@@ -130,7 +130,6 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/checkQueue/{id}', 'SystemController@checkQueue3');
 
     Route::post('/groupFaci/{id}', 'SystemController@addFaciToTalkCircleQueue');
-    Route::get('/checkQueue/{id}', 'SystemController@checkQueue3');
 });
 // });
 
