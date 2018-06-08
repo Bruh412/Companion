@@ -398,7 +398,7 @@ class SystemController extends Controller
                     $clusterPrint = $cluster;
             }
         }
-        // dd($clusters);
+        // dd($clusterPrint);
 
         if(count($clusters[$clusterPrint]) < (int)$config->numberOfUsersToGroup)
             dd("not in group");
@@ -450,43 +450,6 @@ class SystemController extends Controller
             // dd($faciDecode);    
             
             //comparison
-            
-            // foreach ($faciDecode as $faci => $faciValue) {
-            //     //each faci 
-            //     foreach ($faciValue as $field => $value) {
-            //         //each field for faci
-            //         if($field != 'user_id' && $field != 'Score'){
-            //             // not user_id and scor
-            //             if(Specialization::where('spec_name', $field)->get() != EmptyMuch::get()){
-            //                 // checks if specialization
-            //                 $count = 0;
-            //                 foreach ($faciCentroid as $centroidField => $centroidValue) {
-            //                     // each field for centroid
-            //                     if($field != 'user_id' && $field != 'Cluster'){
-            //                         // not user_id and cluster
-            //                         if(Problem::where('problem_name', $centroidField)->get() != EmptyMuch::get()){
-            //                             // checks if problem
-            //                             $specialization = Specialization::where('spec_name', $field)->get()[0];
-            //                             $matches = SpecMatchProblem::where('spec_id', $specialization['spec_id'])->get();
-                                        
-            //                             foreach ($matches as $match) {
-            //                                 $problem = Problem::findOrFail($match['problem_id']);
-            //                                 if($centroidField == $problem['problem_name']){
-            //                                     // echo $centroidField ." and ".$problem['problem_name']."<br>";
-            //                                     // echo $problem['problem_name']."true<br>";
-            //                                     // $faciDecode[$faci]['Score'] += 1;
-            //                                     // $temp += 1;
-            //                                 }
-            //                             }
-            //                         }
-            //                     }
-                            
-            //                 }
-            //                 // dd("hello");
-            //             }   
-            //         }
-            //     }
-            // }
             $problemBasis = $this->createProblemNode("problemBasis");
             $specBasis = $this->createSpecNode("specBasis");
             $longlatBasis = $this->createLongLatIntNode();
@@ -544,7 +507,7 @@ class SystemController extends Controller
             //grouping
             $group = [];
             array_push($group, SystemUser::findOrFail($mainFaci['user_id']));
-            echo "<h1>Meet your members!</h1>";
+            // echo "<h1>Meet your members!</h1>";
             $mainUser = SystemUser::findOrFail($userQueue['user_id']);
             array_push($group, $mainUser);
             // echo "<b>".$mainUser['first_name']." ".$mainUser['last_name']."<br></b>";
@@ -565,13 +528,13 @@ class SystemController extends Controller
                 // echo $orig['first_name']." ".$orig['last_name']."<br>";
             }
 
-            foreach ($group as $member) {
-                if($member['userType'] == 'facilitator')
-                    echo "<b>Host: ".$member['first_name']." ".$member['last_name']."</b><br>";
-                else
-                    echo $member['first_name']." ".$member['last_name']."<br>";
-            }
-
+            // foreach ($group as $member) {
+            //     if($member['userType'] == 'facilitator')
+            //         echo "<b>Host: ".$member['first_name']." ".$member['last_name']."</b><br>";
+            //     else
+            //         echo $member['first_name']." ".$member['last_name']."<br>";
+            // }
+            return view('user.meetYourGroup')->with(['group'=>$group]);
         }
             
         
