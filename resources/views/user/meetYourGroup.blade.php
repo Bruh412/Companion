@@ -98,7 +98,7 @@ use App\FacilitatorSpec;
     <div class="container">
             <br>
             <center>
-                <h1>Meet your group!</h1>
+                <h1>Meet your groupmates!</h1>
             </center>
 
             <div>
@@ -116,18 +116,26 @@ use App\FacilitatorSpec;
                             ?>
                         </ul>
                     @else
-                        <li><h3>{{ $member['first_name'] }} {{ $member['last_name'] }}</h3></li>
-                        <ul>
-                            <li>Problem/s: </li>
-                            <?php
-                                foreach (QueueTalkCircle::where('user_id', $member['user_id'])->get()[0]->problems as $prob) { ?>
-                                    <li><b><?php echo $prob->problem['problem_name'] ?></b></li>
-                            <?php 
-                            }
-                            ?>
-                        </ul>
-                    @endif
+                        <li>
+                            <h3>{{ $member['first_name'] }} {{ $member['last_name'] }}
+                            @if($member['user_id'] == Auth::user()->user_id)
+                                --- You!
+                            @endif
+                            </h3>
+                        </li>
+                        @if(Auth::user()->userType == 'facilitator')
+                            <ul>
+                                <li>Problem/s: </li>
+                                <?php
+                                    foreach (QueueTalkCircle::where('user_id', $member['user_id'])->get()[0]->problems as $prob) { ?>
+                                        <li><b><?php echo $prob->problem['problem_name'] ?></b></li>
+                                <?php 
+                                }
+                                ?>
+                            </ul>
+                        @endif
                         <br>
+                    @endif
                         <ul>
                             <?php
                                 $queued = QueueTalkCircle::where('user_id', $member['user_id'])->get()[0];
@@ -166,6 +174,15 @@ use App\FacilitatorSpec;
                         </ul>
                         <br><br>
                 @endforeach
+
+                <center>
+                    <form action="/selectActivities" method="post">
+                        <button class="btn btn-primary" style="font-size: 30px;">
+                            Get Activities!
+                        </button>
+                    </form>
+                </center>
+                
                 </ul>
             </div>
     </div>

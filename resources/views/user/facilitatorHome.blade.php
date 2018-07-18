@@ -75,59 +75,6 @@
             <a class="nav-link" href="#">Journal</a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</a>
-                <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</button> -->
-                <!-- <button type="submit">Join TalkCircle</button> -->
-                <form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
-                    {{ csrf_field() }}
-                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Join TalkCircle!</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
-                                            </button>
-                                        </div>
-                                                
-                                                <div class="modal-body">
-                                                    <h4>Join TalkCircle!</h4>
-                                                    <p>Help the people by being the listening ear they need.</p>
-                                                    <input type="hidden" name="long" id="long">
-                                                    <input type="hidden" name="lat" id="lat">
-                                                </div>
-                                                <script>
-                                                    var long = document.getElementById("long");
-                                                    var lat = document.getElementById("lat");
-
-                                                    function getLocation() {
-                                                        console.log(navigator.geolocation);
-                                                        if (navigator.geolocation) {
-                                                            navigator.geolocation.getCurrentPosition(showPosition);
-                                                        } else { 
-                                                            // long.value = "null";
-                                                            // lat.value = "null";
-                                                            long.value = position.coords.longitude;
-                                                            lat.value = position.coords.latitude;
-                                                        }
-                                                    }
-
-                                                    function showPosition(position) {
-                                                        long.value = position.coords.longitude;
-                                                        lat.value = position.coords.latitude;
-                                                    }
-                                                </script>
-                                                <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-info" id="imagesButton">Join TalkCircle</button>
-                                                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                                                </div>
-                                            
-                                        </div>
-                                    </div>
-                        </div>
-                    </form>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
         </li>
         </ul>
@@ -175,7 +122,7 @@
                 </div>
                 </div>
                 <br>    
-                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;">Create TalkCircle</button>
+                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;"  data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Create TalkCircle</button>
             </div>
             <div class="col-7">
                 @if($seekersPost->isEmpty())
@@ -225,6 +172,56 @@
         </div>
     </div>
 </div>
+
+<form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
+                    {{ csrf_field() }}
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Join TalkCircle!</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
+                                            </button>
+                                        </div>
+                                                
+                                                <div class="modal-body">
+                                                    <h4>Join TalkCircle!</h4>
+                                                    <p>Help the people by being the listening ear they need.</p>
+                                                    <input type="hidden" name="long" id="long">
+                                                    <input type="hidden" name="lat" id="lat">
+                                                </div>
+                                                <script>
+                                                    var long = document.getElementById("long");
+                                                    var lat = document.getElementById("lat");
+
+                                                    function getLocation() {
+                                                        console.log(navigator.geolocation);
+                                                        if (navigator.geolocation) {
+                                                            navigator.geolocation.getCurrentPosition(showPosition);
+                                                        } else { 
+                                                            // long.value = "null";
+                                                            // lat.value = "null";
+                                                            long.value = position.coords.longitude;
+                                                            lat.value = position.coords.latitude;
+                                                        }
+                                                    }
+
+                                                    function showPosition(position) {
+                                                        long.value = position.coords.longitude;
+                                                        lat.value = position.coords.latitude;
+                                                    }
+                                                </script>
+                                                <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-info" id="imagesButton">Join TalkCircle</button>
+                                                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            
+                                        </div>
+                                    </div>
+                        </div>
+                    </form>
+                    
 <script>
     $(document).ready(function(){
         // alert("huhu");

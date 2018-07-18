@@ -130,6 +130,9 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/checkQueue/{id}', 'SystemController@checkQueue3');
 
     Route::post('/groupFaci/{id}', 'SystemController@addFaciToTalkCircleQueue');
+
+    // --- ONCE GROUPED
+    Route::get('/selectActivities', 'SystemController@recommendActivities');
 });
 // });
 
