@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -78,10 +77,13 @@
             li {
                 border: none !important;
             }
+            .modal-backdrop {
+                z-index: 1020 !important;
+            }
         </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #FFB75E;">
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #FFB75E;">
     <div class="container">
     <a class="navbar-brand text-white">Companion</a>
     <!-- <div class="text-white" style="border-right: 0.5px solid; height: 1.5rem;"></div> -->
@@ -94,71 +96,59 @@
             <a class="nav-labels nav-link text-white pr-2 pl-2" href="{{ url('/facilitator/home')}}">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Notiications</a>
+            <a class="nav-labels nav-link text-white" href="#">Notiications</a>
         </li>
         <li class="nav-item">
-
-
-        
-            <a class="nav-link" href="#"  onClick="getLocation()">Profile</a>
+            <a class="nav-labels nav-link text-white" href="#">Profile</a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</a>
-        <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</button> -->
-        <!-- <button type="submit">Join TalkCircle</button> -->
-        <form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
+            <form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
             {{ csrf_field() }}
-                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Just a question before joining...</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true" class="btn btn-danger">&times;</span>
-                                    </button>
-                                </div>
-                                        
-                                        <div class="modal-body">
-                                            <h4>Join TalkCircle today!</h4>
-                                            <p>Help people by being there for them when they need a listening ear.</p>
-                                            <input type="hidden" name="long" id="long">
-                                            <input type="hidden" name="lat" id="lat">
-                                        
-                                        </div>
-                                        <script>
-                                            var long = document.getElementById("long");
-                                            var lat = document.getElementById("lat");
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Join TalkCircle!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Join TalkCircle!</h4>
+                            <p>Help the people by being the listening ear they need.</p>
+                            <input type="hidden" name="long" id="long">
+                            <input type="hidden" name="lat" id="lat">
+                        </div>
+                        <script>
+                            var long = document.getElementById("long");
+                            var lat = document.getElementById("lat");
 
-                                            function getLocation() {
-                                                console.log(navigator.geolocation);
-                                                if (navigator.geolocation) {
-                                                    navigator.geolocation.getCurrentPosition(showPosition);
-                                                } else { 
-                                                    // long.value = "null";
-                                                    // lat.value = "null";
-                                                    long.value = position.coords.longitude;
-                                                    lat.value = position.coords.latitude;
-                                                }
-                                            }
+                            function getLocation() {
+                                console.log(navigator.geolocation);
+                                if (navigator.geolocation) {
+                                    navigator.geolocation.getCurrentPosition(showPosition);
+                                } else { 
+                                    long.value = position.coords.longitude;
+                                    lat.value = position.coords.latitude;
+                                }
+                            }
 
-                                            function showPosition(position) {
-                                                long.value = position.coords.longitude;
-                                                lat.value = position.coords.latitude;
-                                            }
-
-                                        </script>
-                                        <div class="modal-footer">
-                                                <button type="submit" class="btn btn-info" id="imagesButton">Join Queue</button>
-                                                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                                        </div>
-                                    
-                                </div>
-                            </div>
+                            function showPosition(position) {
+                                long.value = position.coords.longitude;
+                                lat.value = position.coords.latitude;
+                            }
+                        </script>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-info" id="imagesButton">Join TalkCircle</button>
+                            <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
                 </div>
+            </div>
             </form>
-            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Profile</a>
-
-            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-labels nav-link text-white" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
         </li>
         </ul>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -180,7 +170,7 @@
         </div>
     </div>
     </div>
-    </nav>
+</nav>
 
         <main class="main py-4">
             @yield('content')

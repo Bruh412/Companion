@@ -10,20 +10,22 @@
 	   <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Companion</title>
-            
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
         <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css">
         <style>
-                html, body {
+            html, body {
                 background-color: #fff;
                 color: #636b6f;
                 font-family: 'Raleway', sans-serif;
                 font-weight: 100;
                 height: 100vh;
                 margin: 0;
-                background: linear-gradient(to right, #FFB75E, #FFC837);
+                padding-top: 1.5rem;
+                background-color: #fffaf4;
             }
 
             .full-height {
@@ -34,6 +36,12 @@
                 align-items: center;
                 display: flex;
                 justify-content: center;
+            }
+
+            .nav-labels:hover {
+                background: #FFF;
+                border-radius: 3px;
+                color: #FFB75E !important;
             }
 
             .position-ref {
@@ -56,94 +64,101 @@
             .container {
                 color: black;
             }
+            a {
+                text-decoration: none;
+            }
+            .mw-card{
+                /* border-color: #FFB75E; */
+            }
+            .mw-cd-h{
+                background-color: #FFB75E;
+                border-bottom: none !important;
+            }
+            li {
+                border: none !important;
+            }
+            .modal-backdrop {
+                z-index: 1020 !important;
+            }
         </style>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #FFB75E;">
     <div class="container">
-    <a class="navbar-brand" >Companion</a>
+    <a class="navbar-brand text-white">Companion</a>
+    <!-- <div class="text-white" style="border-right: 0.5px solid; height: 1.5rem;"></div> -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" style="font-size: 1rem; padding-left: 7px;">
         <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-labels nav-link text-white pr-2 pl-2" href="{{ url('/facilitator/home')}}">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Journal</a>
+            <a class="nav-labels nav-link text-white" href="#">Notiications</a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</a>
-                <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</button> -->
-                <!-- <button type="submit">Join TalkCircle</button> -->
-                <form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
-                    {{ csrf_field() }}
-                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Join TalkCircle!</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
-                                            </button>
-                                        </div>
-                                                
-                                                <div class="modal-body">
-                                                    <h4>Join TalkCircle!</h4>
-                                                    <p>Help the people by being the listening ear they need.</p>
-                                                    <input type="hidden" name="long" id="long">
-                                                    <input type="hidden" name="lat" id="lat">
-                                                </div>
-                                                <script>
-                                                    var long = document.getElementById("long");
-                                                    var lat = document.getElementById("lat");
-
-                                                    function getLocation() {
-                                                        console.log(navigator.geolocation);
-                                                        if (navigator.geolocation) {
-                                                            navigator.geolocation.getCurrentPosition(showPosition);
-                                                        } else { 
-                                                            // long.value = "null";
-                                                            // lat.value = "null";
-                                                            long.value = position.coords.longitude;
-                                                            lat.value = position.coords.latitude;
-                                                        }
-                                                    }
-
-                                                    function showPosition(position) {
-                                                        long.value = position.coords.longitude;
-                                                        lat.value = position.coords.latitude;
-                                                    }
-                                                </script>
-                                                <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-info" id="imagesButton">Join TalkCircle</button>
-                                                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                                                </div>
-                                            
-                                        </div>
-                                    </div>
+            <a class="nav-labels nav-link text-white" href="#">Profile</a>
+        </li>
+        <li class="nav-item">
+            <form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
+            {{ csrf_field() }}
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Join TalkCircle!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
+                            </button>
                         </div>
-                    </form>
+                        <div class="modal-body">
+                            <h4>Join TalkCircle!</h4>
+                            <p>Help the people by being the listening ear they need.</p>
+                            <input type="hidden" name="long" id="long">
+                            <input type="hidden" name="lat" id="lat">
+                        </div>
+                        <script>
+                            var long = document.getElementById("long");
+                            var lat = document.getElementById("lat");
+
+                            function getLocation() {
+                                console.log(navigator.geolocation);
+                                if (navigator.geolocation) {
+                                    navigator.geolocation.getCurrentPosition(showPosition);
+                                } else { 
+                                    long.value = position.coords.longitude;
+                                    lat.value = position.coords.latitude;
+                                }
+                            }
+
+                            function showPosition(position) {
+                                long.value = position.coords.longitude;
+                                lat.value = position.coords.latitude;
+                            }
+                        </script>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-info" id="imagesButton">Join TalkCircle</button>
+                            <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
+            <a class="nav-labels nav-link text-white" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
         </li>
         </ul>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto" style="font-size: 1rem">
             <li class="nav-item dropdown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                     {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}<span class="caret"></span>
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <!-- <a class="dropdown-item" href="/logout"
-                        onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
-                    </a> -->
                     <a href="/logout" class="dropdown-item">Logout</a>
 
                     <form id="logout-form" action="/logout" method="POST" style="display: none;">
@@ -155,9 +170,9 @@
         </div>
     </div>
     </div>
-    </nav>
+</nav>
 
-<div class="container">
+<div class="container" style="padding-top: 2rem;">
     <div class="w-100 h-100">
         <div class="row m-0">
             <div class="col-1"></div>
@@ -175,7 +190,7 @@
                 </div>
                 </div>
                 <br>    
-                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;">Create TalkCircle</button>
+                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;"  data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Create TalkCircle</button>
             </div>
             <div class="col-7">
                 @if($seekersPost->isEmpty())
@@ -225,30 +240,4 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function(){
-        // alert("huhu");
-        $("#postBtn").click(function(){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            var post = $("#post").val();
-            var feeling = $("#feeling").val();
-            var token = $("#token").val();
-            // console.log(token);
-            $.ajax({
-                type: "post",
-                data:  "post=" + post + "&feeling=" + feeling + "&token=" + token,
-                url: "<?php echo url('/posts/save')?>",
-                success: function(data){
-                    // console.log(data);
-                    $("#post").val("");
-                    $('#posts').empty().html(data);
-                }
-            });
-        });
-    });
-</script>
 </body>

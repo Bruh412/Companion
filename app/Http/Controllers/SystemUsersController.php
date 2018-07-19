@@ -58,7 +58,7 @@ class SystemUsersController extends Controller
             'day'=>'required',
             'year'=>'required',
         ];
-
+        // return $request;
         $birthday = $request->month.'/'.$request->day.'/'.$request->year;
         $checkUsername = SystemUser::where('username',$request['username'])->value('username');
         if(is_null($checkUsername)){
@@ -267,6 +267,50 @@ class SystemUsersController extends Controller
         }
     }
 
+    // public function userAuthentication(Request $request){
+    //     $result = Auth::attempt(['username' => $request['username'], 'password' => $request['password']]);
+    //     $userDetails = DB::table('systemusers')
+    //                 ->join('tokens','systemusers.user_id','=','tokens.token_user_id')
+    //                 ->select('tokens.token','systemusers.user_id')
+    //                 ->where('systemusers.username',$request['username'])
+    //                 ->get();
+    //     $fname = SystemUser::where('username',$request['username'])->value('first_name');   
+    //     $lname = SystemUser::where('username',$request['username'])->value('last_name');
+    //     $name = $fname.' '.$lname;
+
+    //     $userid = SystemUser::where('username',$request['username'])->value('user_id');
+    //     $userType = SystemUser::where('username',$request['username'])->value('userType');
+    //     $token = Token::where('token_user_id',$userid)->value('token');
+    //     if($request->username == 'bruh412' && $request->password == 'happybruh')
+    //         return view('admin.adminHome');
+
+    //     if ($result){
+    //         return response()->json([
+    //             'token' => $token,
+    //             'user_type' => $userType
+    //         ]); 
+    //     }else {
+    //         return response()->json([
+    //             'message' => 'Not Successful!',
+    //         ]);
+    //     }
+    // }
+
+    public function name(Request $request){
+        // $fname = Auth::user()->first_name;
+        // $lname = Auth::user()->last_name;
+        // $name = [
+        //     'name' => $fname.' '.$lname,
+        // ];
+        $id = Token::where('token',$request['token'])->value('token_user_id');
+        $fname = SystemUser::where('user_id',$id)->value('first_name');
+        $lname = SystemUser::where('user_id',$id)->value('last_name');
+        $name = $fname.' ' .$lname;
+        return response()->json([
+            'data' => $name,
+        ]);
+    }
+
     public function logout(){
         Auth::logout();
         return redirect()->to(route('login'));
@@ -294,7 +338,7 @@ class SystemUsersController extends Controller
         $comp = [];
         $comp1 = [];
         $n_quotes = [];
-        foreach($usersPost as $post){//mao ni kato gkuha niya post sa user og kato match quotes sa db
+        foreach($usersPost as $post){ //mao ni kato gkuha niya post sa user og kato match quotes sa db
             $temp = MatchPostQuote::where('post_id', $post['post_id'])->orderByRaw("RAND()")->take(3)->get();
             // if ($temp->isEmpty()){
             //     $temp1 = Quote::orderByRaw("RAND()")->take(3)->get();
@@ -314,16 +358,6 @@ class SystemUsersController extends Controller
                 }
             }
         }
-        // return $quotes;
-        // $cou = 0;
-        // $chu =[];
-        // $quotes = (array)$arr;
-        // foreach($quotes as $row){
-        //     if(!empty($row)){
-        //         $cou++;
-        //     }
-        // }
-        // return $cou;
         foreach($result as $row){
             $temp = MatchVideo::where('categoryID', $row['categoryID'])->orderByRaw("RAND()")->take(2)->get();
             foreach($temp as $row1){
@@ -335,7 +369,6 @@ class SystemUsersController extends Controller
             }
             array_push($videos,$temp);
         }
-        // return view('user.home',compact('feelings','usersPost','quotes','videos','comp','problems'));
         return view('user.home',compact('feelings','usersPost','quotes','videos','comp','n_quotes','comp1','problems'));
     }
 
@@ -348,5 +381,166 @@ class SystemUsersController extends Controller
         $interests = Interest::get();
         $specs = Specialization::get();
         return view('registerFacilitator',compact('interests','specs'));
+    }
+
+    public function registerService(Request $request){
+        // return $request; 
+        $checkUsername = SystemUser::where('username',$request['username'])->value('username');
+        if(is_null($checkUsername)){
+            if ($request['userType'] == 'seeker'){
+                if ($request['confirm'] == $request['password']){
+                    SystemUser::create([
+                        'first_name' => $request['fname'],
+                        'last_name' => $request['lname'],
+                        'email' => $request['email'],
+                        'birthday' => $request['birthday'],
+                        // 'birthday' => $birthday,
+                        'gender' => $request['gender'],
+                        'username' => $request['username'],
+                        'password' => bcrypt($request['password']),
+                        'userType' => 'seeker',
+                    ]);
+                    //generating TOKEN_ID and store userID to token table
+                    $userID = SystemUser::where("username", $request['username'])->value('user_id');
+                    $token = new Token();
+                    $newTokenID = ' ';
+                    if (Token::get() == EmptyMuch::get()){
+                        $token->token_id = "T00000000001";
+                        $newTokenID = "T00000000001";
+                    }
+                    else {
+                        $row = Token::orderby('token_id','desc')->first();
+                        $temp = substr($row["token_id"],1);
+                        $temp = (int)$temp + 1;
+                        $newTokenID = "T".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
+                        $token->token_id = $newTokenID;
+                    }
+                    $token->token_user_id = $userID;
+                    $token->save();
+
+                    //comparing interests to db_interests
+                    $db_usersInterests = [];
+                    $usersInterests = $request->interests;
+                    $interests = Interest::get();
+                    foreach($interests as $interest){
+                        for ($i = 0; $i < count($usersInterests); $i++){
+                            if ($interest['interestName'] == $usersInterests[$i]){
+                                array_push($db_usersInterests,$interest['interestID']);
+                            }
+                        }
+                    }
+                    //store interests to usersinterests
+                    foreach($db_usersInterests as $user_interest){
+                        UsersInterests::create([
+                            'user_id' => $userID,
+                            'interestID' => $user_interest,
+                        ]);
+                    }
+                    $token_key = Token::where('token_id',$newTokenID)->value('token');
+                    return response()->json([
+                        "token" => $token_key,
+                    ]);
+                }
+            }
+            if ($request['userType'] == 'facilitator'){
+                if ($request['confirm'] == $request['password']){
+                    SystemUser::create([
+                        'first_name' => $request['fname'],
+                        'last_name' => $request['lname'],
+                        'email' => $request['email'],
+                        'birthday' => $request['birthday'],
+                        // 'birthday' => $birthday,
+                        'gender' => $request['gender'],
+                        'username' => $request['username'],
+                        'password' => bcrypt($request['password']),
+                        'userType' => 'facilitator',
+                    ]);
+
+                    //generating TOKEN_ID and store userID to token table
+                    $newTokenID = ' ';
+                    $userID = SystemUser::where("username", $request['username'])->value('user_id');
+                    $token = new Token();
+                    if (Token::get() == EmptyMuch::get()){
+                        $token->token_id = "T00000000001";
+                        $newTokenID = "T00000000001";
+                    }
+                    else {
+                        $row = Token::orderby('token_id','desc')->first();
+                        $temp = substr($row["token_id"],1);
+                        $temp = (int)$temp + 1;
+                        $newTokenID = "T".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
+                        $token->token_id = $newTokenID;
+                    }
+                    $token->token_user_id = $userID;
+                    $token->save();
+
+                    //comparing interests to db_interests
+                    $db_usersInterests = [];
+                    $usersInterests = $request->interests;
+                    $interests = Interest::get();
+                    foreach($interests as $interest){
+                        for ($i = 0; $i < count($usersInterests); $i++){
+                            if ($interest['interestName'] == $usersInterests[$i]){
+                                array_push($db_usersInterests,$interest['interestID']);
+                            }
+                        }
+                    }
+                    //store interests to usersinterests
+                    foreach($db_usersInterests as $user_interest){
+                        UsersInterests::create([
+                            'user_id' => $userID,
+                            'interestID' => $user_interest,
+                        ]);
+                    }
+
+                    // //certificate upload
+                    // $fileName = $request->username."/certificate"."/".$request->file->getClientOriginalName();
+                    // $fileType = $request->file->getClientOriginalExtension();
+                    // Storage::disk('public')->put($fileName, File::get($request->file));
+                    // $url = Storage::url($fileName);
+                    // $newFile = new CertificateFile;
+                    // if(CertificateFile::get() == EmptyMuch::get()){
+                    //     $newFile->fileID = "F00001";
+                    // }
+                    // else{
+                    //     $row = CertificateFile::orderby('fileID', 'desc')->first();
+                    //     $temp = substr($row['fileID'], 1);
+                    //     $temp =(int)$temp + 1;
+                    //     $id = "F".(string)str_pad($temp, 5, "0", STR_PAD_LEFT);
+                    //     $newFile->fileID = $id;
+                    // }
+                    // $newFile->fileContent = $url;
+                    // $newFile->fileExt = $fileType;
+                    // $newFile->user_id = $userID;
+                    // $newFile->save();
+
+                    //comparing specs to db_specs
+                    $db_specs = Specialization::get();
+                    $usersSpecs = $request['specs'];
+                    $specs = [];
+                    foreach($db_specs as $spec){
+                        for ($i = 0; $i < count($usersSpecs); $i++){
+                            if ($spec['spec_name'] == $usersSpecs[$i]){
+                                array_push($specs,$spec['spec_id']);
+                            }
+                        }
+                    }
+                    foreach($specs as $spec){
+                        FacilitatorSpec::create([
+                            'user_id' => $userID,
+                            'spec_id' => $spec,
+                        ]);
+                    }
+                    $token_key = Token::where('token_id',$newTokenID)->value('token');
+                    return response()->json([
+                        'token' => $token_key,
+                    ]);
+                }
+            }
+        } else {
+            return response()->json([
+                'message' => 'Error in registration!'
+            ]);
+        }
     }
 }
