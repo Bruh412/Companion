@@ -12,6 +12,6 @@ class PostFeeling extends Model
     public $timestamps = false;
 
     public function postStatus(){
-        return $this->hasOne('App\PostStatus','post_feeling_id','post_feeling_id');
+        return $this->hasOne('App\UsersPostFeeling','post_feeling_id','post_feeling_id');
     }
 }

@@ -66,6 +66,15 @@
 		.ds{
 			background-color: transparent;
 		}
+        .seeker:hover, .faci:hover{
+            background: linear-gradient(to right, #F09819 , #EDDE5D);
+            border: none;
+        }
+        .btn-info {
+            color: #fff;
+            background: linear-gradient(to right, #F09819 , #EDDE5D) !important;
+            border: none !important;
+        }
 		</style>
     </head>
 <body>
@@ -79,13 +88,13 @@
 				<div class="col-md-6">
 					<form method="post" action="{{ url('/register/seeker') }}">
 						{{ csrf_field() }}
-						<button class="btn btn-info" name="type" value="Seeker">Seeker</button>
+						<button class="seeker btn btn-info" name="type" value="Seeker">Seeker</button>
 					</form>
 				</div>
 				<div class="col-md-6">
 					<form method="post" action="{{ url('/register/facilitator') }}">
 						{{ csrf_field() }}
-						<button class="btn btn-info" name="type" value="Facilitator">Facilitator</button>
+						<button class="faci btn btn-info" name="type" value="Facilitator">Facilitator</button>
 					</form>
 				</div>
 			</div>

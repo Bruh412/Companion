@@ -19,7 +19,7 @@
                 </div>
                 </div>
                 <br>    
-                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;">Create TalkCircle</button>
+                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;"  data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Create TalkCircle</button>
             </div>
             <div class="col-7">
                  <div class="card" style="border-color: #FFB75E;">

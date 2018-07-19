@@ -78,7 +78,9 @@
             li {
                 border: none !important;
             }
-            
+            .modal-backdrop {
+                z-index: 1020 !important;
+            }
         </style>
 </head>
 <body>
@@ -93,86 +95,71 @@
         <ul class="navbar-nav" style="font-size: 1rem; padding-left: 7px;">
         <li class="nav-item active">
             <a class="nav-labels nav-link text-white pr-2 pl-2" href="{{ url('/wall')}}">Home <span class="sr-only">(current)</span></a>
-
-            
         </li>
         <li class="nav-item">
-            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Notiications</a>
+            <a class="nav-labels nav-link text-white" href="#">Notiications</a>
         </li>
         <li class="nav-item">
-            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Profile</a>
+            <a class="nav-labels nav-link text-white" href="#">Profile</a>
         </li>
         <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</a>
-                <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Join TalkCircle</button> -->
-                <!-- <button type="submit">Join TalkCircle</button> -->
-                <form action="/groupUser/{{ Auth::user()->user_id }}" method="post">
-                    {{ csrf_field() }}
-                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Just a question before joining...</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
-                                            </button>
-                                        </div>
-                                                
-                                                <div class="modal-body">
-                                                    <h4>How are you feeling today? What seems to be bothering you?</h4>
-                                                    <input type="hidden" name="long" id="long">
-                                                    <input type="hidden" name="lat" id="lat">
-                                                    
-                                                    @foreach($problems as $prob)
-                                                    <div class="form-check" style="background-color: white;">
-                                                        <input class="form-check-input" type="checkbox" value="{{ $prob->problem_id }}" id="defaultCheck1" name="problems[]">
-                                                        <label class="form-check-label" for="defaultCheck1">
-                                                            {{ $prob->problem_name }}
-                                                        </label>
-                                                    </div>
-                                                    @endforeach
-                                                </div>
-                                                <script>
-                                                    var long = document.getElementById("long");
-                                                    var lat = document.getElementById("lat");
-
-                                                    function getLocation() {
-                                                        console.log(navigator.geolocation);
-                                                        if (navigator.geolocation) {
-                                                            navigator.geolocation.getCurrentPosition(showPosition);
-                                                        } else { 
-                                                            // long.value = "null";
-                                                            // lat.value = "null";
-                                                            long.value = position.coords.longitude;
-                                                            lat.value = position.coords.latitude;
-                                                        }
-                                                    }
-
-                                                    function showPosition(position) {
-                                                        long.value = position.coords.longitude;
-                                                        lat.value = position.coords.latitude;
-                                                    }
-                                                </script>
-                                                <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-info" id="imagesButton">Join Queue</button>
-                                                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                                                </div>
-                                            
-                                        </div>
+            <form action="/groupUser/{{ Auth::user()->user_id }}" method="post">
+                {{ csrf_field() }}
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Just a question before joining...</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" class="btn btn-danger">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>How are you feeling today? What seems to be bothering you?</h4>
+                                    <input type="hidden" name="long" id="long">
+                                    <input type="hidden" name="lat" id="lat">
+                                    
+                                    @foreach($problems as $prob)
+                                    <div class="form-check" style="background-color: white;">
+                                        <input class="form-check-input" type="checkbox" value="{{ $prob->problem_id }}" id="defaultCheck1" name="problems[]">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            {{ $prob->problem_name }}
+                                        </label>
                                     </div>
+                                    @endforeach
+                                </div>
+                                <script>
+                                    var long = document.getElementById("long");
+                                    var lat = document.getElementById("lat");
+
+                                    function getLocation() {
+                                        console.log(navigator.geolocation);
+                                        if (navigator.geolocation) {
+                                            navigator.geolocation.getCurrentPosition(showPosition);
+                                        } else { 
+                                            // long.value = "null";
+                                            // lat.value = "null";
+                                            long.value = position.coords.longitude;
+                                            lat.value = position.coords.latitude;
+                                        }
+                                    }
+
+                                    function showPosition(position) {
+                                        long.value = position.coords.longitude;
+                                        lat.value = position.coords.latitude;
+                                    }
+                                </script>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-info" id="imagesButton">Join Queue</button>
+                                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+            </form>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
-
-
-        </li>
-        <li class="nav-item">
-            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Notiications</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Profile</a>
+            <a class="nav-labels nav-link text-white" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
         </li>
         </ul>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -214,7 +201,7 @@
                 </div>
                 </div>
                 <br>    
-                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;">Create TalkCircle</button>
+                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;"  data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Create TalkCircle</button>
             </div>
             <div class="col-7">
                 <input type="hidden" value="{{ csrf_token() }}" id="token">
@@ -509,7 +496,7 @@
                 data:  "post=" + post + "&feeling=" + feeling + "&token=" + token,
                 url: "<?php echo url('/posts/save')?>",
                 success: function(data){
-                    // console.log(data);
+                    console.log(data);
                     $("#post").val("");
                     $('#posts').empty().html(data);
                 }

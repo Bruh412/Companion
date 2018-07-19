@@ -112,6 +112,7 @@
                     <a href="/feelings">Feelings</a>
                     <a href="/categories">Categories</a>
                     <a href="/quotes">Quotes</a>
+                    <a href="/videos">Videos</a>
                     <a href="/systemConfig">Configuration</a>
                     
                 </div>
