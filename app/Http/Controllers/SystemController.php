@@ -559,7 +559,8 @@ class SystemController extends Controller
                 }
                 $mainGroupID = $groupDB->groupID;
                 $groupDB->groupName = $groupFaci['first_name']." ".$groupFaci['last_name']."'s Group";
-                $groupDB->save();
+                
+                // $groupDB->save();
 
                 // --- ADDING MEMBERS TO GROUP
                 foreach ($group as $groupMem) {
@@ -579,16 +580,56 @@ class SystemController extends Controller
                     $gm->fname = $groupMem->first_name;
                     $gm->lname = $groupMem->last_name;
                     $gm->groupID = $mainGroupID;
-                    $gm->save();
+
+                    // $gm->save();
                 }
 
                 // --- ADDING DETAILS TO GROUP
                 
-                // IMPORTANT NOTES
-
+                // IMPORTANT NOTES -- STARTED NOT DONE
+                
                 // PLEASE SOLVE AVERAGE FOR GROUP BY MAKING A NEW 'CENTROID' LAYOUT
                 // VALUES GREATER THAN 0 WILL BE ADDED TO DETAILS DB
                 // THIS IS POSSIBLY THE END FOR THE FUNCTION
+
+                $groupAve = $this->createNode("groupAve");   
+
+                foreach ($groupAve as $row => $rowValue) {
+                    if($row != 'user_id' && $row != 'cluster'){
+
+                        if(!Problem::where("problem_name", $row)->get()){
+                            $score = 0;
+                            foreach ($group as $member) {
+                                if ($member->userType != 'facilitator'){
+                                    print_r($member->first_name);
+                                    $userInQueue = QueueTalkCircle::where("user_id", $member->user_id)->get()[0];
+                                    
+                                    $problems = QueueUsersProblem::where("queueID", $userInQueue->queueID)->get();
+                                    
+                                    foreach ($problems as $problem) {
+                                        $temp = Problem::findOrFail($problem->problem_id);
+                                        if($temp->problem_name == $row){
+                                            $score += 1;
+                                        }
+                                    }
+
+
+                                }
+                            }
+                            // dd($score);
+                            $score = $score/(count($group)-1);
+                            $groupAve[$row] = $score;
+                        }
+                        else{
+                            // YOU LEFT HERE --- INSERT CODE FOR SOLVING AVERGE INTEREST
+                        }
+
+
+
+                    }
+                }
+
+                dd($groupAve);
 
                 return view('user.meetYourGroup')->with(['group'=>$group]);
             }
