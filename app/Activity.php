@@ -26,4 +26,8 @@ class Activity extends Model
     public function equipments(){
         return $this->hasMany("App\Equipment", "actID", "actID");
     }
+
+    public function problems(){
+        return $this->hasMany("App\ActivityProblem", "actID", "actID");
+    }
 }

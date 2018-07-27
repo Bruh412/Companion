@@ -18,6 +18,7 @@ use App\SpecMatchProblem;
 use App\Group;
 use App\GroupActivities;
 use App\GroupDetails;
+use App\GroupDetailsInterests;
 use App\GroupMember;
 use Auth;
 
@@ -560,7 +561,7 @@ class SystemController extends Controller
                 $mainGroupID = $groupDB->groupID;
                 $groupDB->groupName = $groupFaci['first_name']." ".$groupFaci['last_name']."'s Group";
                 
-                // $groupDB->save();
+                $groupDB->save();
 
                 // --- ADDING MEMBERS TO GROUP
                 foreach ($group as $groupMem) {
@@ -581,7 +582,7 @@ class SystemController extends Controller
                     $gm->lname = $groupMem->last_name;
                     $gm->groupID = $mainGroupID;
 
-                    // $gm->save();
+                    $gm->save();
                 }
 
                 // --- ADDING DETAILS TO GROUP
@@ -594,14 +595,15 @@ class SystemController extends Controller
 
                 $groupAve = $this->createNode("groupAve");   
 
+                
                 foreach ($groupAve as $row => $rowValue) {
-                    if($row != 'user_id' && $row != 'cluster'){
+                    if($row != 'user_id' && $row != 'Cluster'){
 
-                        if(!Problem::where("problem_name", $row)->get()){
+                        if(Problem::where("problem_name", $row)->get() != EmptyMuch::get()){
                             $score = 0;
                             foreach ($group as $member) {
                                 if ($member->userType != 'facilitator'){
-                                    print_r($member->first_name);
+                                    // print_r($member->first_name);
                                     $userInQueue = QueueTalkCircle::where("user_id", $member->user_id)->get()[0];
                                     
                                     $problems = QueueUsersProblem::where("queueID", $userInQueue->queueID)->get();
@@ -621,7 +623,27 @@ class SystemController extends Controller
                             $groupAve[$row] = $score;
                         }
                         else{
-                            // YOU LEFT HERE --- INSERT CODE FOR SOLVING AVERGE INTEREST
+                            $score = 0;
+                            foreach ($group as $member) {
+                                if ($member->userType != 'facilitator'){
+                                    // print_r($member->first_name);
+                                    // $userInQueue = QueueTalkCircle::where("user_id", $member->user_id)->get()[0];
+                                    
+                                    $interests = UsersInterests::where("user_id", $member->user_id)->get();
+                                    
+                                    foreach ($interests as $inter) {
+                                        $temp = Interest::findOrFail($inter->interestID);
+                                        if($temp->interestName == $row){
+                                            $score += 1;
+                                        }
+                                    }
+
+
+                                }
+                            }
+                            // dd($score);
+                            $score = $score/(count($group)-1);
+                            $groupAve[$row] = $score;
                         }
 
 
@@ -629,7 +651,57 @@ class SystemController extends Controller
                     }
                 }
 
-                dd($groupAve);
+                
+                // dd($groupAve); // <-- GROUP AVERAGE
+
+                foreach ($groupAve as $field => $fieldValue) {
+                    if($field != 'user_id' && $field != 'Cluster'){
+                        if($fieldValue > 0){
+                            if(Problem::where("problem_name", $field)->get() != EmptyMuch::get()){
+                                $gd = new GroupDetails;
+                                
+                                if(GroupDetails::get() == EmptyMuch::get()){
+                                    $gd->groupDetailID = "GD0001";
+                                }
+                                else{
+                                    $row = GroupDetails::orderby('groupDetailID', 'desc')->first();
+                                    $temp = substr($row['groupDetailID'], 2);
+                                    $temp =(int)$temp + 1;
+                                    $id = "GD".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                                    $gd->groupDetailID = $id;
+                                }
+                                $problem = Problem::where("problem_name", $field)->get()[0];
+                                $gd->problemID = $problem->problem_id;
+                                $gd->groupID = $mainGroupID;
+
+                                $gd->save();
+                            }
+                            else{
+                                $gdi = new GroupDetailsInterests;
+
+                                if(GroupDetailsInterests::get() == EmptyMuch::get()){
+                                    $gdi->groupDetailID = "GD0001";
+                                }
+                                else{
+                                    $row = GroupDetailsInterests::orderby('groupDetailID', 'desc')->first();
+                                    $temp = substr($row['groupDetailID'], 2);
+                                    $temp =(int)$temp + 1;
+                                    $id = "GD".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                                    $gdi->groupDetailID = $id;
+                                }
+
+                                $interest = Interest::where("interestName", $field)->get()[0];
+                                $gdi->interestID = $interest->interestID;
+                                $gdi->groupID = $mainGroupID;
+
+                                $gdi->save();
+                            }
+                            
+                        }
+                    }
+                }
+
+                // dd("done");
 
                 return view('user.meetYourGroup')->with(['group'=>$group]);
             }

@@ -99,6 +99,17 @@
             </td>
         </tr>
 
+        <tr>
+            <td><h5>This activity helps the following problems: </h5></td>
+            <td>
+                <ul>
+                    @foreach($act->problems as $prob)
+                    <li>{{ $prob->problem['problem_name'] }}</li>
+                    @endforeach
+                </ul>
+            </td>
+        </tr>
+
     </table>
 </div>
 @endsection

@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GroupDetails extends Model
+class GroupDetailsInterests extends Model
 {
-    protected $table = "groupdetails";
+    protected $table = "groupdetailsinterests";
     protected $primaryKey = "groupDetailID";
     public $timestamps = false;
     public $incrementing = false;
