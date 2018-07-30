@@ -175,13 +175,15 @@ use App\FacilitatorSpec;
                         <br><br>
                 @endforeach
 
+                @if(Auth::user()->userType == 'facilitator')
                 <center>
-                    <form action="/selectActivities" method="post">
+                    <form action="/selectActivities/{{ $dbgroup->groupID }}" method="get">
                         <button class="btn btn-primary" style="font-size: 30px;">
                             Get Activities!
                         </button>
                     </form>
                 </center>
+                @endif
                 
                 </ul>
             </div>

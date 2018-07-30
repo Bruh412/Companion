@@ -702,10 +702,21 @@ class SystemController extends Controller
                 }
 
                 // dd("done");
+                $dbgroup = Group::findOrFail($mainGroupID);
 
-                return view('user.meetYourGroup')->with(['group'=>$group]);
+                return view('user.meetYourGroup')->with(['group'=>$group, 'dbgroup'=>$dbgroup]);
             }
         // end function
+    }
+
+    public function recommendActivities($id){
+        $probDetails = GroupDetails::where("groupID", $id)->get();
+        $intDetails = GroupDetailsInterests::where("groupID", $id)->get();
+
+        // YOU LEFT HERE --- MATCHING DETAILS WITH ACTIVITIES AND LISTING THEM IN PROFESSIONAL SIDE
+        
+        // CAUTION --- ALGORITHM INCOMING --- CAUTION
+        dd($intDetails);
     }
 }
 

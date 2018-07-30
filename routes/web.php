@@ -132,7 +132,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/groupFaci/{id}', 'SystemController@addFaciToTalkCircleQueue');
 
     // --- ONCE GROUPED
-    Route::get('/selectActivities', 'SystemController@recommendActivities');
+    Route::get('/selectActivities/{id}', 'SystemController@recommendActivities');
 });
 // });
 
