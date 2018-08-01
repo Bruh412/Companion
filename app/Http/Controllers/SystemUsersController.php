@@ -46,6 +46,8 @@ class SystemUsersController extends Controller
     }
 
     public function register(Request $request){
+        // dd($request);
+
         $rules = [
             'fname'=>'required|max:255',
             'lname'=>'required|max:255',

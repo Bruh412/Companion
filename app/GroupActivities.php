@@ -9,7 +9,7 @@ class GroupActivities extends Model
     protected $table = "groupactivities";
     protected $primaryKey = "groupActID";
     public $timestamps = false;
-    public $incrementing = true;
+    public $incrementing = false;
 
     public function group(){
         return $this->belongsTo("App\Group", "groupID", "groupID");

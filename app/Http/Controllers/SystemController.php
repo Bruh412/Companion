@@ -20,6 +20,7 @@ use App\GroupActivities;
 use App\GroupDetails;
 use App\GroupDetailsInterests;
 use App\GroupMember;
+use App\Activity;
 use Auth;
 
 class SystemController extends Controller
@@ -710,13 +711,90 @@ class SystemController extends Controller
     }
 
     public function recommendActivities($id){
+        $config = SystemConfig::findOrFail(1);
         $probDetails = GroupDetails::where("groupID", $id)->get();
         $intDetails = GroupDetailsInterests::where("groupID", $id)->get();
 
         // YOU LEFT HERE --- MATCHING DETAILS WITH ACTIVITIES AND LISTING THEM IN PROFESSIONAL SIDE
         
         // CAUTION --- ALGORITHM INCOMING --- CAUTION
-        dd($intDetails);
+
+        $activities = Activity::get();
+
+        // dd($activities[0]->activityTags[0]->interest);
+
+        $activityArray = [];
+
+        foreach ($activities as $activity) {
+
+            $score = 0;
+
+            foreach ($probDetails as $problem) {
+                foreach ($activity->problems as $actProb) {
+                    if($problem->problem == $actProb->problem)
+                        $score += 1;
+                }
+            }
+
+            foreach ($intDetails as $interest) {
+                foreach ($activity->activityTags as $actTag) {
+                    if($interest->interest == $actTag->interest)
+                        $score += 1;
+                }
+            }
+
+            $actFormat = [
+                'activity' => $activity,
+                'score' => $score
+            ];
+
+            array_push($activityArray, $actFormat);
+        }
+
+        $sortedActArray = [];
+        
+        foreach (array_sort($activityArray, 'score', SORT_ASC) as $act) {
+            array_push($sortedActArray, $act);
+        }
+
+        // for ($index=count($sortedActArray)-1; $index >= 0; $index--) { 
+        //     print_r($sortedActArray[$index]['activity']->title);\
+        //     print_r($sortedActArray[$index]['score']);
+        //     echo "<br>";
+        // }
+        
+        // for ($index=count($sortedActArray)-1, $count=0; $index >= 0 && $count <= (int)$config->numberOfTopActToBeSuggested; $index--, $count++) { 
+        //     print_r($sortedActArray[$index]['activity']->title);\
+        //     print_r($sortedActArray[$index]['score']);
+        //     echo "<br>";
+        // }
+
+
+        return view('user.selectActivities')->with(['activities'=>$sortedActArray, 'groupID'=>$id]);
+
+    }
+
+    public function saveActivities($groupid, Request $req){
+        
+        foreach ($req->selected as $activity) {
+            $groupAct = new GroupActivities();
+
+            if(GroupActivities::get() == EmptyMuch::get()){
+                $groupAct->groupActID = "GA0001";
+            }
+            else{
+                $row = GroupActivities::orderby('groupActID', 'desc')->first();
+                $temp = substr($row['groupActID'], 2);
+                $temp =(int)$temp + 1;
+                $id = "GA".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                $groupAct->groupActID = $id;
+            }
+            $groupAct->actID = $activity;
+            $groupAct->groupID = $groupid;
+            $groupAct->save();
+        }
+
+
     }
 }
 

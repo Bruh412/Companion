@@ -14,4 +14,8 @@ class GroupDetails extends Model
     public function group(){
         return $this->belongsTo("App\Group", "groupID", "groupID");
     }
+
+    public function problem(){
+        return $this->hasOne("App\Problem", "problem_id", "problemID");
+    }
 }

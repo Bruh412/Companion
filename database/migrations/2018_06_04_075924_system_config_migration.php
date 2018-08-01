@@ -18,6 +18,7 @@ class SystemConfigMigration extends Migration
 
             $table->integer('numberOfUsersToGroup');
             $table->integer('numberOfDaysUntilNewVideoForQuotes');
+            $table->integer('numberOfTopActToBeSuggested');
 
             // $table->timestamps();
         });

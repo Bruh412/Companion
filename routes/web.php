@@ -133,6 +133,7 @@ Route::middleware(['auth'])->group(function(){
 
     // --- ONCE GROUPED
     Route::get('/selectActivities/{id}', 'SystemController@recommendActivities');
+    Route::post('/submitActs/{id}', 'SystemController@saveActivities');
 });
 // });
 

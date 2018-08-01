@@ -14,4 +14,8 @@ class GroupDetailsInterests extends Model
     public function group(){
         return $this->belongsTo("App\Group", "groupID", "groupID");
     }
+
+    public function interest(){
+        return $this->hasOne("App\Interest", "interestID", "interestID");
+    }
 }
