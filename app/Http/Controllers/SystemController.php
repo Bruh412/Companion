@@ -30,6 +30,10 @@ class SystemController extends Controller
         return view('SystemConfig')->with(['config'=>$config->toArray()]);
     }
 
+    public function testgmap(){
+        return view('admin.test');
+    }
+
     public function editConfig($field){
         return view('editConfigPage')->with(['field'=>$field]);
     }

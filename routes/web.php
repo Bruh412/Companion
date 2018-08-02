@@ -121,6 +121,9 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/editConfig/{field}', 'SystemController@editConfig');
     Route::post('/editConfig/{field}', 'SystemController@saveEditConfig');
 
+    // --- ADD PLACE -X
+    Route::get('/testgmap', 'SystemController@testgmap');
+
     // --- GROUPING
 
     // - Add to queue
