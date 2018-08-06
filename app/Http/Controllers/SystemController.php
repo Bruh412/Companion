@@ -21,6 +21,8 @@ use App\GroupDetails;
 use App\GroupDetailsInterests;
 use App\GroupMember;
 use App\Activity;
+use App\VenueCategories;
+use App\Venue;
 use Auth;
 
 class SystemController extends Controller
@@ -28,10 +30,6 @@ class SystemController extends Controller
     public function viewConfig(){
         $config = SystemConfig::findOrFail(1);
         return view('SystemConfig')->with(['config'=>$config->toArray()]);
-    }
-
-    public function testgmap(){
-        return view('admin.test');
     }
 
     public function editConfig($field){

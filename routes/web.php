@@ -122,7 +122,9 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/editConfig/{field}', 'SystemController@saveEditConfig');
 
     // --- ADD PLACE -X
-    Route::get('/testgmap', 'SystemController@testgmap');
+    Route::get('/venueDash', 'VenueController@showAll');
+    Route::get('/addVenue', 'VenueController@testgmap');
+    Route::post('/saveVenue', 'VenueController@saveVenue');
 
     // --- GROUPING
 
