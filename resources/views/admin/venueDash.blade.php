@@ -174,6 +174,12 @@
 					});
 				}
 			},
+			
+			setCenterZoom: function(object,lng,lat){
+				var latlng = new google.maps.LatLng(lat, lng);
+				_self.vars.map.setZoom(_self.params.defZoom);
+				setPosition(latlng);
+			},
 
 			// INITIALIZE MAP ON DIV //////////////////////////////////////////////////////////////////
 			init : function(object) {
@@ -241,18 +247,17 @@
 
 				google.maps.event.addListener(autocomplete, 'place_changed', function() {
 
-					
-
 					infowindow.close();
 					marker.setVisible(false);
 					var place = autocomplete.getPlace();
-					console.log(" ghasdasdasd");
+					// console.log(" ghasdasdasd");
 					$(_self.vars.cssID + ".gllpLongitude").val( place.geometry.location.lng() );
 					$(_self.vars.cssID + ".gllpLatitude").val( place.geometry.location.lat() );
 					if (!place.geometry) {
 					return;
 					}
-
+							
+					
 					// If the place has a geometry, then present it on a map.
 					if (place.geometry.viewport) {
 						_self.vars.map.fitBounds(place.geometry.viewport);
@@ -357,12 +362,22 @@
 	});
 		
 	$(document).ready( function() {
+		$obj = null;
 		if (!$.gMapsLatLonPickerNoAutoInit) {
 			$(".gllpLatlonPicker").each(function () {
 				$obj = $(document).gMapsLatLonPicker();
 				$obj.init( $(this) );
 			});
 		}
+		
+		$(".setCenterZoom").on("click",function(){
+			var lng=  $(this).attr("data-lng");
+			var lat = $(this).attr("data-lat");
+			if($obj!=null){
+				$obj.setCenterZoom($(this),lng,lat);
+			}
+			console.log("CLicked "+lng+" "+lat);
+		});
 	});
 
 	$(document).bind("location_changed", function(event, object) {
@@ -371,9 +386,6 @@
 
 	}(jQuery));
 </script>
-
-
-
 
 <div class="container">
 <center>
@@ -397,25 +409,26 @@
                     <th>Latitude</th>
                     <th>Longitude</th>
                     <th>Category</th>
-                </tr>
-                @foreach($venues as $venue)
+				</tr>
+				
+				<script>
+					function changeLongLat(name, category){
+						document.getElementById('latChange').value = document.getElementById(name+category+'lat').value;
+						document.getElementById('longChange').value = document.getElementById(name+category+'long').value;
+						// google.maps.LatLng(lat,long);
+					}
+				</script>
 
-                    <script>
-                        function changeLongLat(lat, long){
-                            // document.getElementById('latChange').value = lat;
-                            // document.getElementById('longChange').value = long;
-                            google.maps.LatLng(lat,long);
-                        }
-                    </script>
+                @foreach($venues as $venue)
 
                     <!-- YOU LEFT OFF HERE /// FUNCTION WON'T CHANGE GOOGLE MAP MARKER -->
 
                     <tr>
                         <td>{{ $venue->venueName }}</td>
-                        <td id="{{ $venue->venueName }}{{ $venue->venueCategory }}lat" value="{{ $venue->latitude }}">{{ $venue->latitude }}</td>
-                        <td id="{{ $venue->venueName }}{{ $venue->venueCategory }}long" value="{{ $venue->longitude }}">{{ $venue->longitude }}</td>
+                        <td><input type="text" id="{{ $venue->venueName }}{{ $venue->venueCategory }}lat" value="{{ $venue->latitude }}"></td>
+                        <td><input type="text"  id="{{ $venue->venueName }}{{ $venue->venueCategory }}long" value="{{ $venue->longitude }}"></td>
                         <td>{{ $venue->venueCategory }}</td>
-                        <td><button onClick="changeLongLat({{ $venue->latitude }}, {{ $venue->longitude }})">check</button></td>
+					<td><button class="setCenterZoom" data-lat="{{ $venue->latitude }}" data-lng="{{ $venue->longitude }}">check</button></td>
                     </tr>
                 @endforeach
             </table>
@@ -423,4 +436,8 @@
 
     <br>
 </div>
+<script type="text/javascript">
+	
+</script>
 @endsection
+

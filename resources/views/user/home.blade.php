@@ -447,7 +447,7 @@
                                                     var lat = document.getElementById("lat");
 
                                                     function getLocation() {
-                                                        console.log(navigator.geolocation);
+                                                        // console.log(navigator.geolocation);
                                                         if (navigator.geolocation) {
                                                             navigator.geolocation.getCurrentPosition(showPosition);
                                                         } else { 

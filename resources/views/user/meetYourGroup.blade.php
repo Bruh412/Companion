@@ -141,14 +141,11 @@ use App\FacilitatorSpec;
                                 $queued = QueueTalkCircle::where('user_id', $member['user_id'])->get()[0];
 
                                 $lat = $queued['latitude'];
-                                $long = $queued['longitude'];
+                                $long = $queued['longitude'];                            
 
                                 $geocode=file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.','.$long.'&sensor=false'); 
                                 
                                 $output= json_decode($geocode);
-                                // dd($output);
-                                // $result = ;
-                                // dd($output->results[0]);
                                 
                                 echo '<li>Location: ';
                                     for($j=0;$j<2;$j++){
