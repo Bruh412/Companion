@@ -388,9 +388,14 @@
 </script>
 
 <div class="container">
+<a href="/home" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
+    <br>
+    <br>
 <center>
     <h1>List of possible venues for TalkCircles</h1>
 </center>
+<a href="/addVenue" class="btn btn-primary">Add New Venue</a>
+<br>
 <br>
        <div class="form-group">
 			<fieldset class="gllpLatlonPicker" style="max-height: 100px;">
@@ -403,32 +408,23 @@
 				<input type="hidden" class="gllpZoom" value="17"/> 
 			</fieldset>
 
-            <table style="margin-top: 400px" class="table table-striped">
+            <table style="margin-top: 400px" class="table table-hover">
                 <tr>
                     <th>Venue</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
                     <th>Category</th>
+					<th colspan='2'>Options</th>
 				</tr>
-				
-				<script>
-					function changeLongLat(name, category){
-						document.getElementById('latChange').value = document.getElementById(name+category+'lat').value;
-						document.getElementById('longChange').value = document.getElementById(name+category+'long').value;
-						// google.maps.LatLng(lat,long);
-					}
-				</script>
 
                 @foreach($venues as $venue)
-
-                    <!-- YOU LEFT OFF HERE /// FUNCTION WON'T CHANGE GOOGLE MAP MARKER -->
-
                     <tr>
                         <td>{{ $venue->venueName }}</td>
-                        <td><input type="text" id="{{ $venue->venueName }}{{ $venue->venueCategory }}lat" value="{{ $venue->latitude }}"></td>
-                        <td><input type="text"  id="{{ $venue->venueName }}{{ $venue->venueCategory }}long" value="{{ $venue->longitude }}"></td>
+                        <td>{{ $venue->latitude }}</td>
+                        <td>{{ $venue->longitude }}</td>
                         <td>{{ $venue->venueCategory }}</td>
-					<td><button class="setCenterZoom" data-lat="{{ $venue->latitude }}" data-lng="{{ $venue->longitude }}">check</button></td>
+						<td><button class="setCenterZoom btn btn-primary" data-lat="{{ $venue->latitude }}" data-lng="{{ $venue->longitude }}">Go to</button></td>
+						<td><a href="/deleteVenue/{{ $venue->id }}" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">Delete</a></td>
                     </tr>
                 @endforeach
             </table>

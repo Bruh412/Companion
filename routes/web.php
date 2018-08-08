@@ -124,6 +124,7 @@ Route::middleware(['auth'])->group(function(){
     // --- ADD PLACE -X
     Route::get('/venueDash', 'VenueController@showAll');
     Route::get('/addVenue', 'VenueController@testgmap');
+    Route::get('/deleteVenue/{id}', 'VenueController@deleteVenue');
     Route::post('/saveVenue', 'VenueController@saveVenue');
 
     // --- GROUPING

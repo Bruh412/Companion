@@ -376,10 +376,10 @@
 
 
 <div class="container">
-<!-- <a href="" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a> -->
+<a href="/venueDash" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
     <br>
     <br>
-    <h1>Choose a venue for TalkCircles</h1>
+    <h1>Choose a new venue for TalkCircles</h1>
     <br>
     <form action="/saveVenue" method="post" enctype="multipart/form-data">
         @csrf

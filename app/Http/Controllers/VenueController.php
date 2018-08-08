@@ -53,4 +53,10 @@ class VenueController extends Controller
 
         $newVenue->save();
     }
+
+    public function deleteVenue($id){
+        $venue = Venue::findOrFail($id);
+        $venue->delete();
+        return redirect(url('/venueDash'));
+    }
 }
