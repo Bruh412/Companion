@@ -96,6 +96,28 @@ use App\FacilitatorSpec;
     </nav>
     
     <div class="container">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyDpz7JmYU3-2CsRVbv3JHKzP-vdzkhgCrY&amp;sensor=false&amp;libraries=places"></script>            
+        <script type="text/javascript">
+             var getLocationName = function(lat,long,container) {
+                var cLocationName = "";
+                var latlng = new google.maps.LatLng(lat, long);
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({'latLng': latlng}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK && results[1]) {
+                        cLocationName = results[1].formatted_address;
+                        if(container!=null){
+                            $(container).html(cLocationName);
+                        }
+                    } else {
+                        setTimeout(function(){
+                            getLocationName(lat,long,container);
+                        },1000);
+                    }
+                });
+                return cLocationName;s
+            };
+        </script>
             <br>
             <center>
                 <h1>Meet your groupmates!</h1>
@@ -143,20 +165,24 @@ use App\FacilitatorSpec;
                                 $lat = $queued['latitude'];
                                 $long = $queued['longitude'];                            
 
-                                $geocode=file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.','.$long.'&sensor=false'); 
+                                // $geocode=file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?latlng='.$lat.','.$long.'&sensor=false'); 
                                 
-                                $output= json_decode($geocode);
+                                // $output= json_decode($geocode);
                                 
                                 echo '<li>Location: ';
                                     for($j=0;$j<2;$j++){
-                                        if($output->results != [])
-                                            echo '<b>'.$output->results[0]->address_components[$j]->long_name.'</b>';
-                                        else
-                                            echo "Try Again";
+                                        // if($output->results != [])
+                                        //     echo '<b>'.$output->results[0]->address_components[$j]->long_name.'</b>';
+                                        // else
+                                        //     echo "Try Again";
                                         
                                         if($j != 1)
                                         echo ", ";
                                     }
+                                    ?> 
+                                        <span class="location_name_text" data-long="{{ $queued['longitude'] }}" data-lat="{{ $queued['latitude'] }}"></span>
+                                        
+                                    <?php
                                 echo '</li>: ';
                             ?>
                         </ul>
@@ -185,4 +211,12 @@ use App\FacilitatorSpec;
                 </ul>
             </div>
     </div>
- 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".location_name_text").each(function(e){
+                var long = $(this).attr("data-long");
+                var lat = $(this).attr("data-lat");
+                var location_name = getLocationName(lat,long,$(this));
+            });
+        });
+    </script>

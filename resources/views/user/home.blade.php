@@ -148,7 +148,7 @@
                 </div>
                 </div>
                 <br>    
-                <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;" data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Create TalkCircle</button>
+                <button class="btn btn-primary" id="createTalkCircleButton" style="background-color: #FFB75E; border: none; width: 100%;" data-toggle="modal" data-target="#exampleModalCenter" >Create TalkCircle</button>
             </div>
             <div class="col-7">
                 <input type="hidden" value="{{ csrf_token() }}" id="token">
@@ -432,6 +432,7 @@
                                                     <h4>How are you feeling today? What seems to be bothering you?</h4>
                                                     <input type="hidden" name="long" id="long">
                                                     <input type="hidden" name="lat" id="lat">
+                                                    <input type="hidden" name="location_name" id="location_name">
                                                     
                                                     @foreach($problems as $prob)
                                                     <div class="form-check" style="background-color: white;">
@@ -443,25 +444,7 @@
                                                     @endforeach
                                                 </div>
                                                 <script>
-                                                    var long = document.getElementById("long");
-                                                    var lat = document.getElementById("lat");
-
-                                                    function getLocation() {
-                                                        // console.log(navigator.geolocation);
-                                                        if (navigator.geolocation) {
-                                                            navigator.geolocation.getCurrentPosition(showPosition);
-                                                        } else { 
-                                                            // long.value = "null";
-                                                            // lat.value = "null";
-                                                            long.value = position.coords.longitude;
-                                                            lat.value = position.coords.latitude;
-                                                        }
-                                                    }
-
-                                                    function showPosition(position) {
-                                                        long.value = position.coords.longitude;
-                                                        lat.value = position.coords.latitude;
-                                                    }
+                                                    
                                                 </script>
                                                 <div class="modal-footer">
                                                         <button type="submit" class="btn btn-info" id="imagesButton">Join Queue</button>
@@ -472,9 +455,54 @@
                                     </div>
                         </div>
                     </form>
-                    
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyDpz7JmYU3-2CsRVbv3JHKzP-vdzkhgCrY&amp;sensor=false&amp;libraries=places"></script>            
 <script>
+    var cLocationName = "";
+    var long = document.getElementById("long");
+    var lat = document.getElementById("lat");
+    
+    
+    var getLocationName = function() {
+        var latlng = new google.maps.LatLng(lat.value, long.value);
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'latLng': latlng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK && results[1]) {
+                cLocationName = results[1].formatted_address;
+                $("#location_name").val(cLocationName);
+            } else {
+                setTimeout(function(){
+                    getLocationName();
+                },1000);
+            }
+        });
+    };
+
+    function getLocation() {
+        // console.log(navigator.geolocation);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            // long.value = "null";
+            // lat.value = "null";
+            long.value = position.coords.longitude;
+            lat.value = position.coords.latitude;
+        }
+    }
+
+    function showPosition(position) {
+        long.value = position.coords.longitude;
+        lat.value = position.coords.latitude;
+        getLocationName();
+    }
+
     $(document).ready(function(){
+        getLocation();
+        getLocationName();
+        $("#createTalkCircleButton").on("click",function(){
+            getLocation();
+            getLocationName();
+        });
+
         $('#postBtn').attr('disabled', true);
     
         $('textarea').on('keyup',function() {

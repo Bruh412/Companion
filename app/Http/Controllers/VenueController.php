@@ -52,6 +52,9 @@ class VenueController extends Controller
         $newVenue->venueCategory = $req->venueCategory;
 
         $newVenue->save();
+
+        $venues = Venue::get();
+        return view('admin.venueDash')->with(['venues'=>$venues]);
     }
 
     public function deleteVenue($id){
