@@ -566,6 +566,8 @@ class SystemController extends Controller
                 
                 $groupDB->save();
 
+
+
                 // --- ADDING MEMBERS TO GROUP
                 foreach ($group as $groupMem) {
                     $gm = new GroupMember;
@@ -753,26 +755,14 @@ class SystemController extends Controller
             array_push($activityArray, $actFormat);
         }
 
-        $sortedActArray = [];
-        
-        foreach (array_sort($activityArray, 'score', SORT_ASC) as $act) {
-            array_push($sortedActArray, $act);
+        $sortedActArray = array_values(array_sort($activityArray, 'score', SORT_ASC));
+        $topActivities = [];
+
+        for( $index = count($sortedActArray)-1, $topCount = 0; $topCount <= 2; $topCount++, $index--){
+            array_push($topActivities, array_sort($sortedActArray, 'score', SORT_ASC)[$index]);
         }
 
-        // for ($index=count($sortedActArray)-1; $index >= 0; $index--) { 
-        //     print_r($sortedActArray[$index]['activity']->title);\
-        //     print_r($sortedActArray[$index]['score']);
-        //     echo "<br>";
-        // }
-        
-        // for ($index=count($sortedActArray)-1, $count=0; $index >= 0 && $count <= (int)$config->numberOfTopActToBeSuggested; $index--, $count++) { 
-        //     print_r($sortedActArray[$index]['activity']->title);\
-        //     print_r($sortedActArray[$index]['score']);
-        //     echo "<br>";
-        // }
-
-
-        return view('user.selectActivities')->with(['activities'=>$sortedActArray, 'groupID'=>$id]);
+        return view('user.selectActivities')->with(['activities'=>$topActivities, 'groupID'=>$id]);
 
     }
 
@@ -797,6 +787,25 @@ class SystemController extends Controller
         }
 
 
+    }
+
+    public function waveGetMembers($groupID){
+        // dd($groupID);
+        $allMembers = GroupMember::where('groupID', $groupID)->get();
+
+        foreach ($allMembers as $member) {
+            $temp = [
+                'id' => '',
+                'fname' => '',
+                'lname' => '',
+                'interests' => [],
+                // 'location' => '',
+            ];
+
+            dd($member);
+             
+            // YOU LEFT OFF HERE MAKE A SERVICE FOR WAVE
+        }
     }
 }
 
