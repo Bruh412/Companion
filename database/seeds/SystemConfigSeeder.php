@@ -14,6 +14,7 @@ class SystemConfigSeeder extends Seeder
         $data = [
             'numberOfUsersToGroup' => '4',
             'numberOfDaysUntilNewVideoForQuotes' => '2',
+            'numberOfTopActToBeSuggested' => '3',
         ];
         DB::table('abcsystemconfig')->insert($data);
     }

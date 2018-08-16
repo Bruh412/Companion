@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class SystemConfigMigration extends Migration
+class VenueCategoriesMigration extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class SystemConfigMigration extends Migration
      */
     public function up()
     {
-        Schema::create('abcsystemconfig', function (Blueprint $table) {
+        Schema::create('venuecategories', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->integer('numberOfUsersToGroup');
-            $table->integer('numberOfDaysUntilNewVideoForQuotes');
-            $table->integer('numberOfTopActToBeSuggested');
-
-            // $table->timestamps();
+            $table->string("venueCategory");
         });
     }
 
@@ -31,6 +26,6 @@ class SystemConfigMigration extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('abcsystemconfig');
+        Schema::dropIfExists('venuecategories');
     }
 }

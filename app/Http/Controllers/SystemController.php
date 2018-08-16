@@ -15,6 +15,15 @@ use App\Problem;
 use App\Specialization;
 use App\FacilitatorSpec;
 use App\SpecMatchProblem;
+use App\Group;
+use App\GroupActivities;
+use App\GroupDetails;
+use App\GroupDetailsInterests;
+use App\GroupMember;
+use App\Activity;
+use App\VenueCategories;
+use App\Venue;
+use Auth;
 
 class SystemController extends Controller
 {
@@ -105,13 +114,15 @@ class SystemController extends Controller
                 $queue->queueID = $id;
 
             }
+            $SID = $user->user_id;
+
             $queue->user_id = $user->user_id;
             $queue->longitude = $req->long;
             $queue->latitude = $req->lat;
             $queue->save();
 
-            // return redirect(url('/checkQueue'.'/'.$SID));
-            return redirect()->back();
+            return redirect(url('/checkQueue'.'/'.$SID));
+            // return redirect()->back();
         }
         else{
             //IN THE QUEUE
@@ -195,7 +206,7 @@ class SystemController extends Controller
         return $node;
     }
 
-    //not done
+    // GROUPING
     public function checkQueue3($id){
         $userQueue = QueueTalkCircle::where("user_id", $id)->get()[0];
         $allQueueUsers = [];
@@ -408,137 +419,393 @@ class SystemController extends Controller
             $faciCentroid = $bin[$clusterPrint];
             // dd($faciCentroid);
 
-            //assigning facilitator
-            $facilitators = [];
-            foreach (QueueTalkCircle::get() as $queuedUser) {
-                if($queuedUser->user['userType'] == 'facilitator')
-                    array_push($facilitators, $queuedUser->user);
-            }
-            // dd($facilitators);
-
-            $faciDecode = [];
-            foreach ($facilitators as $faci) {
-                $node = $this->createFaciNode($faci->user_id);
-                // dd($node);
-                //initializing values for each node
-                $count = 0;
-                foreach ($node as $field => $value) {
-                    $faciQueue = QueueTalkCircle::where('user_id', $faci->user_id)->get()[0];
-                    if(!$count == 0){
-                        foreach (FacilitatorSpec::where('user_id', $faci->user_id)->get() as $userSpec) {
-                            if($field == $userSpec->spec['spec_name']){
-                                $node[$field] = 1;
-                            }
-                        }
-                        if($field == 'Longitude'){
-                            $node[$field] = $faciQueue->longitude;
-                        }
-                        if($field == 'Latitude'){
-                            $node[$field] = $faciQueue->latitude;
-                        }
-                        $Userinterests = UsersInterests::where('user_id', $faci->user_id)->get();
-                        foreach ($Userinterests as $interest) {
-                            if($field == $interest->interest['interestName']){
-                                $node[$field] = 1;
-                            }
-                        }
-                    }
-                    $count++;
+            if(Auth::user()->userType == 'seeker'){
+                //assigning facilitator
+                $facilitators = [];
+                foreach (QueueTalkCircle::get() as $queuedUser) {
+                    if($queuedUser->user['userType'] == 'facilitator')
+                        array_push($facilitators, $queuedUser->user);
                 }
-                array_push($faciDecode, $node);
-            }
-            // dd($faciDecode);    
-            
-            //comparison
-            $problemBasis = $this->createProblemNode("problemBasis");
-            $specBasis = $this->createSpecNode("specBasis");
-            $longlatBasis = $this->createLongLatIntNode();
+                // dd($facilitators);
 
-            foreach ($faciDecode as $faci => $faciValue) {
-                foreach ($faciValue as $field => $fieldValue) {
-                    $problCount = 0;
-                    $specScore = 0;   
-                    if ($field != 'user_id' && $field != 'Score' && Specialization::where('spec_name', $field)->get() != EmptyMuch::get() && $fieldValue > 0){
-                        $spec = Specialization::where('spec_name', $field)->get()[0];
-                        foreach ($faciCentroid as $centroidField => $value) {
-                            if ($field != 'user_id' && $field != 'Score' && Problem::where('problem_name', $centroidField)->get() != EmptyMuch::get() && $value > 0){
-                                $prob = Problem::where('problem_name', $centroidField)->get()[0];
-
-                                foreach (SpecMatchProblem::where('spec_id', $spec['spec_id'])->get() as $match) {
-                                    $problCount = count(SpecMatchProblem::where('spec_id', $spec['spec_id'])->get());
-                                    if($match['problem_id'] == $prob['problem_id']){
-                                         $specScore += $value;
-                                    }
+                $faciDecode = [];
+                foreach ($facilitators as $faci) {
+                    $node = $this->createFaciNode($faci->user_id);
+                    // dd($node);
+                    //initializing values for each node
+                    $count = 0;
+                    foreach ($node as $field => $value) {
+                        $faciQueue = QueueTalkCircle::where('user_id', $faci->user_id)->get()[0];
+                        if(!$count == 0){
+                            foreach (FacilitatorSpec::where('user_id', $faci->user_id)->get() as $userSpec) {
+                                if($field == $userSpec->spec['spec_name']){
+                                    $node[$field] = 1;
                                 }
                             }
-
+                            if($field == 'Longitude'){
+                                $node[$field] = $faciQueue->longitude;
+                            }
+                            if($field == 'Latitude'){
+                                $node[$field] = $faciQueue->latitude;
+                            }
+                            $Userinterests = UsersInterests::where('user_id', $faci->user_id)->get();
+                            foreach ($Userinterests as $interest) {
+                                if($field == $interest->interest['interestName']){
+                                    $node[$field] = 1;
+                                }
+                            }
                         }
-                        $temp = $specScore/$problCount;
-                        $faciDecode[$faci]['Score'] += $temp;
+                        $count++;
+                    }
+                    array_push($faciDecode, $node);
+                }
+                // dd($faciDecode);    
+                
+                //comparison
+                $problemBasis = $this->createProblemNode("problemBasis");
+                $specBasis = $this->createSpecNode("specBasis");
+                $longlatBasis = $this->createLongLatIntNode();
+
+                foreach ($faciDecode as $faci => $faciValue) {
+                    foreach ($faciValue as $field => $fieldValue) {
+                        $problCount = 0;
+                        $specScore = 0;   
+                        if ($field != 'user_id' && $field != 'Score' && Specialization::where('spec_name', $field)->get() != EmptyMuch::get() && $fieldValue > 0){
+                            $spec = Specialization::where('spec_name', $field)->get()[0];
+                            foreach ($faciCentroid as $centroidField => $value) {
+                                // dd($faciCentroid);
+                                if ($field != 'user_id' && $field != 'Score' && Problem::where('problem_name', $centroidField)->get() != EmptyMuch::get() && $value > 0){
+                                    $prob = Problem::where('problem_name', $centroidField)->get()[0];
+                                    // dd($prob);
+
+                                    foreach (SpecMatchProblem::where('spec_id', $spec['spec_id'])->get() as $match) {
+                                        $problCount = count(SpecMatchProblem::where('spec_id', $spec['spec_id'])->get());
+                                        if($match['problem_id'] == $prob['problem_id']){
+                                            $specScore += $value;
+                                        }
+                                    }
+                                }
+
+                            }
+                            $temp = $specScore/$problCount;
+                            $faciDecode[$faci]['Score'] += $temp;
+                        }
+                        else{
+                            foreach ($longlatBasis as $field => $value) {
+                                // if($field == "Latitude")
+                                //     dd(pow($faciCentroid[$field]-$faciDecode[$faci][$field],2));
+                                $faciDecode[$faci]['Score'] += pow($faciCentroid[$field]-$faciDecode[$faci][$field],2);
+                            }
+                            $faciDecode[$faci]['Score'] = sqrt($faciDecode[$faci]['Score']);
+                        }
+                    }
+                }
+                // dd($faciDecode);
+                $index = 0;
+                $lowest = 0;
+                // for ($i=0; $i < count($scores); $i++) { 
+                foreach ($faciDecode as $faciIndex => $faciValue) {
+                    if($lowest == 0){
+                        $lowest = $faciDecode[$faciIndex]['Score'];
+                        $index = $faciIndex;
+                    }
+                    
+                    if($faciDecode[$faciIndex]['Score'] < $lowest){
+                        $lowest = $faciDecode[$faciIndex]['Score'];
+                        $index = $faciIndex;
+                    }
+                }
+                $mainFaci = $faciDecode[$faciIndex];
+                // dd($mainFaci);
+            }
+            else{
+                $mainFaci = SystemUser::findOrFail(Auth::user()->user_id);
+            }
+                // dd($mainFaci);
+
+                //grouping
+                $group = [];
+                $groupDB = new Group;
+                $groupFaci = SystemUser::findOrFail($mainFaci['user_id']);
+                array_push($group, $groupFaci);
+                if(Auth::user()->userType == 'seeker'){
+                    $mainUser = SystemUser::findOrFail($userQueue['user_id']);
+                    array_push($group, $mainUser);
+                }
+
+                for ($i=0; count($group) <= (int)$config->numberOfUsersToGroup; $i++) { 
+                    $orig = SystemUser::findOrFail($clusters[$clusterPrint][$i]['user_id']);
+
+                    if($group == [])
+                        array_push($group, $orig);
+                    else{
+                        $count = 0;
+                        foreach ($group as $member) {
+                            if($orig['user_id'] == $member['user_id'])
+                                $count++; 
+                        }
+                        if($count == 0)
+                            array_push($group, $orig);
+                    }
+                }
+
+                // --- MAKING GROUP IN DB
+                if(Group::get() == EmptyMuch::get()){
+                    $groupDB->groupID = "G00001";
+                }
+                else{
+                    $row = Group::orderby('groupID', 'desc')->first();
+                    $temp = substr($row['groupID'], 1);
+                    $temp =(int)$temp + 1;
+                    $id = "G".(string)str_pad($temp, 5, "0", STR_PAD_LEFT);
+                    // dd($id);
+                    $groupDB->groupID = $id;
+                }
+                $mainGroupID = $groupDB->groupID;
+                $groupDB->groupName = $groupFaci['first_name']." ".$groupFaci['last_name']."'s Group";
+                
+                $groupDB->save();
+
+
+
+                // --- ADDING MEMBERS TO GROUP
+                foreach ($group as $groupMem) {
+                    $gm = new GroupMember;
+
+                    if(GroupMember::get() == EmptyMuch::get()){
+                        $gm->groupMemberID = "GM0001";
                     }
                     else{
-                        foreach ($longlatBasis as $field => $value) {
-                            // if($field == "Latitude")
-                            //     dd(pow($faciCentroid[$field]-$faciDecode[$faci][$field],2));
-                            $faciDecode[$faci]['Score'] += pow($faciCentroid[$field]-$faciDecode[$faci][$field],2);
-                        }
-                        $faciDecode[$faci]['Score'] = sqrt($faciDecode[$faci]['Score']);
+                        $row = GroupMember::orderby('groupMemberID', 'desc')->first();
+                        $temp = substr($row['groupMemberID'], 2);
+                        $temp =(int)$temp + 1;
+                        $id = "GM".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                        $gm->groupMemberID = $id;
                     }
+                    $gm->memberID = $groupMem->user_id;
+                    $gm->fname = $groupMem->first_name;
+                    $gm->lname = $groupMem->last_name;
+                    $gm->groupID = $mainGroupID;
+
+                    $gm->save();
                 }
-            }
-            // dd($faciDecode);
-            $index = 0;
-            $lowest = 0;
-            // for ($i=0; $i < count($scores); $i++) { 
-            foreach ($faciDecode as $faciIndex => $faciValue) {
-                if($lowest == 0){
-                    $lowest = $faciDecode[$faciIndex]['Score'];
-                    $index = $faciIndex;
-                }
+
+                // --- ADDING DETAILS TO GROUP
                 
-                if($faciDecode[$faciIndex]['Score'] < $lowest){
-                    $lowest = $faciDecode[$faciIndex]['Score'];
-                    $index = $faciIndex;
-                }
-            }
-            $mainFaci = $faciDecode[$faciIndex];
-            // dd($mainFaci);
+                // IMPORTANT NOTES -- STARTED NOT DONE
+                
+                // PLEASE SOLVE AVERAGE FOR GROUP BY MAKING A NEW 'CENTROID' LAYOUT
+                // VALUES GREATER THAN 0 WILL BE ADDED TO DETAILS DB
+                // THIS IS POSSIBLY THE END FOR THE FUNCTION
 
-            //grouping
-            $group = [];
-            array_push($group, SystemUser::findOrFail($mainFaci['user_id']));
-            // echo "<h1>Meet your members!</h1>";
-            $mainUser = SystemUser::findOrFail($userQueue['user_id']);
-            array_push($group, $mainUser);
-            // echo "<b>".$mainUser['first_name']." ".$mainUser['last_name']."<br></b>";
+                $groupAve = $this->createNode("groupAve");   
 
-            for ($i=0; count($group) <= (int)$config->numberOfUsersToGroup; $i++) { 
-                $orig = SystemUser::findOrFail($clusters[$clusterPrint][$i]['user_id']);
-                if($group == [])
-                    array_push($group, $orig);
-                else{
-                    $count = 0;
-                    foreach ($group as $member) {
-                        if($orig['user_id'] == $member['user_id'])
-                            $count++; 
+                
+                foreach ($groupAve as $row => $rowValue) {
+                    if($row != 'user_id' && $row != 'Cluster'){
+
+                        if(Problem::where("problem_name", $row)->get() != EmptyMuch::get()){
+                            $score = 0;
+                            foreach ($group as $member) {
+                                if ($member->userType != 'facilitator'){
+                                    // print_r($member->first_name);
+                                    $userInQueue = QueueTalkCircle::where("user_id", $member->user_id)->get()[0];
+                                    
+                                    $problems = QueueUsersProblem::where("queueID", $userInQueue->queueID)->get();
+                                    
+                                    foreach ($problems as $problem) {
+                                        $temp = Problem::findOrFail($problem->problem_id);
+                                        if($temp->problem_name == $row){
+                                            $score += 1;
+                                        }
+                                    }
+
+
+                                }
+                            }
+                            // dd($score);
+                            $score = $score/(count($group)-1);
+                            $groupAve[$row] = $score;
+                        }
+                        else{
+                            $score = 0;
+                            foreach ($group as $member) {
+                                if ($member->userType != 'facilitator'){
+                                    // print_r($member->first_name);
+                                    // $userInQueue = QueueTalkCircle::where("user_id", $member->user_id)->get()[0];
+                                    
+                                    $interests = UsersInterests::where("user_id", $member->user_id)->get();
+                                    
+                                    foreach ($interests as $inter) {
+                                        $temp = Interest::findOrFail($inter->interestID);
+                                        if($temp->interestName == $row){
+                                            $score += 1;
+                                        }
+                                    }
+
+
+                                }
+                            }
+                            // dd($score);
+                            $score = $score/(count($group)-1);
+                            $groupAve[$row] = $score;
+                        }
+
+
+
                     }
-                    if($count == 0)
-                        array_push($group, $orig);
                 }
-                // echo $orig['first_name']." ".$orig['last_name']."<br>";
+
+                
+                // dd($groupAve); // <-- GROUP AVERAGE
+
+                foreach ($groupAve as $field => $fieldValue) {
+                    if($field != 'user_id' && $field != 'Cluster'){
+                        if($fieldValue > 0){
+                            if(Problem::where("problem_name", $field)->get() != EmptyMuch::get()){
+                                $gd = new GroupDetails;
+                                
+                                if(GroupDetails::get() == EmptyMuch::get()){
+                                    $gd->groupDetailID = "GD0001";
+                                }
+                                else{
+                                    $row = GroupDetails::orderby('groupDetailID', 'desc')->first();
+                                    $temp = substr($row['groupDetailID'], 2);
+                                    $temp =(int)$temp + 1;
+                                    $id = "GD".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                                    $gd->groupDetailID = $id;
+                                }
+                                $problem = Problem::where("problem_name", $field)->get()[0];
+                                $gd->problemID = $problem->problem_id;
+                                $gd->groupID = $mainGroupID;
+
+                                $gd->save();
+                            }
+                            else{
+                                $gdi = new GroupDetailsInterests;
+
+                                if(GroupDetailsInterests::get() == EmptyMuch::get()){
+                                    $gdi->groupDetailID = "GD0001";
+                                }
+                                else{
+                                    $row = GroupDetailsInterests::orderby('groupDetailID', 'desc')->first();
+                                    $temp = substr($row['groupDetailID'], 2);
+                                    $temp =(int)$temp + 1;
+                                    $id = "GD".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                                    $gdi->groupDetailID = $id;
+                                }
+
+                                $interest = Interest::where("interestName", $field)->get()[0];
+                                $gdi->interestID = $interest->interestID;
+                                $gdi->groupID = $mainGroupID;
+
+                                $gdi->save();
+                            }
+                            
+                        }
+                    }
+                }
+
+                // dd("done");
+                $dbgroup = Group::findOrFail($mainGroupID);
+
+                return view('user.meetYourGroup')->with(['group'=>$group, 'dbgroup'=>$dbgroup]);
+            }
+        // end function
+    }
+
+    public function recommendActivities($id){
+        $config = SystemConfig::findOrFail(1);
+        $probDetails = GroupDetails::where("groupID", $id)->get();
+        $intDetails = GroupDetailsInterests::where("groupID", $id)->get();
+
+        // YOU LEFT HERE --- MATCHING DETAILS WITH ACTIVITIES AND LISTING THEM IN PROFESSIONAL SIDE
+        
+        // CAUTION --- ALGORITHM INCOMING --- CAUTION
+
+        $activities = Activity::get();
+
+        // dd($activities[0]->activityTags[0]->interest);
+
+        $activityArray = [];
+
+        foreach ($activities as $activity) {
+
+            $score = 0;
+
+            foreach ($probDetails as $problem) {
+                foreach ($activity->problems as $actProb) {
+                    if($problem->problem == $actProb->problem)
+                        $score += 1;
+                }
             }
 
-            // foreach ($group as $member) {
-            //     if($member['userType'] == 'facilitator')
-            //         echo "<b>Host: ".$member['first_name']." ".$member['last_name']."</b><br>";
-            //     else
-            //         echo $member['first_name']." ".$member['last_name']."<br>";
-            // }
-            return view('user.meetYourGroup')->with(['group'=>$group]);
+            foreach ($intDetails as $interest) {
+                foreach ($activity->activityTags as $actTag) {
+                    if($interest->interest == $actTag->interest)
+                        $score += 1;
+                }
+            }
+
+            $actFormat = [
+                'activity' => $activity,
+                'score' => $score
+            ];
+
+            array_push($activityArray, $actFormat);
         }
-            
+
+        $sortedActArray = array_values(array_sort($activityArray, 'score', SORT_ASC));
+        $topActivities = [];
+
+        for( $index = count($sortedActArray)-1, $topCount = 0; $topCount <= 2; $topCount++, $index--){
+            array_push($topActivities, array_sort($sortedActArray, 'score', SORT_ASC)[$index]);
+        }
+
+        return view('user.selectActivities')->with(['activities'=>$topActivities, 'groupID'=>$id]);
+
+    }
+
+    public function saveActivities($groupid, Request $req){
         
-    // end function
+        foreach ($req->selected as $activity) {
+            $groupAct = new GroupActivities();
+
+            if(GroupActivities::get() == EmptyMuch::get()){
+                $groupAct->groupActID = "GA0001";
+            }
+            else{
+                $row = GroupActivities::orderby('groupActID', 'desc')->first();
+                $temp = substr($row['groupActID'], 2);
+                $temp =(int)$temp + 1;
+                $id = "GA".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                $groupAct->groupActID = $id;
+            }
+            $groupAct->actID = $activity;
+            $groupAct->groupID = $groupid;
+            $groupAct->save();
+        }
+
+
+    }
+
+    public function waveGetMembers($groupID){
+        // dd($groupID);
+        $allMembers = GroupMember::where('groupID', $groupID)->get();
+
+        foreach ($allMembers as $member) {
+            $temp = [
+                'id' => '',
+                'fname' => '',
+                'lname' => '',
+                'interests' => [],
+                // 'location' => '',
+            ];
+
+            dd($member);
+             
+            // YOU LEFT OFF HERE MAKE A SERVICE FOR WAVE
+        }
     }
 }
 

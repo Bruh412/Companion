@@ -11,4 +11,8 @@ class ActivityProblem extends Model
     public $timestamps = false;
     public $incrementing = false;
 
+    public function problem(){
+        return $this->hasOne("App\Problem", "problem_id", "problem_id");
+    }
+
 }

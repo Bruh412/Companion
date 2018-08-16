@@ -333,6 +333,7 @@ class ActivityController extends Controller
 
     public function viewAct($id){
         $act = Activity::findOrFail($id);
+        // dd($act);
         return view('admin.viewSingleActivity')->with(["act"=>$act]);
     }
 }

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UserInterestSeeder::class);
         $this->call(SystemConfigSeeder::class);
         $this->call(SpecMatchProbSeeder::class);
+        $this->call(VenueCategorySeeder::class);
     }
 
 }

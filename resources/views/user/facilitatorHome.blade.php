@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype htQueueTalkCirclel>
 <html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8">
@@ -99,6 +99,7 @@
             <a class="nav-labels nav-link text-white" href="#">Notiications</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
             <a class="nav-labels nav-link text-white" href="#">Profile</a>
         </li>
         <li class="nav-item">
@@ -240,4 +241,80 @@
         </div>
     </div>
 </div>
+
+<form action="/groupFaci/{{ Auth::user()->user_id }}" method="post">
+                    {{ csrf_field() }}
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Join TalkCircle!</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
+                                            </button>
+                                        </div>
+                                                
+                                                <div class="modal-body">
+                                                    <h4>Join TalkCircle!</h4>
+                                                    <p>Help the people by being the listening ear they need.</p>
+                                                    <input type="hidden" name="long" id="long">
+                                                    <input type="hidden" name="lat" id="lat">
+                                                </div>
+                                                <script>
+                                                    var long = document.getElementById("long");
+                                                    var lat = document.getElementById("lat");
+
+                                                    function getLocation() {
+                                                        console.log(navigator.geolocation);
+                                                        if (navigator.geolocation) {
+                                                            navigator.geolocation.getCurrentPosition(showPosition);
+                                                        } else { 
+                                                            // long.value = "null";
+                                                            // lat.value = "null";
+                                                            long.value = position.coords.longitude;
+                                                            lat.value = position.coords.latitude;
+                                                        }
+                                                    }
+
+                                                    function showPosition(position) {
+                                                        long.value = position.coords.longitude;
+                                                        lat.value = position.coords.latitude;
+                                                    }
+                                                </script>
+                                                <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-info" id="imagesButton">Join TalkCircle</button>
+                                                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            
+                                        </div>
+                                    </div>
+                        </div>
+                    </form>
+                    
+<script>
+    $(document).ready(function(){
+        // alert("huhu");
+        $("#postBtn").click(function(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var post = $("#post").val();
+            var feeling = $("#feeling").val();
+            var token = $("#token").val();
+            // console.log(token);
+            $.ajax({
+                type: "post",
+                data:  "post=" + post + "&feeling=" + feeling + "&token=" + token,
+                url: "<?php echo url('/posts/save')?>",
+                success: function(data){
+                    // console.log(data);
+                    $("#post").val("");
+                    $('#posts').empty().html(data);
+                }
+            });
+        });
+    });
+</script>
 </body>

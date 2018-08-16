@@ -27,7 +27,7 @@ class CreateSystemUsersTable extends Migration
             $table->string('userType');
             // $table->uuid('token');
             $table->rememberToken();
-            $table->timestamps();
+            // $table->timestamps();
         });
     }
 

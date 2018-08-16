@@ -133,6 +133,12 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/editConfig/{field}', 'SystemController@editConfig');
     Route::post('/editConfig/{field}', 'SystemController@saveEditConfig');
 
+    // --- ADD PLACE -X
+    Route::get('/venueDash', 'VenueController@showAll');
+    Route::get('/addVenue', 'VenueController@testgmap');
+    Route::get('/deleteVenue/{id}', 'VenueController@deleteVenue');
+    Route::post('/saveVenue', 'VenueController@saveVenue');
+
     // --- GROUPING
 
     // - Add to queue
@@ -140,8 +146,15 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/groupUser/{id}', 'SystemController@addUserToTalkCircleQueue');
     // - Check queue
     Route::get('/checkQueue/{id}', 'SystemController@checkQueue3');
+    Route::get('/facilitator/checkQueue/{id}', 'SystemController@checkQueue3');
 
     Route::post('/groupFaci/{id}', 'SystemController@addFaciToTalkCircleQueue');
+
+    // --- ONCE GROUPED
+    Route::get('/selectActivities/{id}', 'SystemController@recommendActivities');
+    Route::post('/submitActs/{id}', 'SystemController@saveActivities');
+
+    Route::get('/wavetest/{id}', 'SystemController@waveGetMembers');
 });
 
 

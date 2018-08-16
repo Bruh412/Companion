@@ -103,6 +103,10 @@
             <a class="nav-labels nav-link text-white" href="#">Profile</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="checkQueue/{{ Auth::user()->user_id }}">Check Group</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-labels nav-link text-white" href="#{{ url('/login') }}">Notifications</a>
             <form action="/groupUser/{{ Auth::user()->user_id }}" method="post">
                 {{ csrf_field() }}
                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -201,6 +205,7 @@
                 </div>
                 </div>
                 <br>    
+                <button class="btn btn-primary" id="createTalkCircleButton" style="background-color: #FFB75E; border: none; width: 100%;" data-toggle="modal" data-target="#exampleModalCenter" >Create TalkCircle</button>
                 <button class="btn btn-primary" style="background-color: #FFB75E; border: none; width: 100%;"  data-toggle="modal" data-target="#exampleModalCenter" onClick="getLocation()">Create TalkCircle</button>
             </div>
             <div class="col-7">
@@ -468,8 +473,94 @@
         </div>
     </div> -->
 </div>
+
+<form action="/groupUser/{{ Auth::user()->user_id }}" method="post">
+                    {{ csrf_field() }}
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Just a question before joining...</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" class="btn btn-danger">&times;</span>
+                                            </button>
+                                        </div>
+                                                
+                                                <div class="modal-body">
+                                                    <h4>How are you feeling today? What seems to be bothering you?</h4>
+                                                    <input type="hidden" name="long" id="long">
+                                                    <input type="hidden" name="lat" id="lat">
+                                                    <input type="hidden" name="location_name" id="location_name">
+                                                    
+                                                    @foreach($problems as $prob)
+                                                    <div class="form-check" style="background-color: white;">
+                                                        <input class="form-check-input" type="checkbox" value="{{ $prob->problem_id }}" id="defaultCheck1" name="problems[]">
+                                                        <label class="form-check-label" for="defaultCheck1">
+                                                            {{ $prob->problem_name }}
+                                                        </label>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                                <script>
+                                                    
+                                                </script>
+                                                <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-info" id="imagesButton">Join Queue</button>
+                                                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            
+                                        </div>
+                                    </div>
+                        </div>
+                    </form>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyDpz7JmYU3-2CsRVbv3JHKzP-vdzkhgCrY&amp;sensor=false&amp;libraries=places"></script>            
 <script>
+    var cLocationName = "";
+    var long = document.getElementById("long");
+    var lat = document.getElementById("lat");
+    
+    
+    var getLocationName = function() {
+        var latlng = new google.maps.LatLng(lat.value, long.value);
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'latLng': latlng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK && results[1]) {
+                cLocationName = results[1].formatted_address;
+                $("#location_name").val(cLocationName);
+            } else {
+                setTimeout(function(){
+                    getLocationName();
+                },1000);
+            }
+        });
+    };
+
+    function getLocation() {
+        // console.log(navigator.geolocation);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            // long.value = "null";
+            // lat.value = "null";
+            long.value = position.coords.longitude;
+            lat.value = position.coords.latitude;
+        }
+    }
+
+    function showPosition(position) {
+        long.value = position.coords.longitude;
+        lat.value = position.coords.latitude;
+        getLocationName();
+    }
+
     $(document).ready(function(){
+        getLocation();
+        getLocationName();
+        $("#createTalkCircleButton").on("click",function(){
+            getLocation();
+            getLocationName();
+        });
+
         $('#postBtn').attr('disabled', true);
     
         $('textarea').on('keyup',function() {
