@@ -18,7 +18,9 @@ class CreateYoutubeVideo extends Migration
             $table->string('videoID')->primary();
             $table->string('videoApi_id');
             $table->string('video_title');
-            $table->text('video_desc');
+            $table->longText('video_desc');
+            $table->string('prevPageToken')->nullable();
+            $table->string('nextPageToken')->nullable();
             $table->timestamps();
         });
     }

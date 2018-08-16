@@ -9,6 +9,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+header('Access-Control-Allow-Origin: *');
+header('Context-Type: application/json');
+header("Accept", 'application/json');
+header('Content-Type', 'application/json');
+header('Access-Control-Allow-Headers: Content-Type, x-xsrf-token');
 
 Route::get('/', function () {
     return view('homepage');
@@ -16,6 +21,8 @@ Route::get('/', function () {
 
 Route::get('/register','SystemUsersController@registerPage');
 Route::post('/register','SystemUsersController@register')->name('register');
+
+Route::post('/registerService','SystemUsersController@registerService');
 
 
 Route::get('/interests/get','InterestController@getInterests');
@@ -27,8 +34,6 @@ Route::get('/login', 'SystemUsersController@loginPage');
 Route::post('/login','SystemUsersController@userAuthentication')->name('login');
 Route::get('/logout','SystemUsersController@logout')->name('logout');
 // Route::get('/logout','AdminController@logout')->name('logout');
-Route::get('/quotes/save','QuotesController@saveQuote');
-Route::get('/quotes/save','QuotesController@saveQuote');
 //----------------------------------------------------------
 Route::view('/loginService','loginService');
 Route::view('/userType','userType');
@@ -37,7 +42,9 @@ Route::view('/register/facilitator','registerFacilitator');
 Route::post('/userType','SystemUsersController@userType');
 Route::post('/register/seeker','SystemUsersController@registerSeeker');
 Route::post('/register/facilitator','SystemUsersController@registerFacilitator');
-    Route::get('/video','VideoController@video');
+
+// Route::get('/problems/get','ProblemController@getProblems');
+// Route::get('/feelings/get','PostStatusController@getFeelings');
 //----------------------------------------------------------
 
 Route::middleware(['auth'])->group(function(){
@@ -46,13 +53,17 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/mediawall','QuotesController@display');
 
     Route::get('/comment/{postid}/add','PostStatusController@addComment');
-    Route::post('/comment/save','PostStatusController@saveComment');
-    Route::get('/video/get','VideoController@getVideo');
     Route::get('/post/{postid}/view','PostStatusController@displayPost');
+    Route::post('/comment/save','PostStatusController@saveComment');
 
+    Route::get('/api/addquote','QuotesController@getQuoteFromApi');
 
+    Route::get('/video/get','VideoController@getVideo');
+    Route::get('/videos', 'VideoController@dashboard');
+    Route::get('/video/{videoID}/view', 'VideoController@display');
+    Route::get('/video','VideoController@storeVideo');
 
-
+    Route::get('/category-view','QuotesController@showByCategory');
 
 
     Route::get('/home','AdminController@adminHome');
@@ -61,14 +72,15 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/post/{postid}/display','PostStatusController@displayPost');
     Route::get('/posts/create','PostStatusController@addPost');
     Route::post('/posts/save','PostStatusController@savePost');
+    // Route::post('/posts/save','PostStatusController@savePost1');
     Route::get('/post/{postid}/edit','PostStatusController@update');
     Route::post('/posts/update','PostStatusController@saveupdate');
     Route::get('/post/{postid}/delete','PostStatusController@deletePost');
+    Route::get('/comments/get','PostStatusController@getComments');
 
-    // Route::get('/quotes/save','QuotesController@saveQuote');
-    Route::get('/categorize','QuotesController@categorizeQuotes');
+
     Route::get('/displayPost','QuotesController@displayQuotes');
-    // Route::get('/display','QuotesController@display');
+    Route::get('/quotes/save','QuotesController@saveQuote');
 
     //---------------------------------------------------------------
     Route::get('/problems/get','ProblemController@getProblems');
@@ -144,6 +156,18 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/wavetest/{id}', 'SystemController@waveGetMembers');
 });
-// });
 
 
+Route::post('/registerService','WebServicesController@registerService');
+Route::post('/login','WebServicesController@userAuthentication')->name('login');
+Route::post('/posts/save','WebServicesController@savePost');
+Route::get('/posts/display','WebServicesController@displayPosts');
+Route::get('/problems/get','ProblemController@getProblems');
+Route::get('/feelings/get','PostStatusController@getFeelings');
+Route::get('/name', 'SystemUsersController@name');
+Route::get('/post/delete','PostStatusController@deletePost');
+
+Route::get('/posts/get','WebServicesController@getSeekersPost');
+Route::get('/comments/get','WebServicesController@getComments');
+Route::post('/posts/update','WebServicesController@saveupdate');
+Route::post('/comment/save','WebServicesController@saveComment');

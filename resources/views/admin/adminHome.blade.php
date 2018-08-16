@@ -113,6 +113,7 @@
                     <a href="/categories">Categories</a>
                     <a href="/quotes">Quotes</a>
                     <a href="/venueDash">Venues</a>
+                    <a href="/videos">Videos</a>
                     <a href="/systemConfig">Configuration</a>
                     
                 </div>
