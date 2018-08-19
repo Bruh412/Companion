@@ -2,13 +2,13 @@
     .gllpMap {
 	margin-top: 20px;
     min-width: 400px;
-    max-width: 1200px;
-    min-height: 600px;
-    max-height: 600px;
+    max-width: 2000px;
+    min-height: 400px;
+    max-height: 400px;
 }
 </style>
 
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
@@ -373,13 +373,10 @@
 </script>
 
 
-
-
-<div class="container">
 <a href="/venueDash" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
     <br>
     <br>
-    <h1>Choose a new venue for TalkCircles</h1>
+    <h1>Add New Venue For TalkCircles</h1>
     <br>
     <form action="/saveVenue" method="post" enctype="multipart/form-data">
         @csrf
@@ -396,7 +393,7 @@
 
         </div>
 
-		<div style="margin-top: 600px">
+		<div style="margin-top: 400px">
 			<select name="venueCategory" class="form-control">
 			@foreach($venueCats as $category)
 				<option value="{{ $category->venueCategory }}">{{ $category->venueCategory }}</option>
@@ -404,10 +401,8 @@
 			</select>
 			<br>
 		</div>
-		<center>
-			<button class="btn btn-primary">Save Venue</button>
-		</center>
+		<button class="btn btn-primary">Save Venue</button>
     </form> 
     <br>
-</div>
+
 @endsection

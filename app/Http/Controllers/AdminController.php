@@ -13,4 +13,8 @@ class AdminController extends Controller
         Auth::logout();
         return redirect()->to(route('login'));
     }
+
+    public function newUI(){
+        return view("admin.test");
+    }
 }

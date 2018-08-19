@@ -27,7 +27,7 @@ class FeelingsController extends Controller
     public function deleteFeeling($id){
         $feeling = PostFeeling::findOrFail($id);
         $feeling->delete();
-        return view("admin.feelingDash");
+        return redirect(url("/feelings"));
     }
 
 

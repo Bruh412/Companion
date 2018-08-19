@@ -1,16 +1,20 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container">
-@include('admin.navbackAct')
-    <table>
-        <tr>
-            <td><h1>{{ $act['title'] }}</h1></td>
-        </tr>
 
+@include('admin.navbackAct')
+    <h1>{{ $act['title'] }}</h1>
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-exclamation"></i>
+            Information about "{{ $act['title'] }}"
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+    <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <tr>
             <td><h5>Details: </h5></td>
-            <td><p>{{ $act['details'] }}</p></td>
+            <td><ul><p>{{ $act['details'] }}</p></ul></td>
         </tr>
 
         @if(!is_null($act->steps))
@@ -28,14 +32,14 @@
         
         <tr>
             <td><h5>Participants needed:</h5></td>
-            <td><h5>{{ $act['participants'] }}</h5></td>
+            <td><ul><p>{{ $act['participants'] }}</p></ul></td>
         </tr>
 
         @if(!is_null($act->equipments))
         <tr>
             <td><h5>Equipment needed:</h5></td>
             <td>
-                <ul>
+                <ul type="none">
                     @foreach($act->equipments as $row)
                     <li>{{ $row['equipmentName'] }} - {{ $row['quantity'] }}pc.</li>
                     @endforeach
@@ -48,20 +52,20 @@
             <td><h5>Time duration: </h5></td>
             <!-- <td>{{ $act['time'] }}</td> -->
             @if($act['time']=="None")
-                <td><p>Indefinite</p></td>
+                <td><ul><p>Indefinite</p></ul></td>
             @else 
-                <td><p>{{ $act['time'] }}</p></td>
+                <td><ul><p>{{ $act['time'] }}</p></ul></td>
             @endif
         </tr>
 
         <tr>
             <td><h5>The activity is good for: </h5></td>
             @if($act['gender']=="Both")
-                <td><p>Both men and women</p></td>
+                <td><ul><p>Both men and women</p></ul></td>
             @elseif($act['gender']=="Female") 
-                <td><p>Women</p></td>
+                <td><ul><p>Women</p></ul></td>
             @else
-                <td><p>Male</p></td>
+                <td><ul><p>Male</p></ul></td>
             @endif
         </tr>
     
@@ -69,7 +73,7 @@
             <tr>
                 <td><h5>Additional Media: </h5></td>
                 <td>
-                    <ul>
+                    <ul type="none">
                         @foreach($act->media as $file)
                             @if($file['fileExt'] == 'png'||'jpg'||'gif'||'bmp'||'dds'||'psd'||'pspimage'||'tga'||'thm'||'tif'||'tiff'||'yuv')
                                 <li><img src="{{ $file['fileContent'] }}"></li>
@@ -91,7 +95,7 @@
        <tr>
             <td><h5>Activity Interests: </h5></td>
             <td>
-                <ul>
+                <ul type="none">
                     @foreach($act->activityTags as $tag)
                     <li>{{ $tag->interest['interestName'] }}</li>
                     @endforeach
@@ -102,7 +106,7 @@
         <tr>
             <td><h5>This activity helps the following problems: </h5></td>
             <td>
-                <ul>
+                <ul type="none">
                     @foreach($act->problems as $prob)
                     <li>{{ $prob->problem['problem_name'] }}</li>
                     @endforeach
@@ -111,5 +115,7 @@
         </tr>
 
     </table>
-</div>
+    </div>
+    </div>
+    </div>
 @endsection

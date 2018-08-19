@@ -791,6 +791,8 @@ class SystemController extends Controller
 
     public function waveGetMembers($groupID){
         // dd($groupID);
+        $data = [];
+
         $allMembers = GroupMember::where('groupID', $groupID)->get();
 
         foreach ($allMembers as $member) {
@@ -802,10 +804,22 @@ class SystemController extends Controller
                 // 'location' => '',
             ];
 
-            dd($member);
-             
-            // YOU LEFT OFF HERE MAKE A SERVICE FOR WAVE
+            $temp['id'] = $member['memberID'];
+            $temp['fname'] = $member['fname'];
+            $temp['lname'] = $member['lname'];
+            
+            $allInterests = UsersInterests::where('user_id', $member['memberID'])->get();
+
+            foreach ($allInterests as $interest) {
+                array_push($temp['interests'], Interest::findOrFail($interest->interestID));
+            }
+
+            array_push($data, $temp);
         }
+
+        return response()->json([
+            'group' => $data
+        ]);
     }
 }
 
