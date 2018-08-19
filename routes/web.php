@@ -133,7 +133,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/editConfig/{field}', 'SystemController@editConfig');
     Route::post('/editConfig/{field}', 'SystemController@saveEditConfig');
 
-    // --- ADD PLACE -X
+    // --- VENUE -X
     Route::get('/venueDash', 'VenueController@showAll');
     Route::get('/addVenue', 'VenueController@testgmap');
     Route::get('/deleteVenue/{id}', 'VenueController@deleteVenue');
@@ -154,7 +154,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/selectActivities/{id}', 'SystemController@recommendActivities');
     Route::post('/submitActs/{id}', 'SystemController@saveActivities');
 
-    Route::get('/wavetest/{id}', 'SystemController@waveGetMembers');
+    Route::get('/wavetest/{id}', 'VenueController@waveRecommendVenue');
+
+    // Route::get('/bruhtest', 'AdminController@newUI');
+
 });
 
 

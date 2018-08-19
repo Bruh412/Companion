@@ -1,7 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container"> 
     @include('admin.navbackInt') 
     <br>
     <br>
@@ -16,5 +15,4 @@
         <button class="btn btn-primary">Save Interest</button>
     </form>
     <br>
-    </div>
 @endsection

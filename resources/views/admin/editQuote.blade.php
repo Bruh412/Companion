@@ -1,14 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container" >
     @if($mode == 'add')
+        <h1>Add Quote</h1>
         <form method="post" action="{{ url('/addQuote') }}">
         {!!
             $text = '';
             $author = '';
         !!}
     @elseif($mode == 'edit')
+        <h1>Edit Quote</h1>
         <form method="post" action="{{ url('/quote/edit') }}"> 
         <!-- {!!
             $text = $quote['quoteText'];
@@ -110,6 +111,5 @@
         </div>
     </div>
     </form>
-</div>
 @endif
 @endsection

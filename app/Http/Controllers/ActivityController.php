@@ -328,7 +328,7 @@ class ActivityController extends Controller
     public function deleteAct($id){
         $act = Activity::findOrFail($id);
         $act->delete();
-        return redirect(url('/home'));
+        return redirect(url('/activities'));
     }
 
     public function viewAct($id){

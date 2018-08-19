@@ -35,7 +35,7 @@ class VenueController extends Controller
         //     title: 'Hello World!'
         //   });
 
-        $venues = Venue::get();
+        $venues = Venue::paginate(2);
         return view('admin.venueDash')->with(['venues'=>$venues]);
     }
 
@@ -54,12 +54,21 @@ class VenueController extends Controller
         $newVenue->save();
 
         $venues = Venue::get();
-        return view('admin.venueDash')->with(['venues'=>$venues]);
+        // return view('admin.venueDash')->with(['venues'=>$venues]);
+        return redirect(url('/venueDash '));
     }
 
     public function deleteVenue($id){
         $venue = Venue::findOrFail($id);
         $venue->delete();
         return redirect(url('/venueDash'));
+    }
+
+    public function waveRecommendVenue($category){
+        $allVenue = Venue::where('venueCategory', $category)->get();
+
+        return response()->json([
+            'venues' => $allVenue
+        ]);
     }
 }
