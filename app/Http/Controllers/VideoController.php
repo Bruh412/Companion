@@ -122,6 +122,7 @@ class VideoController extends Controller
                 }
             }
         }
+        return redirect(url('/videos')); 
     }
 
     public function video(){
@@ -192,8 +193,8 @@ class VideoController extends Controller
                 }
             }
         }
-        // return redirect(url('/videos'));  
-        return $countCurrentVideo;
+        return redirect(url('/videos'));  
+        // return $countCurrentVideo;
     }
 
     public function getVideo(){

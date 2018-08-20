@@ -20,7 +20,8 @@ class CreateCommentPost extends Migration
             $table->foreign('post_id')->references('post_id')->on('poststatus')->onDelete('cascade');
             $table->uuid('user_id');
             $table->foreign('user_id')->references('user_id')->on('systemusers')->onDelete('cascade');
-
+            // $table->string('commentID_fk')->nullable();
+            // $table->foreign('commentID_fk')->references('commentID')->on('commentpost')->onDelete('cascade');
         });
     }
 
