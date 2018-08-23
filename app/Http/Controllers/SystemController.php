@@ -501,6 +501,13 @@ class SystemController extends Controller
                     }
                 }
                 // dd($faciDecode);
+
+                $mainFaci = [
+                    'user' => '',
+                    'latitude' => '',
+                    'longitude' => '',
+                ];
+
                 $index = 0;
                 $lowest = 0;
                 // for ($i=0; $i < count($scores); $i++) { 
@@ -515,39 +522,74 @@ class SystemController extends Controller
                         $index = $faciIndex;
                     }
                 }
-                $mainFaci = $faciDecode[$faciIndex];
+
+                $mainFaci['user'] = $faciDecode[$faciIndex];
+                $mainFaci['latitude'] = $faciDecode[$faciIndex]['Latitude'];
+                $mainFaci['longitude'] = $faciDecode[$faciIndex]['Longitude'];
                 // dd($mainFaci);
             }
             else{
-                $mainFaci = SystemUser::findOrFail(Auth::user()->user_id);
+                $mainFaci = [
+                    'user' => '',
+                    'latitude' => '',
+                    'longitude' => '',
+                ];
+
+                $mainFaci['user'] = SystemUser::findOrFail(Auth::user()->user_id);
+                $mainFaci['latitude'] = QueueTalkCircle::where('user_id', Auth::user()->user_id)->get()[0]['latitude'];
+                $mainFaci['longitude'] = QueueTalkCircle::where('user_id', Auth::user()->user_id)->get()[0]['longitude'];
+
+                // dd($mainFaci);
             }
                 // dd($mainFaci);
 
                 //grouping
                 $group = [];
                 $groupDB = new Group;
-                $groupFaci = SystemUser::findOrFail($mainFaci['user_id']);
+                $groupFaci = $mainFaci;
                 array_push($group, $groupFaci);
                 if(Auth::user()->userType == 'seeker'){
-                    $mainUser = SystemUser::findOrFail($userQueue['user_id']);
-                    array_push($group, $mainUser);
+                    // $mainUser = SystemUser::findOrFail($userQueue['user_id']);
+                    $template = [
+                        'user' => '',
+                        'latitude' => '',
+                        'longitude' => '',
+                    ];
+
+                    $template['user'] = SystemUser::findOrFail($userQueue['user_id']);
+                    $template['latitude'] = QueueTalkCircle::where('user_id', Auth::user()->user_id)->get()[0]['latitude'];
+                    $template['longitude'] = QueueTalkCircle::where('user_id', Auth::user()->user_id)->get()[0]['longitude'];
+
+                    array_push($group, $template);
                 }
 
+                // dd($group);
+
                 for ($i=0; count($group) <= (int)$config->numberOfUsersToGroup; $i++) { 
-                    $orig = SystemUser::findOrFail($clusters[$clusterPrint][$i]['user_id']);
+                    $template = [
+                        'user' => '',
+                        'latitude' => '',
+                        'longitude' => '',
+                    ];
+
+                    $template['user'] = SystemUser::findOrFail($clusters[$clusterPrint][$i]['user_id']);
+                    $template['latitude'] = $clusters[$clusterPrint][$i]['Latitude'];
+                    $template['longitude'] = $clusters[$clusterPrint][$i]['Longitude'];
 
                     if($group == [])
-                        array_push($group, $orig);
+                        array_push($group, $template);
                     else{
                         $count = 0;
                         foreach ($group as $member) {
-                            if($orig['user_id'] == $member['user_id'])
+                            if($template['user']['user_id'] == $member['user']['user_id'])
                                 $count++; 
                         }
                         if($count == 0)
-                            array_push($group, $orig);
+                            array_push($group, $template);
                     }
                 }
+
+                // dd($group);
 
                 // --- MAKING GROUP IN DB
                 if(Group::get() == EmptyMuch::get()){
@@ -585,6 +627,8 @@ class SystemController extends Controller
                     $gm->memberID = $groupMem->user_id;
                     $gm->fname = $groupMem->first_name;
                     $gm->lname = $groupMem->last_name;
+                    // $gm->latitude = $groupMem->latitude;
+                    // $gm->longitude = $groupMem->longitude;
                     $gm->groupID = $mainGroupID;
 
                     $gm->save();
