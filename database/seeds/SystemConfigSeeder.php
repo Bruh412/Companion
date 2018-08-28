@@ -15,6 +15,7 @@ class SystemConfigSeeder extends Seeder
             'numberOfUsersToGroup' => '4',
             'numberOfDaysUntilNewVideoForQuotes' => '2',
             'numberOfTopActToBeSuggested' => '3',
+            'defaultMaxDistanceForVenueRecommendation' => '0.005',
         ];
         DB::table('abcsystemconfig')->insert($data);
     }

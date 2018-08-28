@@ -152,7 +152,10 @@ Route::middleware(['auth'])->group(function(){
 
     // --- ONCE GROUPED
     Route::get('/selectActivities/{id}', 'SystemController@recommendActivities');
-    Route::post('/submitActs/{id}', 'SystemController@saveActivities');
+    Route::post('/submitActs/{id}', 'ActivityController@saveActivities');
+    
+    Route::get('/chooseVenue/{id}', 'VenueController@showCategories');
+    Route::get('/chooseVenue/{id}/{category}', 'VenueController@showVenues');
 
     Route::get('/wavetest/{id}', 'VenueController@waveRecommendVenue');
 

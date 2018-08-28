@@ -18,9 +18,15 @@
 	   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	   <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css">
+	   
+	   	<!-- BUTTON CSS -->
+	 	<link rel="stylesheet" type="text/css" href="{{ asset('button-css/normalize.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ asset('button-css/vicons-font.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ asset('button-css/base.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ asset('button-css/buttons.css') }}" />
 	   <style>
 			#bckgrnd {
-				background: linear-gradient(to right, #F2994A , #F2C94C);
+				background: linear-gradient(to right, #70e1f5, #ffd194);
 			}
 			.login-container{
 				padding-top: 140px;    
@@ -103,14 +109,12 @@
 						</div>
 					</div> -->
 
-					<div class="container-login100-form-btn m-t-17">
-						<button class="login-btn login100-form-btn" type="submit" name="submit" id="loginBtn">
-							Login
+						<button class="button button--ujarak button--border-thin button--text-thick" type="submit" name="submit" id="loginBtn">
+			  				Login
 						</button>
 						<span class="register">
 							Not registered? <a href="{{ url('/userType') }}">Create an account</a>
 						<span>
-					</div>
 				</form>
 			</div>
 		</div>

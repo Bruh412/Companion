@@ -604,7 +604,8 @@ class SystemController extends Controller
                     $groupDB->groupID = $id;
                 }
                 $mainGroupID = $groupDB->groupID;
-                $groupDB->groupName = $groupFaci['first_name']." ".$groupFaci['last_name']."'s Group";
+                // dd($groupFaci);
+                $groupDB->groupName = $groupFaci['user']['first_name']." ".$groupFaci['user']['last_name']."'s Group";
                 
                 $groupDB->save();
 
@@ -624,11 +625,11 @@ class SystemController extends Controller
                         $id = "GM".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
                         $gm->groupMemberID = $id;
                     }
-                    $gm->memberID = $groupMem->user_id;
-                    $gm->fname = $groupMem->first_name;
-                    $gm->lname = $groupMem->last_name;
-                    // $gm->latitude = $groupMem->latitude;
-                    // $gm->longitude = $groupMem->longitude;
+                    $gm->memberID = $groupMem['user']->user_id;
+                    $gm->fname = $groupMem['user']->first_name;
+                    $gm->lname = $groupMem['user']->last_name;
+                    $gm->latitude = $groupMem['latitude'];
+                    $gm->longitude = $groupMem['longitude'];
                     $gm->groupID = $mainGroupID;
 
                     $gm->save();
@@ -651,9 +652,9 @@ class SystemController extends Controller
                         if(Problem::where("problem_name", $row)->get() != EmptyMuch::get()){
                             $score = 0;
                             foreach ($group as $member) {
-                                if ($member->userType != 'facilitator'){
+                                if ($member['user']->userType != 'facilitator'){
                                     // print_r($member->first_name);
-                                    $userInQueue = QueueTalkCircle::where("user_id", $member->user_id)->get()[0];
+                                    $userInQueue = QueueTalkCircle::where("user_id", $member['user']->user_id)->get()[0];
                                     
                                     $problems = QueueUsersProblem::where("queueID", $userInQueue->queueID)->get();
                                     
@@ -674,11 +675,11 @@ class SystemController extends Controller
                         else{
                             $score = 0;
                             foreach ($group as $member) {
-                                if ($member->userType != 'facilitator'){
+                                if ($member['user']->userType != 'facilitator'){
                                     // print_r($member->first_name);
                                     // $userInQueue = QueueTalkCircle::where("user_id", $member->user_id)->get()[0];
                                     
-                                    $interests = UsersInterests::where("user_id", $member->user_id)->get();
+                                    $interests = UsersInterests::where("user_id", $member['user']->user_id)->get();
                                     
                                     foreach ($interests as $inter) {
                                         $temp = Interest::findOrFail($inter->interestID);
@@ -802,34 +803,11 @@ class SystemController extends Controller
         $sortedActArray = array_values(array_sort($activityArray, 'score', SORT_ASC));
         $topActivities = [];
 
-        for( $index = count($sortedActArray)-1, $topCount = 0; $topCount <= 2; $topCount++, $index--){
+        for( $index = count($sortedActArray)-1, $topCount = 0; $topCount < $config->numberOfTopActToBeSuggested; $topCount++, $index--){
             array_push($topActivities, array_sort($sortedActArray, 'score', SORT_ASC)[$index]);
         }
 
         return view('user.selectActivities')->with(['activities'=>$topActivities, 'groupID'=>$id]);
-
-    }
-
-    public function saveActivities($groupid, Request $req){
-        
-        foreach ($req->selected as $activity) {
-            $groupAct = new GroupActivities();
-
-            if(GroupActivities::get() == EmptyMuch::get()){
-                $groupAct->groupActID = "GA0001";
-            }
-            else{
-                $row = GroupActivities::orderby('groupActID', 'desc')->first();
-                $temp = substr($row['groupActID'], 2);
-                $temp =(int)$temp + 1;
-                $id = "GA".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
-                $groupAct->groupActID = $id;
-            }
-            $groupAct->actID = $activity;
-            $groupAct->groupID = $groupid;
-            $groupAct->save();
-        }
-
 
     }
 

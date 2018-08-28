@@ -20,7 +20,7 @@
             font-weight: 100;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(to right, #ffe259, #ffa751); 
+            background: linear-gradient(to right, #70e1f5, #ffd194); 
         }
 
         .full-height {

@@ -9,12 +9,20 @@
 
         <!-- Fonts -->
        <meta charset="UTF-8">
-	   <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+       
+        <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+        <!-- BUTTON CSS -->
+	 	<link rel="stylesheet" type="text/css" href="{{ asset('button-css/normalize.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ asset('button-css/vicons-font.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ asset('button-css/base.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('button-css/buttons.css') }}" />
+        
     <style>
         html, body {
-            background-color: #fff;
+            background: linear-gradient(to right, #70e1f5, #ffd194);
             color: white;
             font-family: 'Raleway', sans-serif;
             font-weight: 100;
@@ -80,7 +88,7 @@
 <body>
     <div class="container" style="padding-top: 2rem;">
 		<div class="jumbotron ds" style="text-align: center;">
-			<h1 class="display-4" style="color: #FFB75E">Register As</h1>
+			<h1 class="display-4" style="color: #404040">Register As</h1>
 		</div>
 
 		<div class="container">
@@ -88,13 +96,13 @@
 				<div class="col-md-6">
 					<form method="post" action="{{ url('/register/seeker') }}">
 						{{ csrf_field() }}
-						<button class="seeker btn btn-info" name="type" value="Seeker">Seeker</button>
+						<button class="button button--ujarak button--border-thin button--text-thick" name="type" value="Seeker">Seeker</button>
 					</form>
 				</div>
 				<div class="col-md-6">
 					<form method="post" action="{{ url('/register/facilitator') }}">
 						{{ csrf_field() }}
-						<button class="faci btn btn-info" name="type" value="Facilitator">Facilitator</button>
+						<button class="button button--ujarak button--border-thin button--text-thick" name="type" value="Facilitator">Facilitator</button>
 					</form>
 				</div>
 			</div>
