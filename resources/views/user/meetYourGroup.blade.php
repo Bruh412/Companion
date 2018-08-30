@@ -126,12 +126,12 @@ use App\FacilitatorSpec;
             <div>
                 <ul>
                 @foreach($group as $member)
-                    @if($member['userType'] == 'facilitator')
-                        <li><h3><b>{{ $member['first_name'] }} {{ $member['last_name'] }} - Host</b></h3></li>
+                    @if($member['user']['userType'] == 'facilitator')
+                        <li><h3><b>{{ $member['user']['first_name'] }} {{ $member['user']['last_name'] }} - Host</b></h3></li>
                         <ul>
                             <li>Specialization/s: </li>
                             <?php
-                                foreach (FacilitatorSpec::where('user_id', $member['user_id'])->get() as $spec) { ?>
+                                foreach (FacilitatorSpec::where('user_id', $member['user']['user_id'])->get() as $spec) { ?>
                                     <li><b><?php echo $spec->spec['spec_name'] ?></b></li>
                             <?php 
                             }
@@ -139,8 +139,8 @@ use App\FacilitatorSpec;
                         </ul>
                     @else
                         <li>
-                            <h3>{{ $member['first_name'] }} {{ $member['last_name'] }}
-                            @if($member['user_id'] == Auth::user()->user_id)
+                            <h3>{{ $member['user']['first_name'] }} {{ $member['user']['last_name'] }}
+                            @if($member['user']['user_id'] == Auth::user()->user_id)
                                 --- You!
                             @endif
                             </h3>
@@ -149,7 +149,7 @@ use App\FacilitatorSpec;
                             <ul>
                                 <li>Problem/s: </li>
                                 <?php
-                                    foreach (QueueTalkCircle::where('user_id', $member['user_id'])->get()[0]->problems as $prob) { ?>
+                                    foreach (QueueTalkCircle::where('user_id', $member['user']['user_id'])->get()[0]->problems as $prob) { ?>
                                         <li><b><?php echo $prob->problem['problem_name'] ?></b></li>
                                 <?php 
                                 }
@@ -160,7 +160,7 @@ use App\FacilitatorSpec;
                     @endif
                         <ul>
                             <?php
-                                $queued = QueueTalkCircle::where('user_id', $member['user_id'])->get()[0];
+                                $queued = QueueTalkCircle::where('user_id', $member['user']['user_id'])->get()[0];
 
                                 $lat = $queued['latitude'];
                                 $long = $queued['longitude'];                            
@@ -189,7 +189,7 @@ use App\FacilitatorSpec;
                         <ul>
                             <li>Interest/s: </li>
                             <?php
-                                foreach ($member->interests as $interest) { ?>
+                                foreach ($member['user']->interests as $interest) { ?>
                                     <li><b><?php echo $interest->interest['interestName'] ?></b></li>
                             <?php 
                             }

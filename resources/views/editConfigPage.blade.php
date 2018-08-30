@@ -1,7 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container">
 <a href="/systemConfig" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
     <br>
     <br>
@@ -16,5 +15,4 @@
         <button class="btn btn-primary">Save Changes</button>
     </form>
     <br>
-</div>
 @endsection

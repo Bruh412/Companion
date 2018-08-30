@@ -1,11 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container">
     @include('admin.navbackCat') 
     <br>
     <br>
-    <h1>Add new category</h1>
+    <h1>Add New Category</h1>
     <br>
     <form action="/addCat" method="post" enctype="multipart/form-data">
         @csrf
@@ -16,5 +15,4 @@
         <button class="btn btn-primary">Save Category</button>
     </form>
     <br>
-</div>
 @endsection

@@ -14,6 +14,12 @@ use App\Step;
 use App\Equipment;
 use App\Problem;
 use App\ActivityProblem;
+use App\Group;
+use App\GroupActivities;
+use App\GroupDetails;
+use App\GroupDetailsInterests;
+use App\GroupMember;
+use App\VenueCategories;
 use Validator;
 
 class ActivityController extends Controller
@@ -31,10 +37,6 @@ class ActivityController extends Controller
 
     }
 
-    public function chosenActivities(Request $request){
-        
-    }
-//--------------------------------------
     public function dashboard(){
         $list = Activity::paginate(3);
         return view('admin.dashboard')->with(["list"=>$list]);
@@ -328,12 +330,36 @@ class ActivityController extends Controller
     public function deleteAct($id){
         $act = Activity::findOrFail($id);
         $act->delete();
-        return redirect(url('/home'));
+        return redirect(url('/activities'));
     }
 
     public function viewAct($id){
         $act = Activity::findOrFail($id);
         // dd($act);
         return view('admin.viewSingleActivity')->with(["act"=>$act]);
+    }
+
+    public function saveActivities($groupid, Request $req){
+        
+        foreach ($req->selected as $activity) {
+            $groupAct = new GroupActivities();
+
+            if(GroupActivities::get() == EmptyMuch::get()){
+                $groupAct->groupActID = "GA0001";
+            }
+            else{
+                $row = GroupActivities::orderby('groupActID', 'desc')->first();
+                $temp = substr($row['groupActID'], 2);
+                $temp =(int)$temp + 1;
+                $id = "GA".(string)str_pad($temp, 4, "0", STR_PAD_LEFT);
+                $groupAct->groupActID = $id;
+            }
+            $groupAct->actID = $activity;
+            $groupAct->groupID = $groupid;
+            $groupAct->save();
+        }
+
+        $allVenueCat = VenueCategories::get();
+        return view('user.chooseVenueCategory')->with(["categories"=>$allVenueCat, "groupID"=>$groupid]);
     }
 }

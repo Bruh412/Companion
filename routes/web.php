@@ -133,7 +133,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/editConfig/{field}', 'SystemController@editConfig');
     Route::post('/editConfig/{field}', 'SystemController@saveEditConfig');
 
-    // --- ADD PLACE -X
+    // --- VENUE -X
     Route::get('/venueDash', 'VenueController@showAll');
     Route::get('/addVenue', 'VenueController@testgmap');
     Route::get('/deleteVenue/{id}', 'VenueController@deleteVenue');
@@ -152,22 +152,28 @@ Route::middleware(['auth'])->group(function(){
 
     // --- ONCE GROUPED
     Route::get('/selectActivities/{id}', 'SystemController@recommendActivities');
-    Route::post('/submitActs/{id}', 'SystemController@saveActivities');
+    Route::post('/submitActs/{id}', 'ActivityController@saveActivities');
+    
+    Route::get('/chooseVenue/{id}', 'VenueController@showCategories');
+    Route::get('/chooseVenue/{id}/{category}', 'VenueController@showVenues');
 
-    Route::get('/wavetest/{id}', 'SystemController@waveGetMembers');
+    Route::get('/wavetest/{id}', 'VenueController@waveRecommendVenue');
+
+    // Route::get('/bruhtest', 'AdminController@newUI');
+
 });
 
 
-Route::post('/registerService','WebServicesController@registerService');
-Route::post('/login','WebServicesController@userAuthentication')->name('login');
-Route::post('/posts/save','WebServicesController@savePost');
-Route::get('/posts/display','WebServicesController@displayPosts');
-Route::get('/problems/get','ProblemController@getProblems');
-Route::get('/feelings/get','PostStatusController@getFeelings');
-Route::get('/name', 'SystemUsersController@name');
-Route::get('/post/delete','PostStatusController@deletePost');
+// Route::post('/registerService','WebServicesController@registerService');
+// Route::post('/login','WebServicesController@userAuthentication')->name('login');
+// Route::post('/posts/save','WebServicesController@savePost');
+// Route::get('/posts/display','WebServicesController@displayPosts');
+// Route::get('/problems/get','ProblemController@getProblems');
+// Route::get('/feelings/get','PostStatusController@getFeelings');
+// Route::get('/name', 'SystemUsersController@name');
+// Route::get('/post/delete','PostStatusController@deletePost');
 
-Route::get('/posts/get','WebServicesController@getSeekersPost');
-Route::get('/comments/get','WebServicesController@getComments');
-Route::post('/posts/update','WebServicesController@saveupdate');
-Route::post('/comment/save','WebServicesController@saveComment');
+// Route::get('/posts/get','WebServicesController@getSeekersPost');
+// Route::get('/comments/get','WebServicesController@getComments');
+// Route::post('/posts/update','WebServicesController@saveupdate');
+// Route::post('/comment/save','WebServicesController@saveComment');

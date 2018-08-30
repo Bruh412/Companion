@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container" >
+        <h1>Add Quote</h1>
         <form method="post" action="{{ url('/addQuote') }}">
         {{ csrf_field() }}
         <div class="form-group">
@@ -46,6 +46,5 @@
     </div>
     
     </form>
-    </div>
 <!-- END OF POPUP AREA        -->
 @endsection

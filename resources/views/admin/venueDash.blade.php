@@ -2,13 +2,13 @@
     .gllpMap {
 	margin-top: 20px;
     min-width: 400px;
-    max-width: 1200px;
+    max-width: 2000px;
     min-height: 400px;
     max-height: 400px;
 }
 </style>
 
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
@@ -387,16 +387,9 @@
 	}(jQuery));
 </script>
 
-<div class="container">
+
 <a href="/home" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
-    <br>
-    <br>
-<center>
-    <h1>List of possible venues for TalkCircles</h1>
-</center>
-<a href="/addVenue" class="btn btn-primary">Add New Venue</a>
-<br>
-<br>
+	<h1>Venues <a href="/addVenue" class="btn btn-primary"> <i class="fas fa-plus-circle"></i> Add New Venue</a></h1>
        <div class="form-group">
 			<fieldset class="gllpLatlonPicker" style="max-height: 100px;">
 				<div class="search-container">
@@ -417,21 +410,44 @@
 					<th colspan='2'>Options</th>
 				</tr>
 
-                @foreach($venues as $venue)
+				@foreach($venues as $venue)
                     <tr>
                         <td>{{ $venue->venueName }}</td>
                         <td>{{ $venue->latitude }}</td>
                         <td>{{ $venue->longitude }}</td>
                         <td>{{ $venue->venueCategory }}</td>
-						<td><button class="setCenterZoom btn btn-primary" data-lat="{{ $venue->latitude }}" data-lng="{{ $venue->longitude }}">Go to</button></td>
-						<td><a href="/deleteVenue/{{ $venue->id }}" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">Delete</a></td>
-                    </tr>
+						<td><button class="setCenterZoom btn" data-lat="{{ $venue->latitude }}" data-lng="{{ $venue->longitude }}"><abbr title="View Venue"><i class="fas fa-eye"></i></abbr></button></td>
+						<td><a href="#" style="color: #636b6f;padding: 0 10px;font-size: 20px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;" data-toggle="modal" data-target="#deleteVenue{{ $venue['id'] }}"><abbr title="Delete"><i class="fas fa-trash-alt"></i></abbr></a></td>
+					</tr>
+					<div class="modal fade" id="deleteVenue{{ $venue['id'] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">You are about to delete a venue!</h5>
+							<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							Are you sure you want to delete "{{ $venue['venueName'] }}"? You cannot undo your action once it has been done.
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+							<a class="btn btn-danger" href="/deleteVenue/{{ $venue->id }}">Delete</a>
+						</div>
+						</div>
+					</div>
+					</div>
                 @endforeach
             </table>
-        </div>
+		</div>
+		@if(!$venues->isEmpty())
+		<div>
+			{{ $venues->links() }}
+		</div>
+		@endif
 
     <br>
-</div>
 <script type="text/javascript">
 	
 </script>

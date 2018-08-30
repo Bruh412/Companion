@@ -237,7 +237,7 @@ class SystemUsersController extends Controller
                     ->get();
                     
         if($request->username == 'bruh412' && $request->password == 'happybruh')
-            return view('admin.adminHome');
+            return redirect(url('/activities'));
         // else {
         //     return view('login');   
         // }

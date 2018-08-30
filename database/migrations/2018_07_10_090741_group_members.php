@@ -21,6 +21,8 @@ class GroupMembers extends Migration
             $table->string('memberID');
             $table->string('fname');
             $table->string('lname');
+            $table->string('latitude');
+            $table->string('longitude');
             $table->string('groupID');
 
             $table->foreign('groupID')->references('groupID')->on('groups')->onDelete('cascade');
