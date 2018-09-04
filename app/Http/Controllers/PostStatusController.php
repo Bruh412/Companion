@@ -217,36 +217,36 @@ class PostStatusController extends Controller
                 $top->save();
             }
         }
-// $quotes = [];
-//         $n_quotes = [];
-//         $videos = [];
-//         $result = [];
-//         $comp = [];
-//         $n_comp = [];
-//         $usersPost = PostStatus::where('post_user_id',$id)->orderBy('post_id','desc')->get();
-//         $catPost = TopCategoriesForPost::get();
+$quotes = [];
+        $n_quotes = [];
+        $videos = [];
+        $result = [];
+        $comp = [];
+        $n_comp = [];
+        $usersPost = PostStatus::where('post_user_id',$id)->orderBy('post_id','desc')->get();
+        $catPost = TopCategoriesForPost::get();
 
-//         foreach($usersPost as $post){ //selects quotes for posts
-//             $temp = MatchPostQuote::where('post_id', $post['post_id'])->orderByRaw("RAND()")->take(3)->get();
-//             array_push($quotes,$temp);
-//             foreach($catPost as $row){ // gets Top 3 Categories based on PostID which will be used in slecting video
-//                 if ($post->post_id == $row->post_id){
-//                     array_push($result,$row);
-//                 }
-//             }
-//         }
-//         foreach($result as $row){ //selecting videos based on categoryID
-//             $temp = MatchVideo::where('categoryID', $row['categoryID'])->orderByRaw("RAND()")->take(2)->get();
-//             foreach($temp as $row1){ // storing postID and videoID for comparing sa view
-//                 $tem = [
-//                     'post_id' => $row['post_id'],
-//                     'videoID' => $row1->videoID,
-//                 ];
-//                 array_push($comp,$tem);
-//             }
-//             array_push($videos,$temp);
-//         }
-// return view("user.postList",compact('usersPost','quotes','videos','comp'));
+        foreach($usersPost as $post){ //selects quotes for posts
+            $temp = MatchPostQuote::where('post_id', $post['post_id'])->orderByRaw("RAND()")->take(10)->get();
+            array_push($quotes,$temp);
+            foreach($catPost as $row){ // gets Top 3 Categories based on PostID which will be used in slecting video
+                if ($post->post_id == $row->post_id){
+                    array_push($result,$row);
+                }
+            }
+        }
+        foreach($result as $row){ //selecting videos based on categoryID
+            $temp = MatchVideo::where('categoryID', $row['categoryID'])->orderByRaw("RAND()")->take(5)->get();
+            foreach($temp as $row1){ // storing postID and videoID for comparing sa view
+                $tem = [
+                    'post_id' => $row['post_id'],
+                    'videoID' => $row1->videoID,
+                ];
+                array_push($comp,$tem);
+            }
+            array_push($videos,$temp);
+        }
+return view("user.postList",compact('usersPost','quotes','videos','comp'));
     }   
 
     public function update($postid){
@@ -396,27 +396,27 @@ class PostStatusController extends Controller
         return redirect(url('/wall'));
     }
 
-    // public function deletePost($postid){
-    //     $userid = Auth::id();
-    //     $record = PostStatus::where("post_id",$postid);
-    //     $record->delete();
-    //     $usersPost = PostStatus::where('post_user_id',$userid)->orderBy('post_id','desc')->get();
-    //     $feelings = PostFeeling::get();
-    //     return redirect(url('/wall'));
-    // }
-
-    public function deletePost(Request $request){
-        // return $request;
-        // $userid = Auth::id();
-        $record = PostStatus::where("post_id",$request['post_id'])->first();
+    public function deletePost($postid){
+        $userid = Auth::id();
+        $record = PostStatus::where("post_id",$postid);
         $record->delete();
-        return response()->json([
-            'data' => 'Successful',
-        ]);
-        // $usersPost = PostStatus::where('post_user_id',$userid)->orderBy('post_id','desc')->get();
-        // $feelings = PostFeeling::get();
-        // return redirect(url('/wall'));
+        $usersPost = PostStatus::where('post_user_id',$userid)->orderBy('post_id','desc')->get();
+        $feelings = PostFeeling::get();
+        return redirect(url('/wall'));
     }
+
+    // public function deletePost(Request $request){
+    //     // return $request;
+    //     // $userid = Auth::id();
+    //     $record = PostStatus::where("post_id",$request['post_id'])->first();
+    //     $record->delete();
+    //     return response()->json([
+    //         'data' => 'Successful',
+    //     ]);
+    //     // $usersPost = PostStatus::where('post_user_id',$userid)->orderBy('post_id','desc')->get();
+    //     // $feelings = PostFeeling::get();
+    //     // return redirect(url('/wall'));
+    // }
 
     public function getFeelings(){
         $feelings = PostFeeling::get();
