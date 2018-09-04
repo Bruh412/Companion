@@ -21,9 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ProblemSeeder::class);
         $this->call(SystemConfigSeeder::class);
 
-        $this->call(QueueSeeder::class);
-        $this->call(UserInterestSeeder::class);
-        $this->call(SystemConfigSeeder::class);
+        // $this->call(QueueSeeder::class);
+        // $this->call(UserInterestSeeder::class);
         $this->call(SpecMatchProbSeeder::class);
         $this->call(VenueCategorySeeder::class);
     }

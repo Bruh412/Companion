@@ -133,7 +133,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/editConfig/{field}', 'SystemController@editConfig');
     Route::post('/editConfig/{field}', 'SystemController@saveEditConfig');
 
-    // --- ADD PLACE -X
+    // --- VENUE -X
     Route::get('/venueDash', 'VenueController@showAll');
     Route::get('/addVenue', 'VenueController@testgmap');
     Route::get('/deleteVenue/{id}', 'VenueController@deleteVenue');
@@ -152,9 +152,15 @@ Route::middleware(['auth'])->group(function(){
 
     // --- ONCE GROUPED
     Route::get('/selectActivities/{id}', 'SystemController@recommendActivities');
-    Route::post('/submitActs/{id}', 'SystemController@saveActivities');
+    Route::post('/submitActs/{id}', 'ActivityController@saveActivities');
+    
+    Route::get('/chooseVenue/{id}', 'VenueController@showCategories');
+    Route::get('/chooseVenue/{id}/{category}', 'VenueController@showVenues');
 
-    Route::get('/wavetest/{id}', 'SystemController@waveGetMembers');
+    Route::get('/wavetest/{id}', 'VenueController@waveRecommendVenue');
+
+    // Route::get('/bruhtest', 'AdminController@newUI');
+
 });
 // Route::get('/', function () {
 //     return view('homepage');
@@ -283,6 +289,7 @@ Route::middleware(['auth'])->group(function(){
 //     Route::post('/groupFaci/{id}', 'SystemController@addFaciToTalkCircleQueue');
 // });
 
+    // Route::get('/wavetest/{id}', 'SystemController@getMembersDetails');
 
 Route::post('/registerService','WebServicesController@registerService');
 Route::post('/login','WebServicesController@userAuthentication')->name('login');
@@ -298,7 +305,6 @@ Route::get('/delete/mediawall','WebServicesController@deleteSavedMedia');
 Route::get('/interests/get','InterestController@getInterests');
 Route::get('/specialization/get','SpecializationController@getSpecsFromDB');
 
-// Route::get()
 Route::get('/posts/get','WebServicesController@getSeekersPost');
 Route::get('/comments/get','WebServicesController@getComments');
 Route::post('/posts/update','WebServicesController@saveupdate');
@@ -306,6 +312,18 @@ Route::post('/comment/save','WebServicesController@saveComment');
 Route::get('/replies/get','WebServicesController@getCommentReplies');
 Route::get('/savedmedia/get','WebServicesController@getSavedMedia');
 Route::get('/count','WebServicesController@countComments');
+
+Route::post('/groupSeeker', 'SystemController@addUserToTalkCircleQueue');
+Route::post('/groupFacilitator', 'SystemController@addFaciToTalkCircleQueue');
+Route::get('/checkQueue', 'SystemController@findGroup');
+Route::get('/checkUserInQueue', 'SystemController@checkUserToQueue');
+Route::get('/checkGroup', 'SystemController@checkGroup');
+Route::get('/checkGroupEvent', 'SystemController@checkGroupEvent');
+Route::get('/selectActivities', 'SystemController@recommendActivities');
+Route::post('/save/event', 'SystemController@saveEvent');
+
+
+
 
 // Just a question before joining...
 // AIzaSyDpz7JmYU3-2CsRVbv3JHKzP-vdzkhgCrY    -gmaps api <key></key>

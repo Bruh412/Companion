@@ -1,12 +1,18 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
-<div class="container">
     <a href="/home" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
-     <h1>Companion Configuration</h1>
+     <h1>System Configuration</h1>
 
-    <table class="table table-striped">
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+            List of Configurations
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+    <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <tr>
             <th>Configurations</th>
             <th>Value</th>
@@ -18,12 +24,16 @@
                 <tr>
                     <td>{{ $field }}</td>
                     <td>{{ $value }}</td>
-                    <td><a href="/editConfig/{{ $field }}" class="btn btn-info">Edit Config</a></td>
+                    <td><a href="/editConfig/{{ $field }}" style="color: #636b6f;padding: 0 10px;font-size: 20px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;"><abbr title="Edit"><i class="fas fa-pen-fancy"></i></abbr></a></td>
+                    
                 </tr>   
             @endif
         @endforeach
 
     </table>
-</div>
+    </div>
+    </div>
+    </div>
+
 
 @endsection

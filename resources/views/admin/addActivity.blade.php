@@ -1,24 +1,16 @@
-<?php
-// use Ramsey\Uuid\Uuid;
-// use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
-// dd(Uuid::uuid1()->toString());
-?>
-
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container">
     @include('admin.navbackAct') 
     <br>
     <br>
     @if($mode == 'edit')
-        <h3 style="text-align: center;">Edit activity</h3>
+        <h1>Edit Activity</h1>
         <br>
         <form action="/saveAct/edit" method="post" enctype="multipart/form-data">
         <input type="hidden" value="{{ $act['actID'] }}" name="secretID" >
     @else
-        <h3 style="text-align: center;">Add new activity</h3>
+        <h1>Add New Activity</h1>
         <br>
         <form action="/saveAct" method="post" enctype="multipart/form-data">
     @endif
@@ -189,7 +181,7 @@
         <!-- END OF POPUP AREA        -->
     </form>
     <br>
-</div>
+
 
     <script>
         var timeDeno = document.getElementById('timeDeno');
