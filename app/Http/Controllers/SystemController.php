@@ -993,10 +993,16 @@ class SystemController extends Controller
 
         // dd($main);
 
+<<<<<<< Updated upstream
         $basis = $this->createNode("sample");
         $clustersTemp = $clusters;
         $dumpCount = 0;
         // ---  COMPARISON AND ASSIGNING OF CLUSTERS
+=======
+        for( $index = count($sortedActArray)-1, $topCount = 0; $topCount < $config->numberOfTopActToBeSuggested; $topCount++, $index--){
+            array_push($topActivities, array_sort($sortedActArray, 'score', SORT_ASC)[$index]);
+        }
+>>>>>>> Stashed changes
 
         do {
             
@@ -1005,6 +1011,7 @@ class SystemController extends Controller
             $clusters = $clustersTemp;
             $oldMain = $main;
 
+<<<<<<< Updated upstream
             foreach ($main as $node => $nodeValue) {
                     $scores = [];
 
@@ -1083,6 +1090,11 @@ class SystemController extends Controller
 
 
         } while ($changeCount != 0);
+=======
+    public function waveGetMembers($groupID){
+        // dd($groupID);
+        $data = [];
+>>>>>>> Stashed changes
 
         // dd($bin);
 
