@@ -23,6 +23,10 @@ class DatabaseSeeder extends Seeder
 
         // $this->call(QueueSeeder::class);
         // $this->call(UserInterestSeeder::class);
+<<<<<<< Updated upstream
+=======
+        // $this->call(SystemConfigSeeder::class);
+>>>>>>> Stashed changes
         $this->call(SpecMatchProbSeeder::class);
         $this->call(VenueCategorySeeder::class);
     }
