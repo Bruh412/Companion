@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSavedMediaTable extends Migration
+class CreateEventMembersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateSavedMediaTable extends Migration
      */
     public function up()
     {
-        Schema::create('savedmedia', function (Blueprint $table) {
-            $table->string('saved_media_id')->primary();
-            $table->string('media_id');
-            $table->uuid('user_id');
+        Schema::create('event_members', function (Blueprint $table) {
+            $table->string('event_memberID')->primary();
+            $table->string('user_id');
             $table->foreign('user_id')->references('user_id')->on('systemusers')->onDelete('cascade');
-            $table->timestamps();
+            $table->string('event_groupID');
+            $table->foreign('event_groupID')->references('event_groupID')->on('event_group')->onDelete('cascade');
         });
     }
 
@@ -29,8 +29,6 @@ class CreateSavedMediaTable extends Migration
      */
     public function down()
     {
-        Schema::table('savedmedia', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('venue');
     }
 }

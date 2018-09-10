@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -12,6 +11,9 @@
         <!-- Fonts -->
        <meta charset="UTF-8">
 	   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	   <!-- Browser Icon -->
+	   <link href="{{ asset('image/logo.png') }}" rel="shortcut icon">
 
 	   <link href="{{ asset('/css/util.css') }}" rel="stylesheet" type="text/css">
 	   <link href="{{ asset('/css/main.css') }}" rel="stylesheet" type="text/css">

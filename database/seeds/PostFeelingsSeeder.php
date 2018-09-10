@@ -30,7 +30,7 @@ class PostFeelingsSeeder extends Seeder
             ],
             [
                 'post_feeling_id'=>'PF05',
-                'post_feeling_name'=>'Angry'
+                'post_feeling_name'=>'Devastated'
             ],
             [
                 'post_feeling_id'=>'PF06',
@@ -46,35 +46,19 @@ class PostFeelingsSeeder extends Seeder
             ],
             [
                 'post_feeling_id'=>'PF09',
-                'post_feeling_name'=>'Contented'
+                'post_feeling_name'=>'Hurt'
             ],
             [
                 'post_feeling_id'=>'PF10',
-                'post_feeling_name'=>'Excited'
+                'post_feeling_name'=>'Incomplete'
             ],
             [
                 'post_feeling_id'=>'PF11',
-                'post_feeling_name'=>'Funny'
+                'post_feeling_name'=>'Hopeless'
             ],
             [
                 'post_feeling_id'=>'PF12',
-                'post_feeling_name'=>'Happy'
-            ],
-            [
-                'post_feeling_id'=>'PF13',
-                'post_feeling_name'=>'Loved'
-            ],
-            [
-                'post_feeling_id'=>'PF14',
-                'post_feeling_name'=>'Nervous'
-            ],
-            [
-                'post_feeling_id'=>'PF15',
-                'post_feeling_name'=>'Shocked'
-            ],
-            [
-                'post_feeling_id'=>'PF16',
-                'post_feeling_name'=>'Thankful'
+                'post_feeling_name'=>'Lost'
             ]
         ];
 

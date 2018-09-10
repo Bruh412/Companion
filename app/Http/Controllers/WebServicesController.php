@@ -23,24 +23,11 @@ use App\TopCategoriesForPost;
 use App\MatchVideo;
 use App\Problem;
 use App\Quote;
-use App\SavedMedia;
 use App\UsersPostFeeling;
 use App\CommentPost;
 use App\MatchQuote;
 use App\YoutubeAPIKey;
 use Validator;
-use App\QueueTalkCircle;
-use App\QueueUsersProblem;
-use App\SystemConfig;
-use App\SpecMatchProblem;
-use App\Group;
-use App\GroupActivities;
-use App\GroupDetails;
-use App\GroupDetailsInterests;
-use App\GroupMember;
-use App\Activity;
-use App\VenueCategories;
-use App\Venue;
 // use Auth;
 use DB;
 use Mail;
@@ -319,18 +306,16 @@ class WebServicesController extends Controller
         $countSimilar = 0;
         foreach($arr as $row){
             if (!empty($row)){
-                $countSimilar++; //if 0, no pair. if more than 1, naay pair
+                $countSimilar++;
             }
         }
-        // return $countSimilar;
+        return $similar;
         //sort by highest counter
         usort($similar, function($a, $b){
             return strcmp($b['counter'], $a['counter']);
         });
         $newTotal = $similar;
-        // return $similar;
         // store top 3 categories sa user's post
-        $topID = 0;
         foreach(array_splice($newTotal,0,3) as $row1){
             $top = new TopCategoriesForPost();
             if (TopCategoriesForPost::get() == EmptyMuch::get()){
@@ -344,34 +329,17 @@ class WebServicesController extends Controller
                 $row = TopCategoriesForPost::orderby('top_id','desc')->first();
                 $temp = substr($row["top_id"],1);
                 $temp = (int)$temp + 1;
-                $newTopID = "T".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
-                $top->top_id = $newTopID;
+                $newPostID = "T".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
+                $top->top_id = $newPostID;
                 $top->post_id = $pID;
                 $top->categoryID = $row1['category'];
                 $top->save();
             }
         }
-        return response()->json([
-            'message' => 'Succesful!'
-        ]);
-        // if ($countSimilar == 0){
-        //     return $this->zeroCategory($id);
-        // }
-        // else {
-        //     $topCategories = TopCategoriesForPost::where('post_id',$pID)->get();
-            
-        //     if(count($topCategories) == 1){
-        //         return $this->oneCategory($topCategories);
-        //     }
-        //     if(count($topCategories) == 2){
-        //         return $this->twoCategories($topCategories);
-        //     }
-        //     if (count($topCategories) == 3){
-        //         return $this->threeCategories($topCategories);
-        //     }
-        // }
+
+
         
-// return $top;
+        // return $top;
         // return $newTotal;
         // // return top 3 highest counter
         // foreach(array_splice($similar,0,3) as $value){
@@ -417,335 +385,20 @@ class WebServicesController extends Controller
         //         $match->quoteID = $row1->quoteID;
         //         $match->save();
         //     }
-// }
-    }
-
-    public function mediaWall(Request $request){
-        $postID = $request->post_id;
-        $topCategories = TopCategoriesForPost::where('post_id',$postID)->get();
-        $userID = Token::where("token", $request->token)->value('token_user_id');
-            
-        if(count($topCategories) == 0){
-            return $this->zeroCategory($userID);
-        }
-        if(count($topCategories) == 1){
-            return $this->oneCategory($topCategories,$userID);
-        }
-        if(count($topCategories) == 2){
-            return $this->twoCategories($topCategories,$userID);
-        }
-        if (count($topCategories) == 3){
-            return $this->threeCategories($topCategories,$userID);
-        }
-    }
-
-    public function zeroCategory($userID){
-        $allData = [];
-        $quotes = MatchQuote::orderByRaw("RAND()")->take(30)->get();
-        $videos = MatchVideo::orderByRaw("RAND()")->take(12)->get();
-        foreach($quotes as $quote){
-            $temp = [
-                'type' => '',
-                'categoryID' => '',
-                'quoteID' => '',
-                'quoteText' => '',
-                'quoteAuthor' => '',
-                'saved' => false,
-                'Iconname' => ''
-            ];
-            $temp['type'] = 'quote';
-            $temp['categoryID'] = $quote->categoryID;
-            $quoteDetails = Quote::where('quoteID',$quote->quoteID)->first();
-            $temp['quoteID'] = $quoteDetails->quoteID;
-            $temp['quoteText'] = $quoteDetails->quoteText;
-            $temp['quoteAuthor'] = $quoteDetails->quoteAuthor;
-
-            $savedMediaDetails = SavedMedia::where('media_id',$quote->quoteID)->where('user_id',$userID)->value('media_id');
-            if(count($savedMediaDetails) == 0 ){
-                $temp['saved'] = false;
-                $temp['Iconname'] = 'star-outline';
-            }
-            else {
-                $temp['saved'] = true;
-                $temp['Iconname'] = 'star';
-            }
-                
-            array_push($allData,$temp);
-            // return $allData;
-        }
-        foreach($videos as $video){
-            $temp = [
-                'type' => '',
-                'categoryID' => '',
-                'videoID' => '',
-                'videoApi_id' => '',
-                'video_title' => '',
-                'saved' => false,
-                'Iconname' => ''
-            ];
-            $temp['type'] = 'video';
-            $temp['categoryID'] = $video->categoryID;
-            $videoDetails = YoutubeAPIKey::where('videoID',$video->videoID)->first();
-            $temp['videoID'] = $videoDetails->videoID;
-            $temp['videoApi_id'] = 'https://www.youtube.com/embed/'.$videoDetails->videoApi_id;
-            $temp['video_title'] = $videoDetails->video_title;
-
-            $savedMediaDetails = SavedMedia::where('media_id',$video->videoID)->where('user_id',$userID)->value('media_id');
-            if(count($savedMediaDetails) == 0 ){
-                $temp['saved'] = false;
-                $temp['Iconname'] = 'star-outline';
-            }
-            else {
-                $temp['saved'] = true;
-                $temp['Iconname'] = 'star';
-            }
-
-            array_push($allData,$temp);
-        }
-        return response()->json([
-            'data' => $allData
-        ]);
-    }
-
-    public function oneCategory($topCategories,$userID){
-        // $allData = [
-        //     'quotes' => [],
-        //     'videos' => [],
-        // ];
-        $allData = [];
-        foreach($topCategories as $category){
-            $catID = $category->categoryID;
-            $quotes = MatchQuote::orderByRaw("RAND()")->take(30)->where('categoryID',$catID)->get();
-            $videos = MatchVideo::orderByRaw("RAND()")->take(12)->where('categoryID',$catID)->get();
-            foreach($quotes as $quote){
-                $temp = [
-                    'type' => '',
-                    'categoryID' => '',
-                    'quoteID' => '',
-                    'quoteText' => '',
-                    'quoteAuthor' => '',
-                    'saved' => false,
-                    'Iconname' => ''
-                ];
-                $temp['type'] = 'quote';
-                $temp['categoryID'] = $quote->categoryID;
-                $quoteDetails = Quote::where('quoteID',$quote->quoteID)->first();
-                $temp['quoteID'] = $quoteDetails->quoteID;
-                $temp['quoteText'] = $quoteDetails->quoteText;
-                $temp['quoteAuthor'] = $quoteDetails->quoteAuthor;
-                
-                $savedMediaDetails = SavedMedia::where('media_id',$quote->quoteID)->where('user_id',$userID)->value('media_id');
-                if(count($savedMediaDetails) == 0 ){
-                    $temp['saved'] = false;
-                    $temp['Iconname'] = 'star-outline';
-                }
-                else {
-                    $temp['saved'] = true;
-                    $temp['Iconname'] = 'star';
-                }
-
-                array_push($allData,$temp);
-            }
-            foreach($videos as $video){
-                $temp = [
-                    'type' => '',
-                    'categoryID' => '',
-                    'videoID' => '',
-                    'videoApi_id' => '',
-                    'video_title' => '',
-                    'saved' => false,
-                    'Iconname' => ''
-                ];
-                $temp['type'] = 'video';
-                $temp['categoryID'] = $video->categoryID;
-                $videoDetails = YoutubeAPIKey::where('videoID',$video->videoID)->first();
-                $temp['videoID'] = $videoDetails->videoID;
-                $temp['videoApi_id'] = 'https://www.youtube.com/embed/'.$videoDetails->videoApi_id;
-                $temp['video_title'] = $videoDetails->video_title;
-                
-                $savedMediaDetails = SavedMedia::where('media_id',$video->videoID)->where('user_id',$userID)->value('media_id');
-                if(count($savedMediaDetails) == 0 ){
-                    $temp['saved'] = false;
-                    $temp['Iconname'] = 'star-outline';
-                }
-                else {
-                    $temp['saved'] = true;
-                    $temp['Iconname'] = 'star';
-                }
-
-                array_push($allData,$temp);
-            }
-        }
-        return response()->json([
-            'data' => $allData
-        ]);
-    }
-
-    public function twoCategories($topCategories,$userID){
-        $allData = [];
-        foreach($topCategories as $category){
-            $catID = $category->categoryID;
-            $quotes = MatchQuote::orderByRaw("RAND()")->take(15)->where('categoryID',$catID)->get();
-            $videos = MatchVideo::orderByRaw("RAND()")->take(6)->where('categoryID',$catID)->get();
-            foreach($quotes as $quote){
-                $temp = [
-                    'type' => '',
-                    'categoryID' => '',
-                    'quoteID' => '',
-                    'quoteText' => '',
-                    'quoteAuthor' => '',
-                    'saved' => false,
-                    'Iconname' => ''
-                ];
-                $temp['type'] = 'quote';
-                $temp['categoryID'] = $quote->categoryID;
-                $quoteDetails = Quote::where('quoteID',$quote->quoteID)->first();
-                $temp['quoteID'] = $quoteDetails->quoteID;
-                $temp['quoteText'] = $quoteDetails->quoteText;
-                $temp['quoteAuthor'] = $quoteDetails->quoteAuthor;
-
-                $savedMediaDetails = SavedMedia::where('media_id',$quote->quoteID)->where('user_id',$userID)->value('media_id');
-                if(count($savedMediaDetails) == 0 ){
-                    $temp['saved'] = false;
-                    $temp['Iconname'] = 'star-outline';
-                }
-                else {
-                    $temp['saved'] = true;
-                    $temp['Iconname'] = 'star';
-                }
-
-                array_push($allData,$temp);
-            }
-            foreach($videos as $video){
-                $temp = [
-                    'type' => '',
-                    'categoryID' => '',
-                    'videoID' => '',
-                    'videoApi_id' => '',
-                    'video_title' => '',
-                    'saved' => false,
-                    'Iconname' => ''
-                ];
-                $temp['type'] = 'video';
-                $temp['categoryID'] = $video->categoryID;
-                $videoDetails = YoutubeAPIKey::where('videoID',$video->videoID)->first();
-                $temp['videoID'] = $videoDetails->videoID;
-                $temp['videoApi_id'] = 'https://www.youtube.com/embed/'.$videoDetails->videoApi_id;
-                $temp['video_title'] = $videoDetails->video_title;
-
-                $savedMediaDetails = SavedMedia::where('media_id',$video->videoID)->where('user_id',$userID)->value('media_id');
-                if(count($savedMediaDetails) == 0 ){
-                    $temp['saved'] = false;
-                    $temp['Iconname'] = 'star-outline';
-                }
-                else {
-                    $temp['saved'] = true;
-                    $temp['Iconname'] = 'star';
-                }
-
-                array_push($allData,$temp);
-            }
-        }
-        return response()->json([
-            'data' => $allData
-        ]);
-    }
-
-    public function threeCategories($topCategories,$userID){
-        $allData = [];
-        foreach($topCategories as $category){
-            $catID = $category->categoryID;
-            $quotes = MatchQuote::orderByRaw("RAND()")->take(10)->where('categoryID',$catID)->get();
-            $videos = MatchVideo::orderByRaw("RAND()")->take(4)->where('categoryID',$catID)->get();
-            foreach($quotes as $quote){
-                $temp = [
-                    'type' => '',
-                    'categoryID' => '',
-                    'quoteID' => '',
-                    'quoteText' => '',
-                    'quoteAuthor' => '',
-                    'saved' => false,
-                    'Iconname' => ''
-                ];
-                $temp['type'] = 'quote';
-                $temp['categoryID'] = $quote->categoryID;
-                $quoteDetails = Quote::where('quoteID',$quote->quoteID)->first();
-                $temp['quoteID'] = $quoteDetails->quoteID;
-                $temp['quoteText'] = $quoteDetails->quoteText;
-                $temp['quoteAuthor'] = $quoteDetails->quoteAuthor;
-
-                $savedMediaDetails = SavedMedia::where('media_id',$quote->quoteID)->where('user_id',$userID)->value('media_id');
-                if(count($savedMediaDetails) == 0 ){
-                    $temp['saved'] = false;
-                    $temp['Iconname'] = 'star-outline';
-                }
-                else {
-                    $temp['saved'] = true;
-                    $temp['Iconname'] = 'star';
-                }
-
-                array_push($allData,$temp);
-            }
-            foreach($videos as $video){
-                $temp = [
-                    'type' => '',
-                    'categoryID' => '',
-                    'videoID' => '',
-                    'videoApi_id' => '',
-                    'video_title' => '',
-                    'saved' => false,
-                    'Iconname' => ''
-                ];
-                $temp['type'] = 'video';
-                $temp['categoryID'] = $video->categoryID;
-                $videoDetails = YoutubeAPIKey::where('videoID',$video->videoID)->first();
-                $temp['videoID'] = $videoDetails->videoID;
-                $temp['videoApi_id'] = 'https://www.youtube.com/embed/'.$videoDetails->videoApi_id;
-                $temp['video_title'] = $videoDetails->video_title;
-
-                $savedMediaDetails = SavedMedia::where('media_id',$video->videoID)->where('user_id',$userID)->value('media_id');
-                if(count($savedMediaDetails) == 0 ){
-                    $temp['saved'] = false;
-                    $temp['Iconname'] = 'star-outline';
-                }
-                else {
-                    $temp['saved'] = true;
-                    $temp['Iconname'] = 'star';
-                }
-
-                array_push($allData,$temp);
-            }
-        }
-        return response()->json([
-            'data' => $allData
-        ]);
+        // }
     }
 
     public function displayPosts(Request $request){
         $userID = Token::where("token", $request['token'])->value('token_user_id');
         $posts = PostStatus::where("post_user_id",$userID)->orderBy('post_id','desc')->get();
-        // return $posts;
         $postFeelings = [];
         foreach($posts as $post){
-            $postDetails = DB::table('poststatus')
+            $temp = DB::table('poststatus')
                 ->join('userspostfeelings','poststatus.post_id','=','userspostfeelings.post_id')
                 ->join('postfeelings','userspostfeelings.post_feeling_id','=','postfeelings.post_feeling_id')
                 ->select('userspostfeelings.post_id', 'userspostfeelings.post_feeling_id','postfeelings.post_feeling_name')
                 ->where('poststatus.post_id',$post['post_id'])
                 ->get();
-            $temp = [
-                'post_id' => '',
-                'post_feeling_id' => '',
-                'post_feeling_name' => '',
-                'count' => ''
-            ];
-            foreach($postDetails as $index){
-                $temp['post_id'] = $index->post_id;
-                $temp['post_feeling_id'] = $index->post_feeling_id;
-                $temp['post_feeling_name'] = $index->post_feeling_name;
-            }
-            $count = $this->countComments( $temp['post_id']);
-            $temp['count'] = $count;
             array_push($postFeelings,$temp);
         }
         return response()->json([
@@ -756,7 +409,7 @@ class WebServicesController extends Controller
 
     public function getSeekersPost(){
         $seekersPost = [];
-        $posts = PostStatus::orderBy('post_id','desc')->get();
+        $posts = PostStatus::get();
         foreach($posts as $post){
             $temp = [
                 'user_id' => '',
@@ -938,211 +591,43 @@ class WebServicesController extends Controller
         return 'yhey';
     }
 
-    public function deletePost(Request $request){
-        // return $request;
-        // $userid = Auth::id();
-        $record = PostStatus::where("post_id",$request['post_id'])->first();
-        $record->delete();
-        return response()->json([
-            'data' => 'Deleted',
-        ]);
-        // $usersPost = PostStatus::where('post_user_id',$userid)->orderBy('post_id','desc')->get();
-        // $feelings = PostFeeling::get();
-        // return redirect(url('/wall'));
-    }
-
     public function getComments(Request $request){
-        $commentData = [];
         $postid = $request['post_id'];
-        // $commentDetails = DB::table('commentpost')
-        //                 ->join('systemusers','commentpost.user_id','=','systemusers.user_id')
-        //                 ->select('commentpost.commentID','commentpost.comment_content','systemusers.user_id','systemusers.first_name','systemusers.last_name')
-        //                 ->where('commentpost.post_id',$postid)
-        //                 ->orderBy('commentID','desc')
-        //                 ->get();
         $commentDetails = DB::table('commentpost')
                         ->join('systemusers','commentpost.user_id','=','systemusers.user_id')
-                        ->select('commentpost.post_id','commentpost.commentID','commentpost.comment_content','systemusers.user_id','systemusers.first_name','systemusers.last_name')
+                        ->select('commentpost.commentID','commentpost.comment_content','systemusers.user_id','systemusers.first_name','systemusers.last_name')
                         ->where('commentpost.post_id',$postid)
+                        ->orderBy('commentID','desc')
                         ->get();
-        foreach($commentDetails as $comment){
-            $temp = [
-                'post_id' => '',
-                'commentID' => '',
-                'comment_content' => '',
-                'user_id' => '',
-                'first_name' => '',
-                'last_name' => '',
-                'count' => ''
-            ];
-
-            $temp['post_id'] = $comment->post_id;
-            $temp['commentID'] = $comment->commentID;
-            $temp['comment_content'] = $comment->comment_content;
-            $temp['user_id'] = $comment->user_id;
-            $temp['first_name'] = $comment->first_name;
-            $temp['last_name'] = $comment->last_name;
-            $temp['countComments'] = $this->countCommentReplies($comment->commentID);
-            array_push($commentData,$temp);
-        }    
         return response()->json([
-            'data' => $commentData
+            'data' => $commentDetails
         ]);
     }
 
     public function saveComment(Request $request){
         // return $request;
-        if(!$request->commentID){
-            $userID = Token::where("token", $request->token)->value('token_user_id');
-            $comment = new CommentPost();
-            $postid = $request->post_id;
-            if (CommentPost::get() == EmptyMuch::get()){
-                $comment->commentID = "C00000000001";
-            }
-            else {
-                $row = CommentPost::orderby('commentID','desc')->first();
-                $temp = substr($row["commentID"],1);
-                $temp = (int)$temp + 1;
-                $newPostID = "C".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
-                $comment->commentID = $newPostID;
-            }
-            $cID = $comment->commentID;
-            $comment->comment_content = $request->comment;
-            $comment->post_id = $postid;
-            $comment->user_id = $userID;
-            $comment->save();
-            return response()->json([
-                'data' => 'Successful!'
-            ]);
-            // return 'not';
-        } 
-        if($request->commentID) {
-            $userID = Token::where("token", $request->token)->value('token_user_id');
-            $comment = new CommentPost();
-            $postid = $request->post_id;
-            $commentID = $request->commentID;
-            if (CommentPost::get() == EmptyMuch::get()){
-                $comment->commentID = "C00000000001";
-            }
-            else {
-                $row = CommentPost::orderby('commentID','desc')->first();
-                $temp = substr($row["commentID"],1);
-                $temp = (int)$temp + 1;
-                $newPostID = "C".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
-                $comment->commentID = $newPostID;
-            }
-            $cID = $comment->commentID;
-            $comment->comment_content = $request->comment;
-            $comment->post_id = $postid;
-            $comment->user_id = $userID;
-            $comment->commentID_fk = $commentID;
-            $comment->save();
-            return response()->json([
-                'data' => 'Successful!'
-            ]);
-            // return 'true';
-        }
-        // $comments = CommentPost::where('post_id',$postid)->orderBy('commentID','desc')->get();
-        // $post = PostStatus::where('post_id',$postid)->first();
-        // return response()->json([
-        //     'data' => 'Successful!'
-        // ]);
-    }
-
-    public function addSavedMedia(Request $request){
-        $userID = Token::where('token',$request->token)->value('token_user_id');
-        $mediaID = $request->media_id;
-        $saveMedia = new SavedMedia();
-        if (SavedMedia::get() == EmptyMuch::get()){
-            $saveMedia->saved_media_id = "S00000000001";
+        $userID = Token::where("token", $request->token)->value('token_user_id');
+        $comment = new CommentPost();
+        $postid = $request->post_id;
+        if (CommentPost::get() == EmptyMuch::get()){
+            $comment->commentID = "C00000000001";
         }
         else {
-            $row = SavedMedia::orderby('saved_media_id','desc')->first();
-            $temp = substr($row["saved_media_id"],1);
+            $row = CommentPost::orderby('commentID','desc')->first();
+            $temp = substr($row["commentID"],1);
             $temp = (int)$temp + 1;
-            $newID = "S".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
-            $saveMedia->saved_media_id = $newID;
+            $newPostID = "C".(string)str_pad($temp,11,"0",STR_PAD_LEFT);
+            $comment->commentID = $newPostID;
         }
-        $saveMedia->media_id = $mediaID;
-        $saveMedia->user_id = $userID;
-        $saveMedia->save();
+        $cID = $comment->commentID;
+        $comment->comment_content = $request->comment;
+        $comment->post_id = $postid;
+        $comment->user_id = $userID;
+        $comment->save();
+        // $comments = CommentPost::where('post_id',$postid)->orderBy('commentID','desc')->get();
+        // $post = PostStatus::where('post_id',$postid)->first();
         return response()->json([
-            'message' => 'Saved!'
+            'data' => 'Successful!'
         ]);
     }
-
-    public function deleteSavedMedia(Request $request){
-        $userID = Token::where('token',$request->token)->value('token_user_id');
-        $record = SavedMedia::where("media_id",$request['media_id'])->where('user_id',$userID)->first();
-        $record->delete();
-        return response()->json([
-            'data' => 'Deleted',
-        ]);
-    }
-
-    public function getCommentReplies(Request $request){
-        $commentID = $request->commentID;
-        $commentReplies = DB::table('commentpost')
-                        ->join('systemusers','commentpost.user_id','=','systemusers.user_id')
-                        ->select('commentpost.post_id','commentpost.commentID','commentpost.comment_content','systemusers.user_id','systemusers.first_name','systemusers.last_name')
-                        ->where('commentpost.commentID_fk',$commentID)
-                        ->get();
-        return response()->json([
-            'data' => $commentReplies
-        ]);
-    }
-
-    public function countComments($postid){
-        $comments = CommentPost::where('post_id',$postid)->get();
-        $countComments = count($comments);
-        return $countComments;
-    }
-
-    public function countCommentReplies($commentID){
-        $comments = CommentPost::where('commentID_fk',$commentID)->get();
-        $countComments = count($comments);
-        return $countComments;
-    }
-
-    public function getSavedMedia(Request $request){
-        $all_media= [];
-        $userID = Token::where('token',$request->token)->value('token_user_id');
-        $saveMedia = SavedMedia::where('user_id',$userID)->orderBy('saved_media_id','desc')->get();
-        foreach($saveMedia as $media) {
-            $type = substr($media->media_id,0,1);
-            if($type === 'Q'){
-                $quote = Quote::where('quoteID',$media->media_id)->first();
-                $temp = [
-                    'type' => 'quote',
-                    'quoteID' => $quote->quoteID,
-                    'quoteText' => $quote->quoteText,
-                    'quoteAuthor' => $quote->quoteAuthor
-                ];
-                array_push($all_media,$temp);
-            }
-            if($type === 'V'){
-                $video = YoutubeAPIKey::where('videoID',$media->media_id)->first();
-                    $temp = [
-                        'type' => 'video',
-                        'videoID' => $video->videoID,
-                        'videoApi_id' => 'https://www.youtube.com/embed/'.$video->videoApi_id,
-                        'video_title' => $video->video_title
-                    ];
-                array_push($all_media,$temp);
-            }
-        }
-        return response()->json([
-            'data' => $all_media
-        ]);
-    }
-
-    // TALK CIRCLE
-    public function getProblems(){
-        $problems = Problem::get();
-        return response()->json([
-            'data' => $problems
-        ]);
-    }
-
-    
 }

@@ -392,9 +392,9 @@
 	<h1>Venues <a href="/addVenue" class="btn btn-primary"> <i class="fas fa-plus-circle"></i> Add New Venue</a></h1>
        <div class="form-group">
 			<fieldset class="gllpLatlonPicker" style="max-height: 100px;">
-				<div class="search-container">
+				<!-- <div class="search-container">
 					<input type="text" id="searchfield" name="location" class="gllpSearchField form-control" placeholder="Search for...">
-				</div>
+				</div> -->
 				<div class="gllpMap map-frame">Google Maps</div>
 				<input type="hidden" class="gllpLatitude" name="latitude" id="latChange" value="10.289796"/>
 				<input type="hidden" class="gllpLongitude" name="longitude" id="longChange" value="123.86165900000003"/>

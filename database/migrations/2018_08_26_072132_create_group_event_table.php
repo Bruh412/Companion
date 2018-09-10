@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnCommentsTable extends Migration
+class CreateGroupEventTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddColumnCommentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('CommentPost', function($table)
-        {
-            $table->string('commentID_fk')->nullable();
-            $table->foreign('commentID_fk')->references('commentID')->on('commentpost')->onDelete('cascade');
+        Schema::create('event_group', function (Blueprint $table) {
+            $table->string('event_groupID')->primary();
         });
     }
 
@@ -27,6 +25,6 @@ class AddColumnCommentsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('event_group');
     }
 }

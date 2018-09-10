@@ -16,8 +16,10 @@ class CreateEventActivitiesTable extends Migration
         Schema::create('event_activities', function (Blueprint $table) {
             $table->string('eventAct_id')->primary();
             $table->string('actID');
+            $table->string('event_id');
 
             $table->foreign('actID')->references('actID')->on('activities')->onDelete('cascade');
+            $table->foreign('event_id')->references('event_id')->on('event')->onDelete('cascade');
         });
     }
 

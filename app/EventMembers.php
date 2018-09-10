@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventMembers extends Model
 {
-    public $table = 'event_members';
-    protected $primaryKey = 'event_memberID';
-    public $incrementing = false;
+    protected $table = "eventMembers";
+    protected $primaryKey = "id";
     public $timestamps = false;
+    public $incrementing = true;
 }

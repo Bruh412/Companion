@@ -130,8 +130,14 @@ class VenueController extends Controller
 
         // dd($nearVenues);
 
-        return response()->json([
-            'venues' => $nearVenues
-        ]);
+        // return response()->json([
+        //     'venues' => $nearVenues
+        // ]);
+
+        // dd($nearVenues);
+
+        return view('user.chooseVenue')->with(['venues' => $nearVenues]);
     }
+
+
 }

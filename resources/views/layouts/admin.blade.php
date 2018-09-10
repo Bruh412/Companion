@@ -14,6 +14,8 @@
     <!-- Bootstrap core CSS-->
     <link href="{{ asset('adminPage/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     
+    <!-- Browser Icon -->
+    <link href="{{ asset('image/logo.png') }}" rel="shortcut icon">
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('adminPage/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">

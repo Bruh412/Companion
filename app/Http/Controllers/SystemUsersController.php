@@ -175,25 +175,25 @@ class SystemUsersController extends Controller
                     }
 
                     // //certificate upload
-                    // $fileName = $request->username."/certificate"."/".$request->file->getClientOriginalName();
-                    // $fileType = $request->file->getClientOriginalExtension();
-                    // Storage::disk('public')->put($fileName, File::get($request->file));
-                    // $url = Storage::url($fileName);
-                    // $newFile = new CertificateFile;
-                    // if(CertificateFile::get() == EmptyMuch::get()){
-                    //     $newFile->fileID = "F00001";
-                    // }
-                    // else{
-                    //     $row = CertificateFile::orderby('fileID', 'desc')->first();
-                    //     $temp = substr($row['fileID'], 1);
-                    //     $temp =(int)$temp + 1;
-                    //     $id = "F".(string)str_pad($temp, 5, "0", STR_PAD_LEFT);
-                    //     $newFile->fileID = $id;
-                    // }
-                    // $newFile->fileContent = $url;
-                    // $newFile->fileExt = $fileType;
-                    // $newFile->user_id = $userID;
-                    // $newFile->save();
+                    $fileName = $request->username."/certificate"."/".$request->file->getClientOriginalName();
+                    $fileType = $request->file->getClientOriginalExtension();
+                    Storage::disk('public')->put($fileName, File::get($request->file));
+                    $url = Storage::url($fileName);
+                    $newFile = new CertificateFile;
+                    if(CertificateFile::get() == EmptyMuch::get()){
+                        $newFile->fileID = "F00001";
+                    }
+                    else{
+                        $row = CertificateFile::orderby('fileID', 'desc')->first();
+                        $temp = substr($row['fileID'], 1);
+                        $temp =(int)$temp + 1;
+                        $id = "F".(string)str_pad($temp, 5, "0", STR_PAD_LEFT);
+                        $newFile->fileID = $id;
+                    }
+                    $newFile->fileContent = $url;
+                    $newFile->fileExt = $fileType;
+                    $newFile->user_id = $userID;
+                    $newFile->save();
                     // return $newFile;
 
                     //comparing specs to db_specs
@@ -341,7 +341,7 @@ class SystemUsersController extends Controller
         $comp1 = [];
         $n_quotes = [];
         foreach($usersPost as $post){ //mao ni kato gkuha niya post sa user og kato match quotes sa db
-            $temp = MatchPostQuote::where('post_id', $post['post_id'])->orderByRaw("RAND()")->take(10)->get();
+            $temp = MatchPostQuote::where('post_id', $post['post_id'])->orderByRaw("RAND()")->take(3)->get();
             // if ($temp->isEmpty()){
             //     $temp1 = Quote::orderByRaw("RAND()")->take(3)->get();
             //         foreach($temp1 as $row1){

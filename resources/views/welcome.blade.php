@@ -7,6 +7,9 @@
 
         <title>Companion</title>
 
+        <!-- Browser Icon -->
+        <link href="{{ asset('image/logo.png') }}" rel="favicon" type="icon">
+
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 

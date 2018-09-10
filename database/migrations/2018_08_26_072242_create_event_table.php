@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventDetailsTable extends Migration
+class CreateEventTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,20 @@ class CreateEventDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('event_details', function (Blueprint $table) {
-            $table->string('event_detailsID')->primary();
+        Schema::create('event', function (Blueprint $table) {
+            $table->string('event_id')->primary();
             $table->string('name');
             $table->string('description');
             $table->string('date');
             $table->string('timeStart');
             $table->string('timeEnd');
+            $table->longText('picture')->nullable();
+            $table->string('latitude');
+            $table->string('longitude');
+            $table->string('location_name');
+
+            $table->string('event_groupID');
+            $table->foreign('event_groupID')->references('event_groupID')->on('event_group')->onDelete('cascade');
         });
     }
 
