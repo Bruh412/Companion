@@ -159,7 +159,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/wavetest/{id}', 'VenueController@waveRecommendVenue');
 
-    // Route::get('/bruhtest', 'AdminController@newUI');
+    Route::get('/bruhtest/{id}', 'SystemController@notifyUser');
 
 });
 

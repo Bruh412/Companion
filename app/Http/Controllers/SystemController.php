@@ -23,6 +23,8 @@ use App\GroupMember;
 use App\Activity;
 use App\VenueCategories;
 use App\Venue;
+use App\SystemDefaultNotif;
+use App\Notification;
 use DateTime;
 use Auth;
 
@@ -524,7 +526,8 @@ class SystemController extends Controller
                     }
                 }
 
-                $mainFaci['user'] = $faciDecode[$faciIndex];
+                // $mainFaci['user'] = $faciDecode[$faciIndex];
+                $mainFaci['user'] = SystemUser::findOrFail($faciDecode[$faciIndex]['user_id']);
                 $mainFaci['latitude'] = $faciDecode[$faciIndex]['Latitude'];
                 $mainFaci['longitude'] = $faciDecode[$faciIndex]['Longitude'];
                 // dd($mainFaci);
@@ -629,6 +632,7 @@ class SystemController extends Controller
                 $mainGroupID = $groupDB->groupID;
                 // dd($groupFaci);
                 // return $groupFaci['user'];
+                // dd($groupFaci);
                 $groupDB->groupName = $groupFaci['user']['first_name']." ".$groupFaci['user']['last_name']."'s Group";
                 // $groupDB->groupName = "Test Group";
                 
@@ -638,6 +642,7 @@ class SystemController extends Controller
 
                 // --- ADDING MEMBERS TO GROUP
                 foreach ($group as $groupMem) {
+
                     $gm = new GroupMember;
 
                     if(GroupMember::get() == EmptyMuch::get()){
@@ -657,7 +662,17 @@ class SystemController extends Controller
                     $gm->longitude = $groupMem['longitude'];
                     $gm->groupID = $mainGroupID;
 
+                    $this->notifyUser(2, $gm->memberID);
+
                     $gm->save();
+
+                    // $tbd = QueueTalkCircle::where('user_id', $groupMem['user']['user_id'])->get()[0];
+                    // $tbd->delete();
+                }
+
+                foreach ($group as $groupMem) {
+                    $tbd = QueueTalkCircle::where('user_id', $groupMem['user']['user_id'])->get()[0];
+                    $tbd->delete();
                 }
 
                 // --- ADDING DETAILS TO GROUP
@@ -879,6 +894,17 @@ class SystemController extends Controller
             $result .= "".$charArray[$randItem];
         }
         return $result;
+    }
+
+    public function notifyUser($notifNum, $recipient){
+        $msg = SystemDefaultNotif::findOrFail(2)->message;
+
+        $notif = new Notification;
+        $notif->message = $msg;
+        $notif->recipient = $recipient;
+        $notif->save();
+
+        // dd($notif);
     }
 }
 

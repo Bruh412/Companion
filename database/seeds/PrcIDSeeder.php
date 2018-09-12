@@ -29,5 +29,6 @@ class PrcIDSeeder extends Seeder
             ['prc_id' => '2015010215'],
         ];
         DB::table('prcraw')->insert($data);
+
     }
 }
