@@ -335,7 +335,7 @@ class ActivityController extends Controller
 
     public function viewAct($id){
         $act = Activity::findOrFail($id);
-        // dd($act);
+        // dd($act->media);
         return view('admin.viewSingleActivity')->with(["act"=>$act]);
     }
 

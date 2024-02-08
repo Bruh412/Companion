@@ -5,8 +5,8 @@
     <a href="/home" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
      <h1>System Configuration</h1>
 
-    <div class="card mb-3">
-        <div class="card-header">
+    <div class="card mb-3" style="background:rgba(255,255,255,0.2);">
+        <div class="card-header" style="background:rgba(255,255,255,0.65);">
             <i class="fas fa-table"></i>
             List of Configurations
         </div>

@@ -4,7 +4,7 @@
     @include('admin.navbackInt') 
     <br>
     <br>
-    <h1>Add new interest</h1>
+    <h1>Add New Interest</h1>
     <br>
     <form action="/addInt" method="post" enctype="multipart/form-data">
         @csrf

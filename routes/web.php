@@ -159,10 +159,11 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/wavetest/{id}', 'VenueController@waveRecommendVenue');
 
-    Route::get('/bruhtest/{id}', 'SystemController@notifyUser');
+    
 
 });
 
+Route::get('/bruhtest', 'SystemController@reminderNotif');
 
 // Route::post('/registerService','WebServicesController@registerService');
 // Route::post('/login','WebServicesController@userAuthentication')->name('login');

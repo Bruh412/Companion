@@ -25,6 +25,7 @@ use App\VenueCategories;
 use App\Venue;
 use App\SystemDefaultNotif;
 use App\Notification;
+// use App\Files;
 use DateTime;
 use Auth;
 
@@ -331,12 +332,8 @@ class SystemController extends Controller
                         $tempTotal = 0;
                         foreach ($basis as $field => $fieldValue) {
                             if($field != 'user_id' && $field != 'Cluster'){
-                                // echo $field;
-                                // if($dumpCount == 2)
-                                //     echo $field."|| bin = ".$bin[$centroid][$field]."|| main = ".$main[$node][$field]."<br>";
                                 $temp = pow($bin[$centroid][$field]-$main[$node][$field], 2);
                                 $tempTotal += $temp;
-                                // echo $temp."<br>";
                             }
                         }
                         array_push($scores, sqrt($tempTotal));
@@ -358,8 +355,6 @@ class SystemController extends Controller
                     $main[$node]['Cluster'] = $index;
                     array_push($clusters[$index], $main[$node]);
                 }     
-            // if($dumpCount == 2)
-            //     dd($clusters);
             $newMain = $main;
 
             //checking for changes in clusters
@@ -372,12 +367,10 @@ class SystemController extends Controller
 
             // //assigning new centroids
             if($changeCount != 0){
-                // dd($clusters);
                     foreach ($clusters as $index => $cluster) {
                         $newCentroid = $this->createNode("summation");
                         foreach ($cluster as $clusterNumber => $node) {
                             foreach ($node as $nodeField => $value) {
-                                // dd($nodeField);
                                 if($nodeField != 'user_id'){
                                     $newCentroid[$nodeField] += $value;
                                 }
@@ -394,10 +387,8 @@ class SystemController extends Controller
                                 $newCentroid[$field] = $index;
                             }
                         }   
-                        // dd($newCentroid);
                         $bin[$index] = $newCentroid;
                     }
-                // dd($bin);
             }
 
 
@@ -413,6 +404,11 @@ class SystemController extends Controller
             }
         }
         // dd($clusterPrint);
+        if($clusterPrint == 0){
+            return response()->json([
+                'ErrorMsg' => "No Clusters made"
+            ]);
+        }
 
         if(count($clusters[$clusterPrint]) < (int)$config->numberOfUsersToGroup)
             dd("not in group");
@@ -513,8 +509,17 @@ class SystemController extends Controller
 
                 $index = 0;
                 $lowest = 0;
+                
+                $faciIndexTemp;
                 // for ($i=0; $i < count($scores); $i++) { 
                 foreach ($faciDecode as $faciIndex => $faciValue) {
+
+                    if ($faciIndex == 0){
+                        return response()->json([
+                            'ErrorMsg' => "No Facilitators"
+                        ]);
+                    }
+
                     if($lowest == 0){
                         $lowest = $faciDecode[$faciIndex]['Score'];
                         $index = $faciIndex;
@@ -524,12 +529,14 @@ class SystemController extends Controller
                         $lowest = $faciDecode[$faciIndex]['Score'];
                         $index = $faciIndex;
                     }
+
+                    $faciIndexTemp = $faciIndex;
                 }
 
-                // $mainFaci['user'] = $faciDecode[$faciIndex];
-                $mainFaci['user'] = SystemUser::findOrFail($faciDecode[$faciIndex]['user_id']);
-                $mainFaci['latitude'] = $faciDecode[$faciIndex]['Latitude'];
-                $mainFaci['longitude'] = $faciDecode[$faciIndex]['Longitude'];
+                // $mainFaci['user'] = $faciDecode[$faciIndexTemp];
+                $mainFaci['user'] = SystemUser::findOrFail($faciDecode[$faciIndexTemp]['user_id']);
+                $mainFaci['latitude'] = $faciDecode[$faciIndexTemp]['Latitude'];
+                $mainFaci['longitude'] = $faciDecode[$faciIndexTemp]['Longitude'];
                 // dd($mainFaci);
             }
             else{
@@ -609,7 +616,7 @@ class SystemController extends Controller
                 //     $groupDB->groupID = $id;
                 // }
                 // $mainGroupID = $groupDB->groupID;
-                // // dd($groupFaci);
+                // dd($groupFaci);
                 // $groupDB->groupName = $groupFaci['user']['first_name']." ".$groupFaci['user']['last_name']."'s Group";
 
                 $date=new DateTime();
@@ -670,10 +677,10 @@ class SystemController extends Controller
                     // $tbd->delete();
                 }
 
-                foreach ($group as $groupMem) {
-                    $tbd = QueueTalkCircle::where('user_id', $groupMem['user']['user_id'])->get()[0];
-                    $tbd->delete();
-                }
+                // foreach ($group as $groupMem) {
+                //     $tbd = QueueTalkCircle::where('user_id', $groupMem['user']['user_id'])->get()[0];
+                //     $tbd->delete();
+                // }
 
                 // --- ADDING DETAILS TO GROUP
                 
@@ -791,8 +798,15 @@ class SystemController extends Controller
                     }
                 }
 
-                // dd("done");
+                
                 $dbgroup = Group::findOrFail($mainGroupID);
+
+                // foreach ($group as $groupMem) {
+                //         $tbd = QueueTalkCircle::where('user_id', $groupMem['user']['user_id'])->get()[0];
+                //         $tbd->delete();
+                // }
+    
+                // dd($group);
 
                 return view('user.meetYourGroup')->with(['group'=>$group, 'dbgroup'=>$dbgroup]);
             }
@@ -803,15 +817,7 @@ class SystemController extends Controller
         $config = SystemConfig::findOrFail(1);
         $probDetails = GroupDetails::where("groupID", $id)->get();
         $intDetails = GroupDetailsInterests::where("groupID", $id)->get();
-
-        // YOU LEFT HERE --- MATCHING DETAILS WITH ACTIVITIES AND LISTING THEM IN PROFESSIONAL SIDE
-        
-        // CAUTION --- ALGORITHM INCOMING --- CAUTION
-
         $activities = Activity::get();
-
-        // dd($activities[0]->activityTags[0]->interest);
-
         $activityArray = [];
 
         foreach ($activities as $activity) {
@@ -905,6 +911,196 @@ class SystemController extends Controller
         $notif->save();
 
         // dd($notif);
+    }
+
+    public function savePicturesAlbum($eventID, $pictures){
+        //-----FILES
+        if(!is_null($pictures[0])){
+            foreach ($pictures as $picture) {
+                $fileName = $eventID."/uploads"."/".$picture->getClientOriginalName();
+                $fileName = str_replace(' ', '', $fileName);
+                $fileType = $picture->getClientOriginalExtension();
+                Storage::disk('public')->put($fileName, File::get($picture));
+                $url = Storage::url($fileName);
+
+                $newFile = new AlbumPicture;
+                $newFile->fileContent = $url;
+                $newFile->fileExt = $fileType;
+                $newFile->eventID = $eventID;
+                $newFile->save();
+            }
+        }
+        return response()->json([
+            'message' => "Pictures added to album."
+        ]);
+    }
+
+    public function reminderNotif(){
+        date_default_timezone_set("Asia/Manila");
+        // $date = date("m-d-Y | h:i:sa");
+        // dd(date("h:i a"));
+        // dd(date("h:i a",time()));
+        // dd(date("h:i a",strtotime("5:05 am")));
+        // dd(abs(strtotime("5:15 am")-strtotime("6:00 am")) / 3600);
+        // dd(abs(strtotime("3 October 2015")-strtotime("25 October 2015")) /60/60/24);
+        // dd(SystemConfig::findOrFail(1)->numberofDaysForEventReminder*24);
+        // 3600 = hours
+        $date = date("Y-m-d");
+
+        $allEvents = Event::get();
+
+        foreach ($allEvents as $event) {
+            if($event->date == $date){
+                $time = strtotime(date("h:i a"));
+                $eventTime = strtotime($event->timeStart);
+
+                // if(abs($eventTime-$time) / 3600 <=  1){ // seconds
+                if(abs($eventTime-$time) /60/60/(SystemConfig::findOrFail(1)->numberofDaysForEventReminder*24) <=  1){
+                    
+                    $members = EventMembers::where("event_id" ,$event->event_id)->get();
+
+                    foreach ($members as $member) {
+                        $notif = new Notification;
+                        $notif->message = "Reminding you of your event an hour later";
+                        $notif->recipient = $member->user_id;
+                        $notif->save();
+                    }
+                    
+                }
+
+            }
+        }
+    }
+
+    public function checkDate(){
+        date_default_timezone_set("Asia/Manila");
+        // $date = date("m-d-Y | h:i:sa");
+        // dd(date("h:i a"));
+        // dd(date("h:i a",time()));
+        // dd(date("h:i a",strtotime("5:05 am")));
+        // dd(abs(strtotime("5:15 am")-strtotime("6:00 am")) / 3600);
+        // dd(abs(strtotime("3 October 2015")-strtotime("25 October 2015")) /60/60/24);
+        // dd(SystemConfig::findOrFail(1)->numberofDaysForEventReminder*24);
+        // 3600 = hours
+        $date = date("Y-m-d");
+
+        $allEvents = Event::get();
+
+        foreach ($allEvents as $event) {
+            if($event->date == $date){
+                return response()->json([
+                    'result' => "true"
+                ]);
+            }
+            else
+                return response()->json([
+                    'result' => "false"
+                ]);
+        }
+    }
+    
+    public function checkTime(){
+        $allEvents = Event::get();
+
+        foreach ($allEvents as $event) {
+        $time = strtotime(date("h:i a"));
+        $eventTime = strtotime($event->timeStart);
+        // if(abs($eventTime-$time) / 3600 <=  1){ // seconds
+        if(abs($eventTime-$time) /60/60/(SystemConfig::findOrFail(1)->numberofDaysForEventReminder*24) <=  1){
+                return response()->json([
+                    'result' => "true"
+                ]);
+            }
+        else
+            return response()->json([
+                'result' => "false"
+            ]);
+        }
+    }
+
+    public function removeFromQueue($eventID){
+        $grpMem = GroupMembers::where('eventID', $eventID)->get();
+
+        foreach ($grpMem as $member) {
+            $temp = QueueTalkCircle::where('user_id', $member->user_id)->get()[0];
+            $temp->delete();
+        }
+    }
+    
+
+    public function sendSurvey(){
+        // files involved 
+        //     PAEQuestions.php
+        //     2018_09_25_083700_p_a_e_question_migration.php
+
+        $survey = PAEQuestions::get();
+        dd($survey);
+
+        return response()->json([
+            'survey' => $survey
+        ]);
+    }
+
+    public function saveSurveyAnswers(Request $req){
+        // new column needed for event table
+        //      eventScore = average score for the event
+
+        // request must have
+        //  req->answers = answers to the survey
+        //  req->owner = id of the one who answered the survey
+        //  req->event = eventid of the event that the surveyee is part of
+
+        $basisCounter = 1;
+        foreach ($req->answers as $answer) {
+            //insert saving part here
+            $surveyAnswer = new SurveyAnswer;
+
+            // dd($surveyAnswer);
+            $surveyAnswer->questionBasis = $basisCounter;
+            $surveyAnswer->answer = $answer;
+            $surveyAnswer->owner = $req->owner;
+            $surveyAnswer->event = $req->event;
+            $surveyAnswer->save();
+            $basisCounter++;
+        }
+
+        return response()->json([
+            'message' => "Successfully saved survey answers."
+        ]);
+    }
+
+    public function solveEventScore($eventID){
+        ////////////////// PLEASE KO EDIT BASED SA KUNG UNSAY NAA SA DB NI WAVE
+        $members = EventMembers::where('eventID', $eventID)->get(); // <--------
+
+
+        $totalScore = 0;
+        foreach ($members as $member) {
+            if (SystemUser::where('user_id', $member->user_id)->get()[0]->userType == "seeker") {
+                $answers = SurveyAnswer::where($member->user_id)->get();
+
+                $memberScore = 0;
+                foreach ($answers as $answer) {
+                    if (PAEQuestions::where('id', $answer->questionBasis)->get()[0]->type == "rating") {
+                        $memberScore += (int)$answer;
+                    }
+                }
+
+                $memberScore = $memberScore/5;
+                $totalScore += $memberScore;
+            }
+        }
+
+        $eventScore = $totalScore/4;
+
+        $event = Event::findOrFail($eventID);
+
+        $event->eventScore = $eventScore;
+        $event->save();
+
+        return response()->json([
+            'message' => "Successfully solved event score."
+        ]);
     }
 }
 

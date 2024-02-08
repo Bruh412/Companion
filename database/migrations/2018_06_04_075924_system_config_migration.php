@@ -20,6 +20,7 @@ class SystemConfigMigration extends Migration
             $table->integer('numberOfDaysUntilNewVideoForQuotes');
             $table->integer('numberOfTopActToBeSuggested');
             $table->integer('defaultMaxDistanceForVenueRecommendation');
+            $table->integer('numberofDaysForEventReminder');
             // $table->timestamps();
         });
     }

@@ -1,11 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="container">
 <a href="/feelings" style="color: #636b6f;padding: 0 10px;font-size: 13px;font-weight: 600;letter-spacing: .1rem;text-decoration: none;text-transform: uppercase;">{{ "< Back" }}</a>
     <br>
     <br>
-    <h1>Add new feeling</h1>
+    <h1>Add New Feeling</h1>
     <br>
     <form action="/addFeeling" method="post" enctype="multipart/form-data">
         @csrf

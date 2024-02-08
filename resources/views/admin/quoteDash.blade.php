@@ -16,8 +16,8 @@
      </div> -->
 
     <div id="category-view">
-    <div class="card mb-3">
-        <div class="card-header">
+    <div class="card mb-3" style="background:rgba(255,255,255,0.2);">
+        <div class="card-header" style="background:rgba(255,255,255,0.65);">
             <i class="fas fa-table"></i>
             List of Quotes
         </div>
